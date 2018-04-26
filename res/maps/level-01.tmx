@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="100" height="50" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#5d9883" nextobjectid="1">
+ <tileset firstgid="1" source="../tilesets/sheet.tsx"/>
+ <layer name="Background 2" width="100" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt2EkKwkAQRuHCK7j2Sg4XcIgHUNH7YxoMaIidqUz96vugFrpq8uy0SWFmxcg5GryMbUEPX/TQQg8t9NBCDy300EIPLfTQQg8t9NBCDy300EIPLfTQQg8t9NBCDy300JKu57KclbVf98ub7+nhJ13PXTl7y7e4ZuY29aJ/WNf70SxqgX+myz0p9ZhHLfDPcF5rSdf7bPkenA/TaTvDaTEtznAtuf+wnOEAgCHW5WweUwSvBWYHe33XiFipx/O7RsSo7lP1ZxLESPui6b0iYqQeTc/sAPCttiMHvhY951T7DF99e9QHvpp+87SIw97Q0ve8oMdnsT+00EMLPbQM6VCdKfDH/vB3B52Vza8=
+  </data>
+ </layer>
+ <layer name="Background 1" width="100" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt1sEJgDAQRNG9qx2o/ZeZHJIGRNg5vAdzX/gEUgUAAAAAAAAAAAAAAPDNMXeuXc23UHXPPWtv8y3okUaPLHpk+bvH/h/4G2TYfb21DHpk0SOLHln0AAAA6DUAey8ETA==
+  </data>
+ </layer>
+ <layer name="Level 1" width="100" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt10kKwjAUBuAunfAAjgfpFbyCO3HpTr2+sSCtpRWsgUT9PngQSIdHftKhKAAAAAAAAAAAAAAA4DsdUzdAZZe6AZ7sB553iNoFD0PyWIRaxm6EypA8VqE2sRuhEjOP64e9UBSnxvjcmpv3jO2P90xDjUKNGzUJNXtRj+Ob74Vtz1ge77mv13pgNddZHnHIIy/yyEvKPC6ft/9zUuTR/obwv1hLkUf7np5nNXnkJWUeZcd1/p39kRd55EUeeUmdR9kx/89ucpMmXQ==
+  </data>
+ </layer>
+</map>
