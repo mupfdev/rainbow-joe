@@ -12,53 +12,65 @@ int main()
 
     atexit(SDL_Quit);
 
-    tmx_map *map = mapLoad("res/maps/level-01.tmx");
+    Map *map = mapInit("res/maps/forest.tmx");
     if (NULL == map) return EXIT_FAILURE;
+    map->worldPosY = video->height - (map->map->height * map->map->tile_height);
 
-    SDL_Texture *mapLevel = mapRender(video->renderer, map, 0, "Level");
-    if (NULL == map) return EXIT_FAILURE;
+    Entity *player = entityInit("player");
+    if (NULL == player) return EXIT_FAILURE;
+    if (-1 == entityLoadSprite(player, video->renderer, "res/sprites/characters.png"))
+        return EXIT_FAILURE;
+    player->frameYoffset = 32;
+    player->worldPosY = 312;
 
-    SDL_Texture *mapBG = mapRender(video->renderer, map, 1, "Background");
-    if (NULL == map) return EXIT_FAILURE;
-
-    int32_t  cameraPosX = 0;
-    int32_t  cameraPosY = 0 - (map->height * map->tile_height - video->height);
-    SDL_Rect camera;
-    camera.w = map->width  * map->tile_width;
-    camera.h = map->height * map->tile_height;
-    camera.x = cameraPosX;
-    camera.y = cameraPosY;
-
-    if (-1 == SDL_RenderCopy(video->renderer, mapBG, NULL, &camera))
-    {
-        fprintf(stderr, "%s\n", SDL_GetError());
-        return -1;
-    }
-
-    if (-1 == SDL_RenderCopy(video->renderer, mapLevel, NULL, &camera))
-    {
-        fprintf(stderr, "%s\n", SDL_GetError());
-        return -1;
-    }
-
-    SDL_RenderPresent(video->renderer);
-    SDL_RenderClear(video->renderer);
+    int32_t cameraPosX = 0;
+    int32_t cameraPosY = 0;
 
     while (1)
     {
+        // Handle keyboard input.
         const uint8_t *keyState;
         SDL_PumpEvents();
         if (SDL_PeepEvents(0, 0, SDL_PEEKEVENT, SDL_QUIT, SDL_QUIT) > 0)
             goto quit;
 
+        player->flags &= ~(1 << IN_MOTION);
+
         keyState = SDL_GetKeyboardState(NULL);
 
         if (keyState[SDL_SCANCODE_Q]) goto quit;
+        if (keyState[SDL_SCANCODE_A])
+        {
+            player->flags |= 1 << IN_MOTION;
+            player->flags |= 1 << DIRECTION;
+            player->worldPosX--;
+        }
+        if (keyState[SDL_SCANCODE_D])
+        {
+            player->flags |= 1   << IN_MOTION;
+            player->flags &= ~(1 << DIRECTION);
+            player->worldPosX++;
+        }
+        if (keyState[SDL_SCANCODE_I]) cameraPosY--;
+        if (keyState[SDL_SCANCODE_K]) cameraPosY++;
+        if (keyState[SDL_SCANCODE_J]) cameraPosX--;
+        if (keyState[SDL_SCANCODE_L]) cameraPosX++;
+
+        if (-1 == mapRender(video->renderer, map, "Background", 1, cameraPosX, cameraPosY))
+            return EXIT_FAILURE;
+
+        if (-1 == entityRender(video->renderer, player, player->worldPosX - cameraPosX, player->worldPosY - cameraPosY))
+            return EXIT_FAILURE;
+
+        if (-1 == mapRender(video->renderer, map, "Level", 0, map->worldPosX - cameraPosX, map->worldPosY - cameraPosY))
+            return EXIT_FAILURE;
+
+        SDL_RenderPresent(video->renderer);
+        SDL_RenderClear(video->renderer);
     }
 
     quit:
-    SDL_DestroyTexture(mapBG);
-    SDL_DestroyTexture(mapLevel);
+    entityFree(player);
     mapFree(map);
     videoTerminate(video);
     return EXIT_SUCCESS;

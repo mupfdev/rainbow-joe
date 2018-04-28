@@ -18,6 +18,6 @@ typedef struct video_t {
 } Video;
 
 Video *videoInit(const char *title, uint32_t width, uint32_t height, uint32_t flags);
-void videoTerminate(Video *video);
+void  videoTerminate(Video *video);
 
 #endif

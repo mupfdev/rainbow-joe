@@ -10,16 +10,27 @@
 #include "map.h"
 
 /**
- * @brief   Load TMX map.
+ * @brief   Initialise map.
  * @param   filename the TMX map file to load.
- * @return  A TMX map on success, NULL on error.
+ * @return  The initialised map on success, NULL on error.
  * @ingroup Map
  */
-tmx_map *mapLoad(const char *filename)
+Map *mapInit(const char *filename)
 {
-    tmx_map *map = tmx_load(filename);
+    static Map *map;
+    map = malloc(sizeof(struct map_t));
+    if (NULL == map)
+    {
+        fprintf(stderr, "mapInit(): error allocating memory.\n");
+        return NULL;
+    }
+ 
+    map->map       = tmx_load(filename);
+    map->worldPosX = 0;
+    map->worldPosY = 0;
+    map->texture   = NULL;
 
-    if (NULL == map) {
+    if (NULL == map->map) {
         fprintf(stderr, "%s\n", tmx_strerr());
         return NULL;
     }
@@ -28,57 +39,65 @@ tmx_map *mapLoad(const char *filename)
 }
 
 /**
- * @brief   Render map on SDL_Texture.  Should only be called once per map.
+ * @brief   Render Map on screen.
  * @param   renderer SDL's rendering context.  See @ref struct Video.
- * @param   map      the TMX map that should be rendered.
- * @param   bg       boolean value to determine if the map's background colour
- *                   should be rendered or not.  Otherwise the background stays
- *                   transparent.
- * @param   tileset  SDL texture used as tileset.
+ * @param   map      the map that should be rendered.
  * @param   name     substring of the layer name(s) that should be rendered.
- * @return  A SDL texture holding the rendered map, NULL on error.
+ * @param   bg       boolean value to determine if the map's background colour
+ *                   should be rendered or not.  If set to 0, the background stays
+ *                   transparent.
+ * @param   posX     coordinate, where the map should be rendered along the x-axis
+ *                   of the set rendering context.
+ * @param   posY     coordinate, where the map should be rendered along the y-axis
+ *                   of the set rendering context.
+ * @return  0 on success, -1 on error.
  * @ingroup Map
+ * @todo    Increase overall performance!
  */
-SDL_Texture *mapRender(SDL_Renderer *renderer, tmx_map *map, uint8_t bg, const char *name)
+int8_t mapRender(
+    SDL_Renderer *renderer,
+    Map          *map,
+    const char   *name,
+    uint8_t      bg,
+    int32_t      posX,
+    int32_t      posY)
 {
-    SDL_Texture *dest = SDL_CreateTexture(
-        renderer,
-        SDL_PIXELFORMAT_RGBA8888,
-        SDL_TEXTUREACCESS_TARGET,
-        map->width  * map->tile_width,
-        map->height * map->tile_height);
+    if (NULL == map->texture)
+        map->texture = SDL_CreateTexture(
+            renderer,
+            SDL_PIXELFORMAT_ARGB8888,
+            SDL_TEXTUREACCESS_TARGET,
+            map->map->width  * map->map->tile_width,
+            map->map->height * map->map->tile_height);
 
-    if (NULL == dest)
+    if (NULL == map->texture)
     {
         fprintf(stderr, "%s\n", SDL_GetError());
-        return NULL;
+        return -1;
     }
 
     SDL_Texture *tileset = IMG_LoadTexture(renderer, "res/tilesets/sheet.png");
     if (NULL == tileset)
     {
         fprintf(stderr, "%s\n", SDL_GetError());
-        return NULL;
+        return -1;
     }
 
-    if (0 != SDL_SetRenderTarget(renderer, dest))
+    if (0 != SDL_SetRenderTarget(renderer, map->texture))
     {
         fprintf(stderr, "%s\n", SDL_GetError());
-        return NULL;
+        return -1;
     }
 
     if (bg)
-    {
         SDL_SetRenderDrawColor(
             renderer,
-            (map->backgroundcolor >> 16) & 0xFF,
-            (map->backgroundcolor >>  8) & 0xFF,
-            (map->backgroundcolor)       & 0xFF,
+            (map->map->backgroundcolor >> 16) & 0xFF,
+            (map->map->backgroundcolor >>  8) & 0xFF,
+            (map->map->backgroundcolor)       & 0xFF,
             255);
-        SDL_RenderClear(renderer);
-    }
 
-    tmx_layer *layers = map->ly_head;
+    tmx_layer *layers = map->map->ly_head;
     while(layers)
     {
         uint32_t    gid;
@@ -88,15 +107,15 @@ SDL_Texture *mapRender(SDL_Renderer *renderer, tmx_map *map, uint8_t bg, const c
 
         if ( (layers->visible) && (NULL != strstr(layers->name, name)) )
         {
-            for (uint32_t ih = 0; ih < map->height; ih++)
-                for (uint32_t iw = 0; iw < map->width; iw++)
+            for (uint32_t ih = 0; ih < map->map->height; ih++)
+                for (uint32_t iw = 0; iw < map->map->width; iw++)
                 {
-                    gid = layers->content.gids[(ih * map->width) + iw] & TMX_FLIP_BITS_REMOVAL;
-                    if (NULL != map->tiles[gid])
+                    gid = layers->content.gids[(ih * map->map->width) + iw] & TMX_FLIP_BITS_REMOVAL;
+                    if (NULL != map->map->tiles[gid])
                     {
-                        ts       = map->tiles[gid]->tileset;
-                        src.x = map->tiles[gid]->ul_x;
-                        src.y = map->tiles[gid]->ul_y;
+                        ts    = map->map->tiles[gid]->tileset;
+                        src.x = map->map->tiles[gid]->ul_x;
+                        src.y = map->map->tiles[gid]->ul_y;
                         src.w = dst.w = ts->tile_width;
                         src.h = dst.h = ts->tile_height;
                         dst.x = iw * ts->tile_width;
@@ -108,30 +127,35 @@ SDL_Texture *mapRender(SDL_Renderer *renderer, tmx_map *map, uint8_t bg, const c
         layers = layers->next;
     }
 
-    SDL_DestroyTexture(tileset);
-
     // Switch back to default render target.
     if (0 != SDL_SetRenderTarget(renderer, NULL))
     {
         fprintf(stderr, "%s\n", SDL_GetError());
-        return NULL;
+        return -1;
     }
 
-    if (0 != SDL_SetTextureBlendMode(dest, SDL_BLENDMODE_BLEND))
+    if (0 != SDL_SetTextureBlendMode(map->texture, SDL_BLENDMODE_BLEND))
     {
         fprintf(stderr, "%s\n", SDL_GetError());
-        return NULL;
+        return -1;
     }
 
-    return dest;
+    SDL_Rect dst = { posX, posY, map->map->width * map->map->tile_width, map->map->height * map->map->tile_height };
+    if (-1 == SDL_RenderCopyEx(renderer, map->texture, NULL, &dst, 0, NULL, SDL_FLIP_NONE))
+    {
+        fprintf(stderr, "%s\n", SDL_GetError());
+        return -1;
+    }
+
+    return 0;
 }
 
 /**
- * @brief   Terminate TMX map.
- * @param   map the TMX map that should be freed.
+ * @brief   Free map.
+ * @param   map the map that should be freed.
  * @ingroup Map
  */
-void mapFree(tmx_map *map)
+void mapFree(Map *map)
 {
-    tmx_map_free(map);
+    tmx_map_free(map->map);
 }
