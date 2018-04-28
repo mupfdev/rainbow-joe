@@ -24,6 +24,19 @@ To generate the documentation using doxygen enter:
 doxygen
 ```
 
+## Controls
+
+```
+A:     move left
+D:     move right
+F:     toggle free camera mode
+UP:    move camera up
+DOWN:  move camera down
+LEFT:  move camera left
+RIGHT: move camera right
+Q: quit
+```
+
 ## Title
 The quite odd game title was generated using
 [The Video Game Name Generator](https://www.videogamena.me/).

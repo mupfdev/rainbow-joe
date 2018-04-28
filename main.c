@@ -51,6 +51,7 @@ int main()
         if (SDL_PeepEvents(0, 0, SDL_PEEKEVENT, SDL_QUIT, SDL_QUIT) > 0)
             goto quit;
 
+        // Reset flag (in case no key is pressed).
         player->flags &= ~(1 << IN_MOTION);
 
         keyState = SDL_GetKeyboardState(NULL);
@@ -70,7 +71,7 @@ int main()
         }
 
         if (keyState[SDL_SCANCODE_F]) flags ^= 1 << FREE_CAMERA;
-        if (! ((flags >> FREE_CAMERA) & 1))
+        if (0 != ((flags >> FREE_CAMERA) & 1))
         {
             if (keyState[SDL_SCANCODE_UP])    cameraPosY--;
             if (keyState[SDL_SCANCODE_DOWN])  cameraPosY++;
