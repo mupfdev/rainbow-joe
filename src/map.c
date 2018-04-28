@@ -35,7 +35,9 @@ Map *mapInit(const char *filename, int32_t windowHeight)
 
     map->worldPosX = 0;
     map->worldPosY = windowHeight - (map->map->height * map->map->tile_height);
-    map->texture   = NULL;
+
+    for (uint8_t i = 0; i < MAX_TEXTURES_PER_MAP; i++)
+        map->texture[i] = NULL;
 
     return map;
 }
@@ -46,33 +48,45 @@ Map *mapInit(const char *filename, int32_t windowHeight)
  * @param   map      the map that should be rendered.
  * @param   name     substring of the layer name(s) that should be rendered.
  * @param   bg       boolean value to determine if the map's background colour
- *                   should be rendered or not.  If set to 0, the background stays
- *                   transparent.
- * @param   posX     coordinate, where the map should be rendered along the x-axis
- *                   of the set rendering context.
- * @param   posY     coordinate, where the map should be rendered along the y-axis
- *                   of the set rendering context.
+ *                   should be rendered or not.  If set to 0, the background
+ *                   stays transparent.
+ * @param   index    determine the texture index.  The total amount of textures
+ *                   per map is defined by MAP_TEXTURES_PER_MAP.
+ * @param   posX     coordinate, where the map should be rendered along the
+ *                   x-axis of the set rendering context.
+ * @param   posY     coordinate, where the map should be rendered along the
+ *                   y-axis of the set rendering context.
  * @return  0 on success, -1 on error.
  * @ingroup Map
- * @todo    Increase overall performance!
  */
 int8_t mapRender(
     SDL_Renderer *renderer,
     Map          *map,
     const char   *name,
     uint8_t      bg,
+    uint8_t      index,
     int32_t      posX,
     int32_t      posY)
 {
-    if (NULL == map->texture)
-        map->texture = SDL_CreateTexture(
-            renderer,
-            SDL_PIXELFORMAT_ARGB8888,
-            SDL_TEXTUREACCESS_TARGET,
-            map->map->width  * map->map->tile_width,
-            map->map->height * map->map->tile_height);
+    if (map->texture[index])
+    {
+        SDL_Rect dst = { posX, posY, map->map->width * map->map->tile_width, map->map->height * map->map->tile_height };
+        if (-1 == SDL_RenderCopyEx(renderer, map->texture[index], NULL, &dst, 0, NULL, SDL_FLIP_NONE))
+        {
+            fprintf(stderr, "%s\n", SDL_GetError());
+            return -1;
+        }
+        return 0;
+    }
 
-    if (NULL == map->texture)
+    map->texture[index] = SDL_CreateTexture(
+        renderer,
+        SDL_PIXELFORMAT_ARGB8888,
+        SDL_TEXTUREACCESS_TARGET,
+        map->map->width  * map->map->tile_width,
+        map->map->height * map->map->tile_height);
+
+    if (NULL == map->texture[index])
     {
         fprintf(stderr, "%s\n", SDL_GetError());
         return -1;
@@ -85,7 +99,7 @@ int8_t mapRender(
         return -1;
     }
 
-    if (0 != SDL_SetRenderTarget(renderer, map->texture))
+    if (0 != SDL_SetRenderTarget(renderer, map->texture[index]))
     {
         fprintf(stderr, "%s\n", SDL_GetError());
         return -1;
@@ -136,14 +150,7 @@ int8_t mapRender(
         return -1;
     }
 
-    if (0 != SDL_SetTextureBlendMode(map->texture, SDL_BLENDMODE_BLEND))
-    {
-        fprintf(stderr, "%s\n", SDL_GetError());
-        return -1;
-    }
-
-    SDL_Rect dst = { posX, posY, map->map->width * map->map->tile_width, map->map->height * map->map->tile_height };
-    if (-1 == SDL_RenderCopyEx(renderer, map->texture, NULL, &dst, 0, NULL, SDL_FLIP_NONE))
+    if (0 != SDL_SetTextureBlendMode(map->texture[index], SDL_BLENDMODE_BLEND))
     {
         fprintf(stderr, "%s\n", SDL_GetError());
         return -1;

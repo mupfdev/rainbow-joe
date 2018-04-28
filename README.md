@@ -48,3 +48,7 @@ This project is licensed under the "THE BEER-WARE LICENCE".  See the file
 [TMX C Loader](https://github.com/baylej/tmx/) by Bayle Jonathan is licensed
 under a BSD 2-Clause "Simplified" License.  See the file
 [COPYING](src/tmx/COPYING) for details.
+
+All graphic, sound & music resources are dedicated to
+[public domain](https://creativecommons.org/publicdomain/zero/1.0/) and have
+been found on [OpenGameArt.org](https://opengameart.org/).

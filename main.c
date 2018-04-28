@@ -36,8 +36,9 @@ int main()
         execStatus = EXIT_FAILURE;
         goto quit;
     }
-    player->frameYoffset = 32;
-    player->worldPosY    = 312;
+    player->frameYoffset =  32;
+    player->worldPosX    =  64;
+    player->worldPosY    = 424;
 
     uint16_t flags      = 0;
     int32_t  cameraPosX = 0;
@@ -55,6 +56,7 @@ int main()
         player->flags &= ~(1 << IN_MOTION);
 
         keyState = SDL_GetKeyboardState(NULL);
+        SDL_Delay(5);
 
         if (keyState[SDL_SCANCODE_Q]) goto quit;
         if (keyState[SDL_SCANCODE_A])
@@ -83,9 +85,17 @@ int main()
             cameraPosX = player->worldPosX - video->width  / 2;
             cameraPosY = player->worldPosY - video->height / 2 - 32;
         }
+        if (cameraPosX < 0) cameraPosX = 0;
+        if (cameraPosY > 0) cameraPosY = 0;
 
         // Render scene.
-        if (-1 == mapRender(video->renderer, map, "Background", 1, cameraPosX, cameraPosY))
+        if (-1 == mapRender(video->renderer, map, "Background", 1, 0, map->worldPosX - cameraPosX, map->worldPosY - cameraPosY))
+        {
+            execStatus = EXIT_FAILURE;
+            goto quit;
+        }
+
+        if (-1 == mapRender(video->renderer, map, "Level", 1, 1, map->worldPosX - cameraPosX, map->worldPosY - cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
@@ -97,7 +107,7 @@ int main()
             goto quit;
         }
 
-        if (-1 == mapRender(video->renderer, map, "Level", 0, map->worldPosX - cameraPosX, map->worldPosY - cameraPosY))
+        if (-1 == mapRender(video->renderer, map, "Overlay", 1, 2, map->worldPosX - cameraPosX, map->worldPosY - cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
