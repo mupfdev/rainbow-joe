@@ -18,13 +18,12 @@ int main()
 
     atexit(SDL_Quit);
 
-    Map *map = mapInit("res/maps/forest.tmx");
+    Map *map = mapInit("res/maps/forest.tmx", video->height);
     if (NULL == map)
     {
         execStatus = EXIT_FAILURE;
         goto quit;
     }
-    map->worldPosY = video->height - (map->map->height * map->map->tile_height);
 
     Entity *player = entityInit("player");
     if (NULL == player)
@@ -38,10 +37,11 @@ int main()
         goto quit;
     }
     player->frameYoffset = 32;
-    player->worldPosY = 312;
+    player->worldPosY    = 312;
 
-    int32_t cameraPosX = 0;
-    int32_t cameraPosY = 0;
+    uint16_t flags      = 0;
+    int32_t  cameraPosX = 0;
+    int32_t  cameraPosY = 0;
 
     while (1)
     {
@@ -68,11 +68,22 @@ int main()
             player->flags &= ~(1 << DIRECTION);
             player->worldPosX++;
         }
-        if (keyState[SDL_SCANCODE_I]) cameraPosY--;
-        if (keyState[SDL_SCANCODE_K]) cameraPosY++;
-        if (keyState[SDL_SCANCODE_J]) cameraPosX--;
-        if (keyState[SDL_SCANCODE_L]) cameraPosX++;
 
+        if (keyState[SDL_SCANCODE_F]) flags ^= 1 << FREE_CAMERA;
+        if (! ((flags >> FREE_CAMERA) & 1))
+        {
+            if (keyState[SDL_SCANCODE_UP])    cameraPosY--;
+            if (keyState[SDL_SCANCODE_DOWN])  cameraPosY++;
+            if (keyState[SDL_SCANCODE_LEFT])  cameraPosX--;
+            if (keyState[SDL_SCANCODE_RIGHT]) cameraPosX++;
+        }
+        else
+        {
+            cameraPosX = player->worldPosX - video->width  / 2;
+            cameraPosY = player->worldPosY - video->height / 2 - 32;
+        }
+
+        // Render scene.
         if (-1 == mapRender(video->renderer, map, "Background", 1, cameraPosX, cameraPosY))
         {
             execStatus = EXIT_FAILURE;

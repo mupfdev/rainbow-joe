@@ -20,7 +20,7 @@ static int32_t entityThread(void *ent)
 {
     Entity *entity = (Entity *)ent;
 
-    while((entity->flags >> THREAD_IS_RUNNING) & 1)
+    while ((entity->flags >> THREAD_IS_RUNNING) & 1)
     {
         // Update frame.
         if ((entity->flags >> IN_MOTION) & 1)

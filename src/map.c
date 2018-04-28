@@ -11,11 +11,13 @@
 
 /**
  * @brief   Initialise map.
- * @param   filename the TMX map file to load.
+ * @param   filename     the TMX map file to load.
+ * @param   windowHeight height of the window.  Used to determine the initial
+ *          map position on the window's y-axis.
  * @return  The initialised map on success, NULL on error.
  * @ingroup Map
  */
-Map *mapInit(const char *filename)
+Map *mapInit(const char *filename, int32_t windowHeight)
 {
     static Map *map;
     map = malloc(sizeof(struct map_t));
@@ -26,14 +28,14 @@ Map *mapInit(const char *filename)
     }
  
     map->map       = tmx_load(filename);
-    map->worldPosX = 0;
-    map->worldPosY = 0;
-    map->texture   = NULL;
-
     if (NULL == map->map) {
         fprintf(stderr, "%s\n", tmx_strerr());
         return NULL;
     }
+
+    map->worldPosX = 0;
+    map->worldPosY = windowHeight - (map->map->height * map->map->tile_height);
+    map->texture   = NULL;
 
     return map;
 }
