@@ -34,7 +34,7 @@ UP:    move camera up
 DOWN:  move camera down
 LEFT:  move camera left
 RIGHT: move camera right
-Q: quit
+Q:     quit
 ```
 
 ## Title
