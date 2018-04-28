@@ -7,19 +7,36 @@
 
 int main()
 {
+    int execStatus = EXIT_SUCCESS;
+
     Video *video = videoInit("Rainbow Joe", 800, 600, 0);
-    if (NULL == video) return EXIT_FAILURE;
+    if (NULL == video)
+    {
+        execStatus = EXIT_FAILURE;
+        goto quit;
+    }
 
     atexit(SDL_Quit);
 
     Map *map = mapInit("res/maps/forest.tmx");
-    if (NULL == map) return EXIT_FAILURE;
+    if (NULL == map)
+    {
+        execStatus = EXIT_FAILURE;
+        goto quit;
+    }
     map->worldPosY = video->height - (map->map->height * map->map->tile_height);
 
     Entity *player = entityInit("player");
-    if (NULL == player) return EXIT_FAILURE;
+    if (NULL == player)
+    {
+        execStatus = EXIT_FAILURE;
+        goto quit;
+    }
     if (-1 == entityLoadSprite(player, video->renderer, "res/sprites/characters.png"))
-        return EXIT_FAILURE;
+    {
+        execStatus = EXIT_FAILURE;
+        goto quit;
+    }
     player->frameYoffset = 32;
     player->worldPosY = 312;
 
@@ -57,13 +74,22 @@ int main()
         if (keyState[SDL_SCANCODE_L]) cameraPosX++;
 
         if (-1 == mapRender(video->renderer, map, "Background", 1, cameraPosX, cameraPosY))
-            return EXIT_FAILURE;
+        {
+            execStatus = EXIT_FAILURE;
+            goto quit;
+        }
 
         if (-1 == entityRender(video->renderer, player, player->worldPosX - cameraPosX, player->worldPosY - cameraPosY))
-            return EXIT_FAILURE;
+        {
+            execStatus = EXIT_FAILURE;
+            goto quit;
+        }
 
         if (-1 == mapRender(video->renderer, map, "Level", 0, map->worldPosX - cameraPosX, map->worldPosY - cameraPosY))
-            return EXIT_FAILURE;
+        {
+            execStatus = EXIT_FAILURE;
+            goto quit;
+        }
 
         SDL_RenderPresent(video->renderer);
         SDL_RenderClear(video->renderer);
@@ -73,5 +99,5 @@ int main()
     entityFree(player);
     mapFree(map);
     videoTerminate(video);
-    return EXIT_SUCCESS;
+    return execStatus;
 }
