@@ -40,6 +40,13 @@ int main()
     player->worldPosX    =  64;
     player->worldPosY    = 424;
 
+    /* Note: The error handling isn't missing here.  There is simply no need to
+     * quit the program if the music can't be played by some reason. */
+    Mixer *mixer    = mixerInit();
+    Music *music    = musicInit();
+    music->filename = "res/music/creepy.ogg";
+    if (mixer) musicFadeIn(music, 5000);
+
     uint16_t flags      = 0;
     int32_t  cameraPosX = 0;
     int32_t  cameraPosY = 0;
@@ -118,6 +125,8 @@ int main()
     }
 
     quit:
+    musicFree(music);
+    mixerFree(mixer);
     entityFree(player);
     mapFree(map);
     videoTerminate(video);

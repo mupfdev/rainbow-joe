@@ -7,6 +7,7 @@
 // Flags.
 #define FREE_CAMERA 0
 
+#include "src/audio.h"
 #include "src/entity.h"
 #include "src/map.h"
 #include "src/video.h"

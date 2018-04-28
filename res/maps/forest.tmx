@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="200" height="100" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#5d9883" nextobjectid="1">
+<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="200" height="50" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#5d9883" nextobjectid="1">
  <tileset firstgid="1" source="../tilesets/sheet.tsx"/>
- <layer name="Background 2" width="200" height="100" locked="1">
+ <layer name="Background 3" width="200" height="50" locked="1">
   <data encoding="base64" compression="zlib">
-   eJzt08EJwCAABEEbSWvpvwwrWAgBH+oMXAe3YwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAP++iwQmeRYMT6AOaPqDpA5o+oOkD2tdv64Mb6QOaPqDpA5o+oOmDXUxdKiKX
+   eJzt2stNAmAQhVFAxL2K2ACoDajQgAINqNCAgg34qt27ZENi4mJ+zTnJt7/ryXQ6AAAAAAAAAAAAAMBf0k296hHQqON0Uj0CAAAAAHa458J+7rkAAD/jVwT28ysCAAAAAPC/HaR+OkyDdFQ7B5pymobpLI3See0caMo4TdJFukxXtXOgKdfpJt2maZrVzoGm3KX7NE+LtKydA015SI/pKa3SunYONOU5vaRN2qbX2jnQlLf0nj7SZ/qqnQMAAAAAAAAAv/INyPEKeg==
   </data>
  </layer>
- <layer name="Background 1" width="200" height="100" locked="1">
+ <layer name="Background 2" width="200" height="50" locked="1">
   <data encoding="base64" compression="zlib">
-   eJzt1jEKgDAQRcGcUNELKHoC79+4ASUhpSBJMQOPtNt8SEoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPxtqVo73wKjOZrsBIp6G1M0R2fXi2AceRfX827RnuwDXu3/KmcfAAAAAADAVzc+XAo7
+   eJzt3V2KwjAUBtCucGRmA4puYGTcP2MfihK4sUzs5KfnwH2QKCjk48bQNudpms4N1GWC9rxrfn8Xfl4+aFHtviEftKx2LuSDltXOhXzQstq5kA9aFs3Xj3sdMuOl9ZPUbesfCn8Qzd/jvU6Z8ZL9Kr2CXmzVH3L9Rz7oxVb5yPUf+aAXW+XD+ooRyAfE/jsb8/96+aAX75jz6V7tq7KXSy+slSC2JgPXzJh8MDL9A2LyATH5gFhpPuxFMbKS/VzZYHTWUxDTMyCmZ0DM9SAAAAAAAAAAAKz1+VRflb8LtCa9LlFO4CF6VgkQX9/+zBqMvUpzsZzxkb5nObvAfSHsyZr+Mb9ezi6QD/bGvegAAAAAAAAwrl96YwTU
   </data>
  </layer>
- <layer name="Level" width="200" height="100" locked="1">
+ <layer name="Background 1" width="200" height="50" locked="1">
   <data encoding="base64" compression="zlib">
-   eJzt2TkOwjAQBVCXYREXYDsKl6Gn5Pq4IBKKNIawGAfek6axrWSarykmJQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPgNq283AA84jHx/fNO39iP/C7Usci1zdblmNzW/nkfVFd5Gd/35etCDfNCqTa5t5doNepAPWiUfECvl41S4kw/+gfkBsU/mI5o/8sFUmB8Qkw+ItZiPcyrvHqGWFvLR7yjv7RGhthbyEfUwfAe1PZuPV3Yj8sFUmB8Qkw+IyQfE5ANiFzwRPVc=
+   eJzt1zsKgDAURcGUiu7Az9LcgvvvfGBj4QMbSdAZOH2aS5JSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOC7hmiMuqiPprrHgabM0XJprXscaIp9QM4+AHjT9iD4q+VB8FfZJvZiH3C3B/cHnLyvIGcfkPP/gJz7gy86AE+aDV4=
+  </data>
+ </layer>
+ <layer name="Level 1" width="200" height="50" locked="1">
+  <data encoding="base64" compression="zlib">
+   eJzt3FtqwmAUhdH/sdcBiLUTaGfQi52M859CT8BAKt3alsREuhYchBA0efg4+mBaAwAAAAAAAACA43Y127kvAhbotuaq5rpmPfO1wNI81KxqNjWPM18LLE3Xx6bpA77T99HtEH3AV/YHZPqATB+Q6QMyfUCmD8j0AZk+INMHZPqATB+Q6QMyfUCmD8j0AZk+INMHZPqATB+Q+f85ZPYHZPqATB+Q6QOy1Me2TfvM6t2E7w1jGfbRTf+s6uHc7I93r3dh7k98zmvN036ea95Gvg+YwmEff51T383eD87/GPc2YBL6gOy3fazC8Z/28dL0weWwPyAb9pF2gz74r+wPyM7ZR//bQx9cCvsDsk/S8CiC
+  </data>
+ </layer>
+ <layer name="Overlay" width="200" height="50" locked="1">
+  <data encoding="base64" compression="zlib">
+   eJzt08EJgDAMBdBO4ArOYF1JuoLrt7dIsCCCB+E9CEkuIZdfCgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwH8sqQNhTR0I8gFz8gFz8gHhTPtdPo7L3B7e3UbVUfvLvwAAAAAAAADgKx36CQMq
   </data>
  </layer>
 </map>
