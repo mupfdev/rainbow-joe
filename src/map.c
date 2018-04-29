@@ -10,14 +10,35 @@
 #include "map.h"
 
 /**
+ * @brief   Free map.
+ * @param   map the map that should be freed.
+ * @ingroup Map
+ */
+void mapFree(Map *map)
+{
+    tmx_map_free(map->map);
+}
+
+/**
+ * @brief 
+ * @param   width
+ * @param   posX
+ * @param   posY
+ * @ingroup Map
+ * @return 
+ */
+uint16_t mapGetGID(uint16_t width, int32_t posX, int32_t posY)
+{
+    return (width * (abs(posY) / 16)) + (abs(posX) / 16);
+}
+
+/**
  * @brief   Initialise map.
  * @param   filename     the TMX map file to load.
- * @param   windowHeight height of the window.  Used to determine the initial
- *          map position on the window's y-axis.
  * @return  The initialised map on success, NULL on error.
  * @ingroup Map
  */
-Map *mapInit(const char *filename, int32_t windowHeight)
+Map *mapInit(const char *filename)
 {
     static Map *map;
     map = malloc(sizeof(struct map_t));
@@ -34,7 +55,7 @@ Map *mapInit(const char *filename, int32_t windowHeight)
     }
 
     map->worldPosX = 0;
-    map->worldPosY = windowHeight - (map->map->height * map->map->tile_height);
+    map->worldPosY = 0;
 
     for (uint8_t i = 0; i < MAX_TEXTURES_PER_MAP; i++)
         map->texture[i] = NULL;
@@ -157,14 +178,4 @@ int8_t mapRender(
     }
 
     return 0;
-}
-
-/**
- * @brief   Free map.
- * @param   map the map that should be freed.
- * @ingroup Map
- */
-void mapFree(Map *map)
-{
-    tmx_map_free(map->map);
 }

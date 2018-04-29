@@ -28,6 +28,7 @@ typedef struct entity_t
     uint8_t     frameStart;
     uint8_t     frameEnd;
     uint8_t     frameYoffset;
+    uint16_t    gid;
     SDL_Texture *sprite;
     const char  *spriteImage;
     SDL_Thread  *thread;
@@ -35,9 +36,9 @@ typedef struct entity_t
     int32_t     worldPosY;
 } Entity;
 
+void   entityFree(Entity *entity);
 Entity *entityInit(const char *name);
 int8_t entityLoadSprite(Entity *entity, SDL_Renderer *renderer, const char *filename);
 int8_t entityRender(SDL_Renderer *renderer, Entity *entity, int32_t posX, int32_t posY);
-void   entityFree(Entity *entity);
 
 #endif

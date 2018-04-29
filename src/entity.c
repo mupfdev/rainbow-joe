@@ -39,6 +39,18 @@ static int32_t entityThread(void *ent)
 }
 
 /**
+ * @brief
+ * @param entity
+ * @ingroup Entity
+ */
+void entityFree(Entity *entity)
+{
+    entity->flags &= ~(1 << THREAD_IS_RUNNING);
+    SDL_WaitThread(entity->thread, NULL);
+    free(entity);
+}
+
+/**
  * @brief   
  * @param   name
  * @return  
@@ -59,6 +71,7 @@ Entity *entityInit(const char *name)
     entity->frame      =  0;
     entity->frameStart = WALK;
     entity->frameEnd   = WALK_MAX; 
+    entity->gid        =  0;
     entity->sprite     = NULL;
     entity->worldPosX  =  0;
     entity->worldPosY  =  0;
@@ -131,11 +144,4 @@ int8_t entityRender(SDL_Renderer *renderer, Entity *entity, int32_t posX, int32_
     }
 
     return 0;
-}
-
-void entityFree(Entity *entity)
-{
-    entity->flags &= ~(1 << THREAD_IS_RUNNING);
-    SDL_WaitThread(entity->thread, NULL);
-    free(entity);
 }
