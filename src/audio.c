@@ -5,7 +5,7 @@
  * @author    Michael Fitzmayer
  * @copyright "THE BEER-WARE LICENCE" (Revision 42)
  */
- 
+
  #include "audio.h"
 
 /**
@@ -41,7 +41,7 @@ Mixer *mixerInit()
             mixer->audioFormat,
             mixer->numChannels,
             mixer->chunkSize))
-    {   
+    {
         fprintf(stderr, "%s\n", Mix_GetError());
         free(mixer);
         return NULL;

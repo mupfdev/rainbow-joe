@@ -9,8 +9,6 @@
 #define THREAD_IS_RUNNING  0
 #define IN_MOTION          1
 #define DIRECTION          2
-#define BLOCK_LEFT         3
-#define BLOCK_RIGHT        4
 
 // Frames.
 #define WALK      0

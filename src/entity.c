@@ -11,7 +11,7 @@
 #include "entity.h"
 
 /**
- * @brief   
+ * @brief
  * @param   ent
  * @return  Always 0.
  * @ingroup Entity
@@ -51,9 +51,9 @@ void entityFree(Entity *entity)
 }
 
 /**
- * @brief   
+ * @brief
  * @param   name
- * @return  
+ * @return
  * @ingroup Entity
  */
 Entity *entityInit(const char *name)
@@ -66,18 +66,18 @@ Entity *entityInit(const char *name)
         return NULL;
     }
 
-    entity->flags        =  0;    
+    entity->flags        =  0;
     entity->fps          = 24;
     entity->frame        =  0;
     entity->frameStart   = WALK;
-    entity->frameEnd     = WALK_MAX; 
+    entity->frameEnd     = WALK_MAX;
     entity->gid          =  0;
     entity->speed        =  0;
     entity->sprite       = NULL;
     entity->worldPosX    =  0.0;
     entity->worldPosY    =  0.0;
 
-    entity->flags |= 1 << THREAD_IS_RUNNING; 
+    entity->flags |= 1 << THREAD_IS_RUNNING;
     entity->thread = SDL_CreateThread(entityThread, name, entity);
     if (NULL == entity->thread)
     {
@@ -90,7 +90,7 @@ Entity *entityInit(const char *name)
 }
 
 /**
- * @brief   
+ * @brief
  * @param   entity
  * @param   renderer
  * @param   filename
@@ -112,12 +112,12 @@ int8_t entityLoadSprite(Entity *entity, SDL_Renderer *renderer, const char *file
 }
 
 /**
- * @brief 
+ * @brief
  * @param   renderer
  * @param   entity
  * @param   posX
  * @param   posY
- * @return  
+ * @return
  * @ingroup Entity
  */
 int8_t entityRender(SDL_Renderer *renderer, Entity *entity, double posX, double posY)

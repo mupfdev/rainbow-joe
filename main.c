@@ -56,7 +56,7 @@ int main()
     {
         double timeB = SDL_GetTicks();
         double dTime = (timeB - timeA) / 1000;
-        timeA        = timeB; 
+        timeA        = timeB;
 
         double gid   = player->gid;
         player->gid  = mapGetGID(map, player->worldPosX, player->worldPosY);

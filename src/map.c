@@ -25,7 +25,7 @@ void mapFree(Map *map)
  * @param   posX
  * @param   posY
  * @ingroup Map
- * @return 
+ * @return
  */
 double mapGetGID(Map *map, double posX, double posY)
 {
@@ -47,7 +47,7 @@ Map *mapInit(const char *filename)
         fprintf(stderr, "mapInit(): error allocating memory.\n");
         return NULL;
     }
- 
+
     map->map       = tmx_load(filename);
     if (NULL == map->map) {
         fprintf(stderr, "%s\n", tmx_strerr());
