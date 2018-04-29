@@ -56,9 +56,11 @@ int main()
     {
         double timeB = SDL_GetTicks();
         double dTime = (timeB - timeA) / 1000;
-        timeA        = timeB;
+        timeA        = timeB; 
 
-        player->gid = mapGetGID(map->map->width, player->worldPosX, player->worldPosY);
+        double gid   = player->gid;
+        player->gid  = mapGetGID(map, player->worldPosX, player->worldPosY);
+        if (gid != player->gid) printf("%lf\n", player->gid); // Debug.
 
         // Handle keyboard input.
         const uint8_t *keyState;
@@ -70,18 +72,31 @@ int main()
         player->flags &= ~(1 << IN_MOTION);
         keyState = SDL_GetKeyboardState(NULL);
 
+        if (keyState[SDL_SCANCODE_RCTRL])
+        {
+            player->speed      = 250;
+            player->frameStart = RUN;
+            player->frameEnd   = RUN_MAX;
+        }
+        else
+        {
+            player->speed      = 100;
+            player->frameStart = WALK;
+            player->frameEnd   = WALK_MAX;
+        }
+
         if (keyState[SDL_SCANCODE_Q]) goto quit;
         if (keyState[SDL_SCANCODE_A])
         {
             player->flags |= 1 << IN_MOTION;
             player->flags |= 1 << DIRECTION;
-            player->worldPosX -= (150 * dTime);
+            player->worldPosX -= (player->speed * dTime);
         }
         if (keyState[SDL_SCANCODE_D])
         {
             player->flags |= 1   << IN_MOTION;
             player->flags &= ~(1 << DIRECTION);
-            player->worldPosX += (150 * dTime);
+            player->worldPosX += (player->speed * dTime);
         }
 
         if (keyState[SDL_SCANCODE_F]) flags ^= 1 << FREE_CAMERA;
@@ -135,8 +150,8 @@ int main()
     }
 
     quit:
-    /*musicFree(music);
-    mixerFree(mixer);*/
+    musicFree(music);
+    mixerFree(mixer);
     entityFree(player);
     mapFree(map);
     videoTerminate(video);

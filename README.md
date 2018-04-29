@@ -29,6 +29,7 @@ doxygen
 ```
 A:     move left
 D:     move right
+RCTRL: hold to run
 F:     toggle free camera mode
 UP:    move camera up
 DOWN:  move camera down

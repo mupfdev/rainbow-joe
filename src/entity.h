@@ -9,10 +9,14 @@
 #define THREAD_IS_RUNNING  0
 #define IN_MOTION          1
 #define DIRECTION          2
+#define BLOCK_LEFT         3
+#define BLOCK_RIGHT        4
 
 // Frames.
 #define WALK      0
 #define WALK_MAX  3
+#define RUN      14
+#define RUN_MAX  17
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -29,6 +33,7 @@ typedef struct entity_t
     uint8_t     frameEnd;
     uint8_t     frameYoffset;
     double      gid;
+    double      speed;
     SDL_Texture *sprite;
     const char  *spriteImage;
     SDL_Thread  *thread;

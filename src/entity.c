@@ -66,15 +66,16 @@ Entity *entityInit(const char *name)
         return NULL;
     }
 
-    entity->flags      =  0;    
-    entity->fps        = 24;
-    entity->frame      =  0;
-    entity->frameStart = WALK;
-    entity->frameEnd   = WALK_MAX; 
-    entity->gid        =  0;
-    entity->sprite     = NULL;
-    entity->worldPosX  =  0.0;
-    entity->worldPosY  =  0.0;
+    entity->flags        =  0;    
+    entity->fps          = 24;
+    entity->frame        =  0;
+    entity->frameStart   = WALK;
+    entity->frameEnd     = WALK_MAX; 
+    entity->gid          =  0;
+    entity->speed        =  0;
+    entity->sprite       = NULL;
+    entity->worldPosX    =  0.0;
+    entity->worldPosY    =  0.0;
 
     entity->flags |= 1 << THREAD_IS_RUNNING; 
     entity->thread = SDL_CreateThread(entityThread, name, entity);

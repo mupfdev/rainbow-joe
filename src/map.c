@@ -20,21 +20,21 @@ void mapFree(Map *map)
 }
 
 /**
- * @brief 
+ * @brief   Get calculated GID from coordinates.
  * @param   width
  * @param   posX
  * @param   posY
  * @ingroup Map
  * @return 
  */
-double mapGetGID(uint16_t width, double posX, double posY)
+double mapGetGID(Map *map, double posX, double posY)
 {
-    return (width * (posY / 16)) + (posX / 16);
+    return (map->map->width * posY / (map->map->tile_width)) + posX / (map->map->tile_width);
 }
 
 /**
  * @brief   Initialise map.
- * @param   filename     the TMX map file to load.
+ * @param   filename the TMX map file to load.
  * @return  The initialised map on success, NULL on error.
  * @ingroup Map
  */
