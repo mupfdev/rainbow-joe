@@ -27,9 +27,9 @@ void mapFree(Map *map)
  * @ingroup Map
  * @return 
  */
-uint16_t mapGetGID(uint16_t width, int32_t posX, int32_t posY)
+double mapGetGID(uint16_t width, double posX, double posY)
 {
-    return (width * (abs(posY) / 16)) + (abs(posX) / 16);
+    return (width * (posY / 16)) + (posX / 16);
 }
 
 /**
@@ -86,8 +86,8 @@ int8_t mapRender(
     const char   *name,
     uint8_t      bg,
     uint8_t      index,
-    int32_t      posX,
-    int32_t      posY)
+    double       posX,
+    double       posY)
 {
     if (map->texture[index])
     {

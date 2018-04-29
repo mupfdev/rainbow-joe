@@ -73,8 +73,8 @@ Entity *entityInit(const char *name)
     entity->frameEnd   = WALK_MAX; 
     entity->gid        =  0;
     entity->sprite     = NULL;
-    entity->worldPosX  =  0;
-    entity->worldPosY  =  0;
+    entity->worldPosX  =  0.0;
+    entity->worldPosY  =  0.0;
 
     entity->flags |= 1 << THREAD_IS_RUNNING; 
     entity->thread = SDL_CreateThread(entityThread, name, entity);
@@ -119,7 +119,7 @@ int8_t entityLoadSprite(Entity *entity, SDL_Renderer *renderer, const char *file
  * @return  
  * @ingroup Entity
  */
-int8_t entityRender(SDL_Renderer *renderer, Entity *entity, int32_t posX, int32_t posY)
+int8_t entityRender(SDL_Renderer *renderer, Entity *entity, double posX, double posY)
 {
     if (NULL == entity->sprite)
     {

@@ -42,17 +42,22 @@ int main()
 
     /* Note: The error handling isn't missing here.  There is simply no need to
      * quit the program if the music can't be played by some reason. */
-    /*Mixer *mixer    = mixerInit();
+    Mixer *mixer    = mixerInit();
     Music *music    = musicInit();
     music->filename = "res/music/creepy.ogg";
-    if (mixer) musicFadeIn(music, 5000);*/
+    if (mixer) musicFadeIn(music, 5000);
 
     uint16_t flags      = 0;
-    int32_t  cameraPosX = 0;
-    int32_t  cameraPosY = map->map->height * map->map->tile_height - video->height;
+    double   cameraPosX = 0;
+    double   cameraPosY = map->map->height * map->map->tile_height - video->height;
+    double   timeA      = SDL_GetTicks();
 
     while (1)
     {
+        double timeB = SDL_GetTicks();
+        double dTime = (timeB - timeA) / 1000;
+        timeA        = timeB;
+
         player->gid = mapGetGID(map->map->width, player->worldPosX, player->worldPosY);
 
         // Handle keyboard input.
@@ -70,22 +75,22 @@ int main()
         {
             player->flags |= 1 << IN_MOTION;
             player->flags |= 1 << DIRECTION;
-            player->worldPosX--;
+            player->worldPosX -= (150 * dTime);
         }
         if (keyState[SDL_SCANCODE_D])
         {
             player->flags |= 1   << IN_MOTION;
             player->flags &= ~(1 << DIRECTION);
-            player->worldPosX++;
+            player->worldPosX += (150 * dTime);
         }
 
         if (keyState[SDL_SCANCODE_F]) flags ^= 1 << FREE_CAMERA;
         if (0 != ((flags >> FREE_CAMERA) & 1))
         {
-            if (keyState[SDL_SCANCODE_UP])    cameraPosY--;
-            if (keyState[SDL_SCANCODE_DOWN])  cameraPosY++;
-            if (keyState[SDL_SCANCODE_LEFT])  cameraPosX--;
-            if (keyState[SDL_SCANCODE_RIGHT]) cameraPosX++;
+            if (keyState[SDL_SCANCODE_UP])    cameraPosY -= (250 * dTime);
+            if (keyState[SDL_SCANCODE_DOWN])  cameraPosY += (250 * dTime);
+            if (keyState[SDL_SCANCODE_LEFT])  cameraPosX -= (250 * dTime);
+            if (keyState[SDL_SCANCODE_RIGHT]) cameraPosX += (250 * dTime);
         }
         else
         {
@@ -127,7 +132,6 @@ int main()
 
         SDL_RenderPresent(video->renderer);
         SDL_RenderClear(video->renderer);
-        SDL_Delay(5);
     }
 
     quit:

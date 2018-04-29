@@ -18,13 +18,13 @@ typedef struct map_t
 {
     tmx_map     *map;
     SDL_Texture *texture[MAX_TEXTURES_PER_MAP];
-    int32_t     worldPosX;
-    int32_t     worldPosY;
+    double      worldPosX;
+    double      worldPosY;
 } Map;
 
-void     mapFree(Map *map);
-uint16_t mapGetGID(uint16_t width, int32_t posX, int32_t posY);
-Map      *mapInit(const char *filename);
-int8_t   mapRender(SDL_Renderer *renderer, Map *map, const char *name, uint8_t bg, uint8_t index, int32_t posX, int32_t posY);
+void   mapFree(Map *map);
+double mapGetGID(uint16_t width, double posX, double posY);
+Map    *mapInit(const char *filename);
+int8_t mapRender(SDL_Renderer *renderer, Map *map, const char *name, uint8_t bg, uint8_t index, double posX, double posY);
 
 #endif
