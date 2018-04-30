@@ -24,6 +24,7 @@
  */
 typedef struct entity_t
 {
+    double      acceleration;
     uint16_t    flags;
     uint8_t     fps;
     uint8_t     frame;
@@ -31,10 +32,11 @@ typedef struct entity_t
     uint8_t     frameEnd;
     uint8_t     frameYoffset;
     double      gid;
-    double      speed;
     SDL_Texture *sprite;
     const char  *spriteImage;
     SDL_Thread  *thread;
+    double      velocity;
+    double      velocityMax;
     double      worldPosX;
     double      worldPosY;
 } Entity;

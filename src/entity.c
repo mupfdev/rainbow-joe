@@ -29,10 +29,19 @@ static int32_t entityThread(void *ent)
             entity->frame++;
         }
         else
-            entity->frame = entity->frameStart;
+        {
+            entity->frame     = entity->frameStart;
+            entity->velocity -= 0.000003;
+        }
 
         if (entity->frameEnd <= entity->frame)
             entity->frame = entity->frameStart;
+
+        if (entity->velocity < 0) entity->velocity = 0;
+
+        if (entity->velocity > entity->velocityMax)
+            entity->velocity = entity->velocityMax;
+
     }
 
     return 0;
@@ -66,14 +75,16 @@ Entity *entityInit(const char *name)
         return NULL;
     }
 
+    entity->acceleration =  0.3;
     entity->flags        =  0;
     entity->fps          = 24;
     entity->frame        =  0;
     entity->frameStart   = WALK;
     entity->frameEnd     = WALK_MAX;
     entity->gid          =  0;
-    entity->speed        =  0;
     entity->sprite       = NULL;
+    entity->velocity     =  0;
+    entity->velocityMax  = 50;
     entity->worldPosX    =  0.0;
     entity->worldPosY    =  0.0;
 

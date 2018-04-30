@@ -57,10 +57,7 @@ int main()
         double timeB = SDL_GetTicks();
         double dTime = (timeB - timeA) / 1000;
         timeA        = timeB;
-
-        double gid   = player->gid;
         player->gid  = mapGetGID(map, player->worldPosX, player->worldPosY);
-        if (gid != player->gid) printf("%lf\n", player->gid); // Debug.
 
         // Handle keyboard input.
         const uint8_t *keyState;
@@ -74,29 +71,37 @@ int main()
 
         if (keyState[SDL_SCANCODE_RCTRL])
         {
-            player->speed      = 250;
-            player->frameStart = RUN;
-            player->frameEnd   = RUN_MAX;
+            player->velocityMax = 350;
+            player->frameStart  = RUN;
+            player->frameEnd    = RUN_MAX;
         }
         else
         {
-            player->speed      = 100;
-            player->frameStart = WALK;
-            player->frameEnd   = WALK_MAX;
+            player->velocityMax = 150;
+            player->frameStart  = WALK;
+            player->frameEnd    = WALK_MAX;
         }
 
         if (keyState[SDL_SCANCODE_Q]) goto quit;
         if (keyState[SDL_SCANCODE_A])
         {
-            player->flags |= 1 << IN_MOTION;
-            player->flags |= 1 << DIRECTION;
-            player->worldPosX -= (player->speed * dTime);
+            player->flags     |= 1 << IN_MOTION;
+            player->flags     |= 1 << DIRECTION;
+            player->velocity  += player->acceleration;
         }
         if (keyState[SDL_SCANCODE_D])
         {
-            player->flags |= 1   << IN_MOTION;
-            player->flags &= ~(1 << DIRECTION);
-            player->worldPosX += (player->speed * dTime);
+            player->flags     |= 1   << IN_MOTION;
+            player->flags     &= ~(1 << DIRECTION);
+            player->velocity  += player->acceleration;
+        }
+
+        if (player->velocity > 0)
+        {
+            if ((player->flags >> DIRECTION) & 1)
+                player->worldPosX -= (player->velocity * dTime);
+            else
+                player->worldPosX += (player->velocity * dTime);
         }
 
         if (keyState[SDL_SCANCODE_F]) flags ^= 1 << FREE_CAMERA;
