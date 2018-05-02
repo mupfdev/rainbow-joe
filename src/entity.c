@@ -22,26 +22,42 @@ static int32_t entityThread(void *ent)
 
     while ((entity->flags >> THREAD_IS_RUNNING) & 1)
     {
-        // Update frame.
+        if ((entity->flags >> IN_MID_AIR) & 1)
+            entity->velocityFall += entity->gravity;
+
         if ((entity->flags >> IN_MOTION) & 1)
         {
-            SDL_Delay(1000 / entity->fps);
-            entity->frame++;
+            entity->velocity   += entity->acceleration;
+            // Slowing down frame animation.
+            entity->frameDelay += entity->dTime;
+            if (entity->frameDelay > 5000)
+            {
+                entity->frame++;
+                entity->frameDelay = 0;
+            }
         }
         else
         {
-            entity->frame     = entity->frameStart;
-            entity->velocity -= 0.000003;
+            entity->velocity -= entity->deceleration;
         }
 
-        if (entity->frameEnd <= entity->frame)
-            entity->frame = entity->frameStart;
-
-        if (entity->velocity < 0) entity->velocity = 0;
-
+        // Set velocity limits.
         if (entity->velocity > entity->velocityMax)
             entity->velocity = entity->velocityMax;
+        if (entity->velocity < 0)
+        {
+            entity->velocity = 0;
+            // Reset frame animation when standing still.
+            entity->frame = entity->frameStart;
+        }
 
+        if (entity->velocityFall > entity->velocityFallMax)
+            entity->velocityFall = entity->velocityFallMax;
+        if (entity->velocityFall < 0) entity->velocityFall = 0;
+
+        // Loop frame animation.
+        if (entity->frameEnd <= entity->frame)
+            entity->frame = entity->frameStart;
     }
 
     return 0;
@@ -75,18 +91,24 @@ Entity *entityInit(const char *name)
         return NULL;
     }
 
-    entity->acceleration =  0.3;
-    entity->flags        =  0;
-    entity->fps          = 24;
-    entity->frame        =  0;
-    entity->frameStart   = WALK;
-    entity->frameEnd     = WALK_MAX;
-    entity->gid          =  0;
-    entity->sprite       = NULL;
-    entity->velocity     =  0;
-    entity->velocityMax  = 50;
-    entity->worldPosX    =  0.0;
-    entity->worldPosY    =  0.0;
+    // Default values.
+    entity->acceleration    =   0.2;
+    entity->deceleration    =   0.000004;
+    entity->flags           =   0;
+    entity->fps             =  24;
+    entity->frame           =   0;
+    entity->frameDelay      =   0;
+    entity->frameEnd        = WALK_MAX;
+    entity->frameStart      = WALK;
+    entity->gid             =   0;
+    entity->gravity         =   0.6;
+    entity->sprite          = NULL;
+    entity->velocity        =   0.0;
+    entity->velocityMax     = 100.0;
+    entity->velocityFall    =   0.0;
+    entity->velocityFallMax = 320.0;
+    entity->worldPosX       =   0.0;
+    entity->worldPosY       =   0.0;
 
     entity->flags |= 1 << THREAD_IS_RUNNING;
     entity->thread = SDL_CreateThread(entityThread, name, entity);

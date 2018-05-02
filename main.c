@@ -36,9 +36,9 @@ int main()
         execStatus = EXIT_FAILURE;
         goto quit;
     }
-    player->frameYoffset =  32;
-    player->worldPosX    =  64;
-    player->worldPosY    = 624;
+    player->frameYoffset  =  32;
+    player->worldPosX     =  64;
+    player->worldPosY     =   0;
 
     /* Note: The error handling isn't missing here.  There is simply no need to
      * quit the program if the music can't be played by some reason. */
@@ -54,56 +54,51 @@ int main()
 
     while (1)
     {
-        double timeB = SDL_GetTicks();
-        double dTime = (timeB - timeA) / 1000;
-        timeA        = timeB;
-        player->gid  = mapGetGID(map, player->worldPosX, player->worldPosY);
+        double timeB  = SDL_GetTicks();
+        double dTime  = (timeB - timeA) / 1000;
+        timeA         = timeB;
+        player->dTime = dTime;
+        player->gid   = mapGetGID(map, player->worldPosX, player->worldPosY);
 
         // Handle keyboard input.
         const uint8_t *keyState;
         SDL_PumpEvents();
         if (SDL_PeepEvents(0, 0, SDL_PEEKEVENT, SDL_QUIT, SDL_QUIT) > 0)
             goto quit;
-
-        // Reset flag (in case no key is pressed).
-        player->flags &= ~(1 << IN_MOTION);
         keyState = SDL_GetKeyboardState(NULL);
 
-        if (keyState[SDL_SCANCODE_RCTRL])
+        // Reset IN_MOTION flag (in case no key is pressed).
+        player->flags &= ~(1 << IN_MOTION);
+
+        if (keyState[SDL_SCANCODE_LSHIFT])
         {
-            player->velocityMax = 350;
-            player->frameStart  = RUN;
-            player->frameEnd    = RUN_MAX;
+            // Allow running only when not in mid-air.
+            if (0 == ((player->flags >> IN_MID_AIR) & 1))
+            {
+                player->velocityMax  = 250;
+                player->deceleration = 0.00001; // x2.5
+                player->frameStart   = RUN;
+                player->frameEnd     = RUN_MAX;
+            }
         }
         else
         {
-            player->velocityMax = 150;
-            player->frameStart  = WALK;
-            player->frameEnd    = WALK_MAX;
+            player->velocityMax  = 100;
+            player->deceleration = 0.000004;
+            player->frameStart   = WALK;
+            player->frameEnd     = WALK_MAX;
         }
-
         if (keyState[SDL_SCANCODE_Q]) goto quit;
         if (keyState[SDL_SCANCODE_A])
         {
-            player->flags     |= 1 << IN_MOTION;
-            player->flags     |= 1 << DIRECTION;
-            player->velocity  += player->acceleration;
+            player->flags |= 1 << IN_MOTION;
+            player->flags |= 1 << DIRECTION;
         }
         if (keyState[SDL_SCANCODE_D])
         {
-            player->flags     |= 1   << IN_MOTION;
-            player->flags     &= ~(1 << DIRECTION);
-            player->velocity  += player->acceleration;
+            player->flags |= 1   << IN_MOTION;
+            player->flags &= ~(1 << DIRECTION);
         }
-
-        if (player->velocity > 0)
-        {
-            if ((player->flags >> DIRECTION) & 1)
-                player->worldPosX -= (player->velocity * dTime);
-            else
-                player->worldPosX += (player->velocity * dTime);
-        }
-
         if (keyState[SDL_SCANCODE_F]) flags ^= 1 << FREE_CAMERA;
         if (0 != ((flags >> FREE_CAMERA) & 1))
         {
@@ -117,6 +112,28 @@ int main()
             cameraPosX = player->worldPosX - video->width  / 2;
             cameraPosY = player->worldPosY - video->height / 2 - 16;
         }
+
+        // Set fixed floor height for testing purposes.
+        if (player->worldPosY < 624)
+            player->flags |= 1 << IN_MID_AIR;
+        else
+        {
+            player->flags     &= ~(1 << IN_MID_AIR);
+            player->worldPosY  = 624;
+        }
+
+        // Set player position.
+        if (player->velocity > 0)
+        {
+            if ((player->flags >> DIRECTION) & 1)
+                player->worldPosX -= (player->velocity * dTime);
+            else
+                player->worldPosX += (player->velocity * dTime);
+        }
+
+        if ((player->flags >> IN_MID_AIR) & 1)
+            player->worldPosY += (player->velocityFall * dTime);
+
         // Set camera boundaries to map size.
         int32_t cameraMaxX = map->map->width  * map->map->tile_width  - video->width;
         int32_t cameraMaxY = map->map->height * map->map->tile_height - video->height;

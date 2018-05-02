@@ -22,9 +22,10 @@ typedef struct map_t
     double      worldPosY;
 } Map;
 
-void   mapFree(Map *map);
-double mapGetGID(Map *map, double posX, double posY);
-Map    *mapInit(const char *filename);
-int8_t mapRender(SDL_Renderer *renderer, Map *map, const char *name, uint8_t bg, uint8_t index, double posX, double posY);
+uint8_t  mapGIDisType(Map *map, const char *type, uint16_t gid);
+void     mapFree(Map *map);
+uint16_t mapGetGID(Map *map, double posX, double posY);
+Map      *mapInit(const char *filename);
+int8_t   mapRender(SDL_Renderer *renderer, Map *map, const char *name, uint8_t bg, uint8_t index, double posX, double posY);
 
 #endif

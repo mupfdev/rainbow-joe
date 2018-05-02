@@ -27,15 +27,15 @@ doxygen
 ## Controls
 
 ```
-A:     move left
-D:     move right
-RCTRL: hold to run
-F:     toggle free camera mode
-UP:    move camera up
-DOWN:  move camera down
-LEFT:  move camera left
-RIGHT: move camera right
-Q:     quit
+A:      move left
+D:      move right
+LSHIFT: hold to run
+F:      toggle free camera mode
+UP:     move camera up
+DOWN:   move camera down
+LEFT:   move camera left
+RIGHT:  move camera right
+Q:      quit
 ```
 
 ## Title

@@ -10,6 +10,33 @@
 #include "map.h"
 
 /**
+ * @brief   Check whether a tile is of a specific type or not.
+ * @param   map  the map.
+ * @param   type name of the tile type to look for.
+ * @param   gid  the GID of the tile to check.
+ * @return  1 if the tile is of the specific type, 0 if not.
+ * @ingroup Map
+ */
+uint8_t mapGIDisType(Map *map, const char *type, uint16_t gid)
+{
+    tmx_layer *layers = map->map->ly_head;
+    while(layers)
+    {
+        if ( (layers->visible) && (NULL != strstr(layers->name, "Level")) )
+        {
+            gid = layers->content.gids[gid] & TMX_FLIP_BITS_REMOVAL;
+            if (NULL != map->map->tiles[gid])
+                if (gid < 20)
+                    if (0 == strncmp(map->map->tiles[gid]->type, type, strlen(type)))
+                    return 1;
+        }
+        layers = layers->next;
+    }
+
+    return 0;
+}
+
+/**
  * @brief   Free map.
  * @param   map the map that should be freed.
  * @ingroup Map
@@ -27,9 +54,9 @@ void mapFree(Map *map)
  * @ingroup Map
  * @return
  */
-double mapGetGID(Map *map, double posX, double posY)
+uint16_t mapGetGID(Map *map, double posX, double posY)
 {
-    return (map->map->width * posY / (map->map->tile_width)) + posX / (map->map->tile_width);
+    return (map->map->width * (int32_t)posY / (map->map->tile_width)) + (int32_t)posX / (map->map->tile_width);
 }
 
 /**
@@ -48,7 +75,7 @@ Map *mapInit(const char *filename)
         return NULL;
     }
 
-    map->map       = tmx_load(filename);
+    map->map = tmx_load(filename);
     if (NULL == map->map) {
         fprintf(stderr, "%s\n", tmx_strerr());
         return NULL;

@@ -6,9 +6,10 @@
 #define ENTITY_h
 
 // Flags.
-#define THREAD_IS_RUNNING  0
+#define DIRECTION          0
 #define IN_MOTION          1
-#define DIRECTION          2
+#define IN_MID_AIR         2
+#define THREAD_IS_RUNNING  3
 
 // Frames.
 #define WALK      0
@@ -25,18 +26,24 @@
 typedef struct entity_t
 {
     double      acceleration;
+    double      deceleration;
+    double      dTime;
     uint16_t    flags;
     uint8_t     fps;
     uint8_t     frame;
-    uint8_t     frameStart;
+    double      frameDelay;
     uint8_t     frameEnd;
+    uint8_t     frameStart;
     uint8_t     frameYoffset;
-    double      gid;
+    uint16_t    gid;
+    double      gravity;
     SDL_Texture *sprite;
     const char  *spriteImage;
     SDL_Thread  *thread;
     double      velocity;
     double      velocityMax;
+    double      velocityFall;
+    double      velocityFallMax;
     double      worldPosX;
     double      worldPosY;
 } Entity;
