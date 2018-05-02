@@ -45,7 +45,10 @@ int main()
     Mixer *mixer    = mixerInit();
     Music *music    = musicInit();
     music->filename = "res/music/creepy.ogg";
-    if (mixer) musicFadeIn(music, 5000);
+    Music *dead     = musicInit();
+    dead->filename  = "res/sfx/05.ogg";
+
+    if (mixer) musicFadeIn(music, -1, 5000);
 
     uint16_t flags      = 0;
     double   cameraPosX = 0;
@@ -130,9 +133,22 @@ int main()
         if ((player->flags >> IN_MID_AIR) & 1)
             player->worldPosY += (player->velocityFall * dTime);
 
-        // Test code.
-        if (player->worldPosY > (map->map->height * map->map->tile_height) + player->height)
-            player->worldPosY = 0 - player->height;
+        if (player->worldPosX < 0 - (player->width / 2))
+            player->worldPosX = (map->map->width * map->map->tile_width) - (player->width / 2);
+
+        if (player->worldPosX > (map->map->width * map->map->tile_width) - (player->width / 2))
+            player->worldPosX = 0;
+
+        if (player->worldPosY > (map->map->height * map->map->tile_width) + player->height)
+            player->flags |= 1 << IS_DEAD;
+
+        if ((player->flags >> IS_DEAD) & 1)
+        {
+            musicHalt();
+            musicPlay(dead, 1);
+            SDL_Delay(2000);
+            goto quit;
+        }
 
         // Set camera boundaries to map size.
         int32_t cameraMaxX = map->map->width  * map->map->tile_width  - video->width;
@@ -149,7 +165,7 @@ int main()
             goto quit;
         }
 
-        if (-1 == mapRender(video->renderer, map, "Level", 1, 1, map->worldPosX - cameraPosX, map->worldPosY - cameraPosY))
+        if (-1 == mapRender(video->renderer, map, "World", 1, 1, map->worldPosX - cameraPosX, map->worldPosY - cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
@@ -172,6 +188,7 @@ int main()
     }
 
     quit:
+    musicFree(dead);
     musicFree(music);
     mixerFree(mixer);
     entityFree(player);
