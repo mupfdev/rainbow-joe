@@ -9,6 +9,18 @@
  #include "audio.h"
 
 /**
+ * @brief   Free audio mixer.
+ * @param   mixer
+ * @ingroup Audio
+ */
+void mixerFree(Mixer *mixer)
+{
+    free(mixer);
+    Mix_CloseAudio();
+    while(Mix_Init(0)) Mix_Quit();
+}
+
+/**
  * @brief   Initialise audio mixer.
  * @return  Mixer on success, NULL on error.
  * @ingroup Audio
@@ -51,6 +63,43 @@ Mixer *mixerInit()
 }
 
 /**
+ * @brief   Same as musicPlay but with fade-in effect.
+ * @param   music the music structure that should be played.
+ * @param   loops number of times to play through the music, -1 plays the music
+ *                forever.
+ * @param   ms    time to fade-in music.
+ * @return  0 on success, -1 on error.
+ * @ingroup Audio
+ */
+int8_t musicFadeIn(Music *music, int8_t loops, uint16_t ms)
+{
+    music->mus = Mix_LoadMUS(music->filename);
+
+    if (NULL == music->mus) {
+        fprintf(stderr, "%s\n", Mix_GetError());
+        return -1;
+    }
+
+    if (-1 == Mix_FadeInMusic(music->mus, loops, ms))
+    {
+        fprintf(stderr, "%s\n", Mix_GetError());
+        return -1;
+    }
+
+    return 0;
+}
+
+/**
+ * @brief   Free music.
+ * @param   music
+ * @ingroup Audio
+ */
+void musicFree(Music *music)
+{
+    free(music);
+}
+
+/**
  * @brief   Initialise Music.
  * @return  Music on success, NULL on error.
  * @ingroup Audio
@@ -70,11 +119,13 @@ Music *musicInit()
 
 /**
  * @brief   Play music.
- * @param   music the music element that should be played.
+ * @param   music the music structure that should be played.
+ * @param   loops number of times to play through the music, -1 plays the music
+ *                forever.
  * @return  0 on success, -1 on error.
  * @ingroup Audio
  */
-int8_t musicPlay(Music *music)
+int8_t musicPlay(Music *music, int8_t loops)
 {
     music->mus = Mix_LoadMUS(music->filename);
 
@@ -83,7 +134,7 @@ int8_t musicPlay(Music *music)
         return -1;
     }
 
-    if (-1 == Mix_PlayMusic(music->mus, -1)) {
+    if (-1 == Mix_PlayMusic(music->mus, loops)) {
         fprintf(stderr, "%s\n", Mix_GetError());
         return -1;
     }
@@ -92,48 +143,9 @@ int8_t musicPlay(Music *music)
 }
 
 /**
- * @brief   Same as musicPlay but with fade-in effect.
- * @param   music the music element that should be played.
- * @param   ms    time to fade-in music.
- * @return  0 on success, -1 on error.
- * @ingroup Audio
+ * @brief Halt music.
  */
-int8_t musicFadeIn(Music *music, uint16_t ms)
+void musicHalt()
 {
-    music->mus = Mix_LoadMUS(music->filename);
-
-    if (NULL == music->mus) {
-        fprintf(stderr, "%s\n", Mix_GetError());
-        return -1;
-    }
-
-    if (-1 == Mix_FadeInMusic(music->mus, -1, ms))
-    {
-        fprintf(stderr, "%s\n", Mix_GetError());
-        return -1;
-    }
-
-    return 0;
-}
-
-/**
- * @brief   Free audio mixer.
- * @param   mixer
- * @ingroup Audio
- */
-void mixerFree(Mixer *mixer)
-{
-    free(mixer);
-    Mix_CloseAudio();
-    while(Mix_Init(0)) Mix_Quit();
-}
-
-/**
- * @brief   Free music.
- * @param   music
- * @ingroup Audio
- */
-void musicFree(Music *music)
-{
-    free(music);
+    Mix_HaltMusic();
 }

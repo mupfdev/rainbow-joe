@@ -23,11 +23,12 @@ typedef struct music_t {
     Mix_Music *mus;
 } Music;
 
-Mixer  *mixerInit();
-Music  *musicInit();
-int8_t musicPlay(Music *music);
-int8_t musicFadeIn(Music *music, uint16_t ms);
 void   mixerFree(Mixer *mixer);
+Mixer  *mixerInit();
+int8_t musicFadeIn(Music *music, int8_t loops, uint16_t ms);
 void   musicFree(Music *music);
+Music  *musicInit();
+int8_t musicPlay(Music *music, int8_t loops);
+void   musicHalt();
 
 #endif
