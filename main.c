@@ -45,7 +45,7 @@ int main()
     Mixer *mixer    = mixerInit();
     Music *music    = musicInit();
     music->filename = "res/music/creepy.ogg";
-    if (! mixer) musicFadeIn(music, 5000);
+    if (mixer) musicFadeIn(music, 5000);
 
     uint16_t flags      = 0;
     double   cameraPosX = 0;
