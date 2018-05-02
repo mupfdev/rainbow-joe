@@ -55,6 +55,48 @@ void mapFree(Map *map)
 }
 
 /**
+ * @brief   
+ * @param   map
+ * @param   xPos
+ * @param   yPos
+ * @ingroup Map
+ * @return 
+ */
+uint8_t mapGetTileType(Map *map, double xPos, double yPos)
+{
+    xPos = xPos / map->map->tile_width + 1;
+    yPos = yPos / map->map->tile_height;
+
+    // Prevent segfaults by setting boundaries.
+    if ((xPos < 0) ||
+        (yPos < 0) ||
+        (xPos > map->map->width) ||
+        (yPos > map->map->height))
+            return 0;
+
+    tmx_layer *layers = map->map->ly_head;
+    while(layers)
+    {
+        uint16_t gid = layers->content.gids[((int32_t)yPos * map->map->width) + (int32_t)xPos] & TMX_FLIP_BITS_REMOVAL;
+        if (NULL != map->map->tiles[gid])
+            if (NULL != map->map->tiles[gid]->type)
+            {
+                if (0 == strcmp("floor", map->map->tiles[gid]->type))
+                    return TILE_FLOOR;
+                if (0 == strcmp("wall", map->map->tiles[gid]->type))
+                    return TILE_WALL;
+                if (0 == strcmp("lwall", map->map->tiles[gid]->type))
+                    return TILE_LWALL;
+                if (0 == strcmp("rwall", map->map->tiles[gid]->type))
+                    return TILE_RWALL;
+            }
+        layers = layers->next;
+    }
+
+    return 0;
+}
+
+/**
  * @brief   Initialise map.
  * @param   filename the TMX map file to load.
  * @return  The initialised map on success, NULL on error.

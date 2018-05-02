@@ -9,9 +9,10 @@
 
 // Flags.
 #define DIRECTION          0
-#define IN_MOTION          1
+#define IS_DEAD            1
 #define IN_MID_AIR         2
-#define THREAD_IS_RUNNING  3
+#define IN_MOTION          3
+#define THREAD_IS_RUNNING  4
 
 // Frames.
 #define WALK      0

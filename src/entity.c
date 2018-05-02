@@ -99,10 +99,10 @@ Entity *entityInit(const char *name)
     // Default values.
     entity->height          =  32;
     entity->width           =  32;
-    entity->bb.b           =   0;
-    entity->bb.l           = entity->height;
-    entity->bb.r           = entity->width;
-    entity->bb.t           =   0;
+    entity->bb.b            =   0;
+    entity->bb.l            = entity->height;
+    entity->bb.r            = entity->width;
+    entity->bb.t            =   0;
     entity->acceleration    =   0.2;
     entity->deceleration    =   0.000004;
     entity->flags           =   0;
