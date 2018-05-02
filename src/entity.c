@@ -5,7 +5,6 @@
  *            etc.
  * @author    Michael Fitzmayer
  * @copyright "THE BEER-WARE LICENCE" (Revision 42)
- * @todo      Add documentation.
  */
 
 #include "entity.h"
@@ -22,6 +21,12 @@ static int32_t entityThread(void *ent)
 
     while ((entity->flags >> THREAD_IS_RUNNING) & 1)
     {
+        // Update bounding box.
+        entity->bb.b = entity->worldPosY + entity->height;
+        entity->bb.l = entity->worldPosX;
+        entity->bb.r = entity->worldPosX + entity->width;
+        entity->bb.t = entity->worldPosY;
+
         if ((entity->flags >> IN_MID_AIR) & 1)
             entity->velocityFall += entity->gravity;
 
@@ -92,6 +97,12 @@ Entity *entityInit(const char *name)
     }
 
     // Default values.
+    entity->height          =  32;
+    entity->width           =  32;
+    entity->bb.b           =   0;
+    entity->bb.l           = entity->height;
+    entity->bb.r           = entity->width;
+    entity->bb.t           =   0;
     entity->acceleration    =   0.2;
     entity->deceleration    =   0.000004;
     entity->flags           =   0;
@@ -100,7 +111,6 @@ Entity *entityInit(const char *name)
     entity->frameDelay      =   0;
     entity->frameEnd        = WALK_MAX;
     entity->frameStart      = WALK;
-    entity->gid             =   0;
     entity->gravity         =   0.6;
     entity->sprite          = NULL;
     entity->velocity        =   0.0;
@@ -161,8 +171,8 @@ int8_t entityRender(SDL_Renderer *renderer, Entity *entity, double posX, double 
         return -1;
     }
 
-    SDL_Rect dst = { posX, posY, 32, 32 };
-    SDL_Rect src = { entity->frame * 32, entity->frameYoffset, 32, 32 };
+    SDL_Rect dst = { posX, posY, entity->width, entity->height };
+    SDL_Rect src = { entity->frame * entity->width, entity->frameYoffset, entity->width, entity->height };
 
     SDL_RendererFlip flip;
 

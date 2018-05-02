@@ -36,16 +36,16 @@ int main()
         execStatus = EXIT_FAILURE;
         goto quit;
     }
-    player->frameYoffset  =  32;
-    player->worldPosX     =  64;
-    player->worldPosY     =   0;
+    player->frameYoffset = 32;
+    player->worldPosX    = 64;
+    player->worldPosY    =  0;
 
     /* Note: The error handling isn't missing here.  There is simply no need to
      * quit the program if the music can't be played by some reason. */
     Mixer *mixer    = mixerInit();
     Music *music    = musicInit();
     music->filename = "res/music/creepy.ogg";
-    if (mixer) musicFadeIn(music, 5000);
+    if (! mixer) musicFadeIn(music, 5000);
 
     uint16_t flags      = 0;
     double   cameraPosX = 0;
@@ -58,7 +58,6 @@ int main()
         double dTime  = (timeB - timeA) / 1000;
         timeA         = timeB;
         player->dTime = dTime;
-        player->gid   = mapGetGID(map, player->worldPosX, player->worldPosY);
 
         // Handle keyboard input.
         const uint8_t *keyState;
@@ -113,14 +112,11 @@ int main()
             cameraPosY = player->worldPosY - video->height / 2 - 16;
         }
 
-        // Set fixed floor height for testing purposes.
-        if (player->worldPosY < 624)
-            player->flags |= 1 << IN_MID_AIR;
+        // Set up collision detection.
+        if (mapCoordIsType(map, "floor", player->worldPosX, player->worldPosY + player->height))
+            player->flags &= ~(1 << IN_MID_AIR);
         else
-        {
-            player->flags     &= ~(1 << IN_MID_AIR);
-            player->worldPosY  = 624;
-        }
+            player->flags |= 1 << IN_MID_AIR;
 
         // Set player position.
         if (player->velocity > 0)
@@ -133,6 +129,10 @@ int main()
 
         if ((player->flags >> IN_MID_AIR) & 1)
             player->worldPosY += (player->velocityFall * dTime);
+
+        // Test code.
+        if (player->worldPosY > (map->map->height * map->map->tile_height) + player->height)
+            player->worldPosY = 0 - player->height;
 
         // Set camera boundaries to map size.
         int32_t cameraMaxX = map->map->width  * map->map->tile_width  - video->width;

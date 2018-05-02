@@ -5,6 +5,7 @@ LIBS=\
 	-lSDL2_mixer\
 	`xml2-config --libs`
 CFLAGS=\
+	-g\
 	-pedantic-errors\
 	-std=c99\
 	-DWANT_ZLIB\

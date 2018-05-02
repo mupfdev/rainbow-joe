@@ -10,26 +10,34 @@
 #include "map.h"
 
 /**
- * @brief   Check whether a tile is of a specific type or not.
+ * @brief   Check whether a tile is from a specific type or not.
  * @param   map  the map.
  * @param   type name of the tile type to look for.
- * @param   gid  the GID of the tile to check.
+ * @param   xPos coordinate along the x-axis.
+ * @param   yPos coordinate along the y-axis.
  * @return  1 if the tile is of the specific type, 0 if not.
  * @ingroup Map
  */
-uint8_t mapGIDisType(Map *map, const char *type, uint16_t gid)
+uint8_t mapCoordIsType(Map *map, const char *type, double xPos, double yPos)
 {
+    xPos = xPos / map->map->tile_width + 1;
+    yPos = yPos / map->map->tile_height;
+
+    // Prevent segfaults by setting boundaries.
+    if ((xPos < 0) ||
+        (yPos < 0) ||
+        (xPos > map->map->width) ||
+        (yPos > map->map->height))
+            return 0;
+
     tmx_layer *layers = map->map->ly_head;
     while(layers)
     {
-        if ( (layers->visible) && (NULL != strstr(layers->name, "Level")) )
-        {
-            gid = layers->content.gids[gid] & TMX_FLIP_BITS_REMOVAL;
-            if (NULL != map->map->tiles[gid])
-                if (gid < 20)
-                    if (0 == strncmp(map->map->tiles[gid]->type, type, strlen(type)))
+        uint16_t gid = layers->content.gids[((int32_t)yPos * map->map->width) + (int32_t)xPos] & TMX_FLIP_BITS_REMOVAL;
+        if (NULL != map->map->tiles[gid])
+            if (NULL != map->map->tiles[gid]->type)
+                if (0 == strcmp(type, map->map->tiles[gid]->type))
                     return 1;
-        }
         layers = layers->next;
     }
 
@@ -44,19 +52,6 @@ uint8_t mapGIDisType(Map *map, const char *type, uint16_t gid)
 void mapFree(Map *map)
 {
     tmx_map_free(map->map);
-}
-
-/**
- * @brief   Get calculated GID from coordinates.
- * @param   width
- * @param   posX
- * @param   posY
- * @ingroup Map
- * @return
- */
-uint16_t mapGetGID(Map *map, double posX, double posY)
-{
-    return (map->map->width * (int32_t)posY / (map->map->tile_width)) + (int32_t)posX / (map->map->tile_width);
 }
 
 /**

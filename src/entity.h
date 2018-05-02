@@ -5,6 +5,8 @@
 #ifndef ENTITY_h
 #define ENTITY_h
 
+#include "aabb.h"
+
 // Flags.
 #define DIRECTION          0
 #define IN_MOTION          1
@@ -26,6 +28,7 @@
 typedef struct entity_t
 {
     double      acceleration;
+    AABB        bb;
     double      deceleration;
     double      dTime;
     uint16_t    flags;
@@ -35,8 +38,8 @@ typedef struct entity_t
     uint8_t     frameEnd;
     uint8_t     frameStart;
     uint8_t     frameYoffset;
-    uint16_t    gid;
     double      gravity;
+    uint8_t     height;
     SDL_Texture *sprite;
     const char  *spriteImage;
     SDL_Thread  *thread;
@@ -44,6 +47,7 @@ typedef struct entity_t
     double      velocityMax;
     double      velocityFall;
     double      velocityFallMax;
+    uint8_t     width;
     double      worldPosX;
     double      worldPosY;
 } Entity;
