@@ -19,4 +19,7 @@
  <tile id="47" type="floor"/>
  <tile id="59" type="floor"/>
  <tile id="60" type="floor"/>
+ <tile id="75" type="ladder"/>
+ <tile id="92" type="ladder"/>
+ <tile id="109" type="ladder"/>
 </tileset>

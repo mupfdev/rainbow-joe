@@ -3,7 +3,7 @@
  <tileset firstgid="1" source="../tilesets/sheet.tsx"/>
  <layer name="Background 3" width="200" height="50" locked="1">
   <data encoding="base64" compression="zlib">
-   eJzt2stNAmAQhVFAxL2K2ACoDajQgAINqNCAgg34qt27ZENi4mJ+zTnJt7/ryXQ6AAAAAAAAAAAAAMBf0k296hHQqON0Uj0CAAAAAHa458J+7rkAAD/jVwT28ysCAAAAAPC/HaR+OkyDdFQ7B5pymobpLI3See0caMo4TdJFukxXtXOgKdfpJt2maZrVzoGm3KX7NE+LtKydA015SI/pKa3SunYONOU5vaRN2qbX2jnQlLf0nj7SZ/qqnQMAAAAAAAAAv/INyPEKeg==
+   eJzt2jdOA1EUhlGTe3JDSdoAaQOkDZggepLoSWvnLyk8FjKW7hvrHOlrr24xTxM0gwEAAAAAAAAAAAAA0Cdzab56CWjUalqrXgIAAAAAfvE9F7r5ngsA8Df+FYFu/hUBAAAAAJhtC2kxLaXltFK7DjRlPW2kzbSVtmvXgabspr20nw7SYe060JSjdJxO0mk6q10HmnKeLtJlukrXtetAU4bpJt2mu3Rfuw405TE9pef0kl5r14GmvKeP9Jm+0nftOgD01MOYpjlr0plQaWdM05w16Uyo1HUdv015lvNBH426hv97/xg1y/mgjzxfQTfnA7p5/4Bu7h/Moh8Idx72
   </data>
  </layer>
  <layer name="Background 2" width="200" height="50" locked="1">
@@ -13,17 +13,22 @@
  </layer>
  <layer name="Background 1" width="200" height="50" locked="1">
   <data encoding="base64" compression="zlib">
-   eJzt1zsKgDAURcGUiu7Az9LcgvvvfGBj4QMbSdAZOH2aS5JSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOC7hmiMuqiPprrHgabM0XJprXscaIp9QM4+AHjT9iD4q+VB8FfZJvZiH3C3B/cHnLyvIGcfkPP/gJz7gy86AE+aDV4=
+   eJzt10sKgzAARdEM+11Av/tfZiNtoJS+QQbVqufAAyeCAy+aUgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIB/da7bhu3qNm/Xh9eOkzwpjO9ad6q7dew+yZPC+IY+etrQB2uiD8haHz3/WPpgLvbleWZu5+hL5/2+HyzZ5/vd++7qgyXTB2T6gN9pfXyjD9ZOH5DpAzJ9QKYPyPQBmT4g0wdk+mDOHpE3GGY=
   </data>
  </layer>
- <layer name="Level 1" width="200" height="50" locked="1">
+ <layer name="World" width="200" height="50" locked="1">
   <data encoding="base64" compression="zlib">
-   eJzt3F1OwkAUhuG59HcBqLgB3QEibob9b8FptAmSfqI4tUWfJzk3hJDh4s0BQlsKAAAAAAAAAAB8bltnM/UhYIYu65zVOa9zO/FZYG7u6izqLOvcT3wWmJuuj2XRBwzp++h2iD7gI/sDMn1Apg/IWvZxU/xOzN9if0CmD8j0AZk+INMHZD/to/t/41Wd65aHgpmwPyDTB2T6gEwfkOkDMn1Apg/I9AGZPiBz/Tlk9gdk+oBMH5DpA7LUx6aMe8/q7YivDa3s9tFNf6/qobkob9d6DM2h6z+e6jy8z2OddeP3AWPY7+PYOfTZ7Hnv+S9t3waMQh+QfbePRXj8q32sij44HfYHZLt9pN2gD/4r+wOy3+yj/+6hD06F/QHZKyq9KOQ=
+   eJzt3MtKw2AQgNEsvT6AaH0BXbj3Ut37Ci679f2X/oUEYui00UxucA4MSilJF/2YBDFVBQAAAAAAAAAAx+3KbOf+ELBAl2XOypyXuZ35s8DS3JW5KbMpcz/zZ4Gl2fexqfQBhzR97HeIPuA3+wNi+oCYPiCmD4jpA2L6gJg+IKYPiOkDYvqAmD4gpg+I6QNi+oCYPiCmD4hN2cfnyMeHbFP28TXy8SGbPiA25f+f64O1mXt/PI18Thhi7j4+Rj4nDLHGPjzzkamssQ/P7GIqUR/bKv+Z1d+t33f1zyF9+JsmY7vqTHPdcmguDry/mesT53kp81DPY5nX+vV2H33v1T0zmGzta/b2d32TNKe+p2+d97/Xr7f76LtLXF+RrX1N0ny3stqYqw/7gyzta5IhEx2jbx/PlT5Ynu7+yB77gzXrc301ZL9k93HsXl0fZFvb/ji2S/RBtiX00dx7/LWP7i7RB9mW0Md/90d3l+iDbFEfP0i+PWM=
   </data>
  </layer>
- <layer name="Overlay" width="200" height="50" locked="1">
+ <layer name="Overlay 2" width="200" height="50" locked="1">
   <data encoding="base64" compression="zlib">
-   eJzt27ENgDAMBMBMwArMAKwErMD6pEtkEURnijvJctJYbr50KQAAAAAAAAAAAAAAAAAA747sBQAAAACgs9Raa23ZiwAAAAAAAAAAkGYKHWjm0IFGPmBMPmBMPqC5wv8pH3v3Pj/OdSsCAAAAAAAAwF/dxzIEJQ==
+   eJzt2csJhTAQBVArsAVbsIXXi9qB2MIrW5cy6MJvop4DYUgWw2wuIaQoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0uqm1YSzOuz7m2aBJ/ilHgAyJh+wTj54kzLUo+b56E7qCalUoR7l/uBN5APW5ZyP/4m9YI+c8wFXi/9zQ9gv5WP+57f1jS0fAAAAAADf0KYeAABggxEh8wgU
+  </data>
+ </layer>
+ <layer name="Overlay 1" width="200" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt2CEOACAMA8B9CXgc3weBQOAQkOwuqZmqbBYBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwtzJTV9q69Xd1AAAAAODa6ecFAJDNvonsIn5ktwMAAAAAAEBuAzsjA8o=
   </data>
  </layer>
 </map>
