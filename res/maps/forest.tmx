@@ -23,12 +23,12 @@
  </layer>
  <layer name="Overlay 2" width="200" height="50" locked="1">
   <data encoding="base64" compression="zlib">
-   eJzt2csJhTAQBVArsAVbsIXXi9qB2MIrW5cy6MJvop4DYUgWw2wuIaQoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0uqm1YSzOuz7m2aBJ/ilHgAyJh+wTj54kzLUo+b56E7qCalUoR7l/uBN5APW5ZyP/4m9YI+c8wFXi/9zQ9gv5WP+57f1jS0fAAAAAADf0KYeAABggxEh8wgU
+   eJzt2csJgDAQBUArsAVbsAV7UTsQW7BsPcqiBz+YqDMQwuaw7OURQooCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgrX5ZbTirQz08NAu8QZN6AMiYfMA++eBLyrBftc5Hf1NPSKUK+1XuD75EPmBfzvmYbuwFZ+ScD3jaGOqtfKz//I6+seUDAAAAAOAfutQDAAAcMAPapgef
   </data>
  </layer>
- <layer name="Overlay 1" width="200" height="50">
+ <layer name="Overlay 1" width="200" height="50" locked="1">
   <data encoding="base64" compression="zlib">
-   eJzt2CEOACAMA8B9CXgc3weBQOAQkOwuqZmqbBYBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwtzJTV9q69Xd1AAAAAODa6ecFAJDNvonsIn5ktwMAAAAAAEBuAzsjA8o=
+   eJzt2TEKACEMBEC/pD7O72uhYGF3cAacgTSpUqRYkpQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABiy6PKrDp77d44AAAAAPDZ6eYFABDFXxllz0RyEVGt3/TaVwAAAAAAAOAdHYiFBEE=
   </data>
  </layer>
 </map>
