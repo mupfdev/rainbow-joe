@@ -3,9 +3,8 @@
 Rainbow Joe is a classic 2D platformer game in the spirit of the 1990s written
 in C using SDL2 and the
 [TMX Map Format](http://doc.mapeditor.org/en/stable/reference/tmx-map-format/)
-(Tile Map XML).  
-It is also a constantly evolving project I work on to exercise C programming and
-to learn about the basic concepts of game development.
+(Tile Map XML).  It is also a constantly evolving project I work on to exercise
+C programming and to learn about the basic concepts of game development.
 
 Last but not least: follow-on project of
 [Janitor Jamboree](https://github.com/mupfelofen-de/janitor-jamboree) which I
