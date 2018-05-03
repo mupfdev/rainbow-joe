@@ -19,15 +19,15 @@ typedef struct mixer_t {
 } Mixer;
 
 typedef struct music_t {
-    char      *filename;
-    Mix_Music *mus;
+    const char *filename;
+    Mix_Music  *mus;
 } Music;
 
 void   mixerFree(Mixer *mixer);
 Mixer  *mixerInit();
 int8_t musicFadeIn(Music *music, int8_t loops, uint16_t ms);
 void   musicFree(Music *music);
-Music  *musicInit();
+Music *musicInit(const char *filename);
 int8_t musicPlay(Music *music, int8_t loops);
 void   musicHalt();
 

@@ -104,7 +104,7 @@ void musicFree(Music *music)
  * @return  Music on success, NULL on error.
  * @ingroup Audio
  */
-Music *musicInit()
+Music *musicInit(const char *filename)
 {
     static Music *music;
     music = malloc(sizeof(struct music_t));
@@ -113,6 +113,8 @@ Music *musicInit()
         fprintf(stderr, "musicInit(): error allocating memory.\n");
         return NULL;
     }
+
+    music->filename = filename;
 
     return music;
 }
