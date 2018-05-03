@@ -87,18 +87,18 @@ Map *mapInit(const char *filename)
 
 /**
  * @brief   Render Map on screen.
- * @param   renderer  SDL's rendering context.  See @ref struct Video.
- * @param   map       the map that should be rendered.
- * @param   name      substring of the layer name(s) that should be rendered.
- * @param   bg        boolean value to determine if the map's background colour
- *                    should be rendered or not.  If set to 0, the background
- *                    stays transparent.
- * @param   index     determine the texture index.  The total amount of textures
- *                    per map is defined by MAP_TEXTURES_PER_MAP.
- * @param   posX      coordinate, where the map should be rendered along the
- *                    x-axis of the set rendering context.
- * @param   posY      coordinate, where the map should be rendered along the
- *                    y-axis of the set rendering context.
+ * @param   renderer SDL's rendering context.  See @ref struct Video.
+ * @param   map      the map that should be rendered.
+ * @param   name     substring of the layer name(s) that should be rendered.
+ * @param   bg       boolean value to determine if the map's background colour
+ *                   should be rendered or not.  If set to 0, the background
+ *                   stays transparent.
+ * @param   index    determine the texture index.  The total amount of textures
+ *                   per map is defined by MAP_TEXTURES_PER_MAP.
+ * @param   posX     coordinate, where the map should be rendered along the
+ *                   x-axis of the set rendering context.
+ * @param   posY     coordinate, where the map should be rendered along the
+ *                   y-axis of the set rendering context.
  * @return  0 on success, -1 on error.
  * @ingroup Map
  */
