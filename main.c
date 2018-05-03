@@ -9,7 +9,14 @@ int main()
 {
     int execStatus = EXIT_SUCCESS;
 
-    Video *video = videoInit("Rainbow Joe", 800, 600, 0);
+    Video  *video  = NULL;
+    Map    *map    = NULL;
+    Entity *player = NULL;
+    Mixer  *mixer  = NULL;
+    Music  *music  = NULL;
+    Music  *dead   = NULL;
+
+    video = videoInit("Rainbow Joe", 800, 600, 0);
     if (NULL == video)
     {
         execStatus = EXIT_FAILURE;
@@ -18,14 +25,14 @@ int main()
 
     atexit(SDL_Quit);
 
-    Map *map = mapInit("res/maps/forest.tmx");
+    map = mapInit("res/maps/forest.tmx");
     if (NULL == map)
     {
         execStatus = EXIT_FAILURE;
         goto quit;
     }
 
-    Entity *player = entityInit("player");
+    player = entityInit("player");
     if (NULL == player)
     {
         execStatus = EXIT_FAILURE;
@@ -36,17 +43,15 @@ int main()
         execStatus = EXIT_FAILURE;
         goto quit;
     }
-    player->frameYoffset = 32;
-    player->worldPosX    = 64;
-    player->worldPosY    =  0;
+    player->frameYoffset =  32;
+    player->worldPosX    =  16;
+    player->worldPosY    = 160;
 
     /* Note: The error handling isn't missing here.  There is simply no need to
      * quit the program if the music can't be played by some reason. */
-    Mixer *mixer    = mixerInit();
-    Music *music    = musicInit();
-    music->filename = "res/music/creepy.ogg";
-    Music *dead     = musicInit();
-    dead->filename  = "res/sfx/05.ogg";
+    mixer           = mixerInit();
+    music           = musicInit("res/music/creepy.ogg");
+    dead            = musicInit("res/sfx/05.ogg");
 
     if (mixer) musicFadeIn(music, -1, 5000);
 
@@ -111,8 +116,8 @@ int main()
         }
         else
         {
-            cameraPosX = player->worldPosX - video->width  / 2;
-            cameraPosY = player->worldPosY - video->height / 2 - 16;
+            cameraPosX = player->worldPosX - video->width  / 4 + (player->width  / 2);
+            cameraPosY = player->worldPosY - video->height / 3;
         }
 
         // Set up collision detection.
@@ -151,8 +156,8 @@ int main()
         }
 
         // Set camera boundaries to map size.
-        int32_t cameraMaxX = map->map->width  * map->map->tile_width  - video->width;
-        int32_t cameraMaxY = map->map->height * map->map->tile_height - video->height;
+        int32_t cameraMaxX = (map->map->width  * map->map->tile_width)  - (video->width  / 2);
+        int32_t cameraMaxY = (map->map->height * map->map->tile_height) - (video->height / 2);
         if (cameraPosX < 0) cameraPosX = 0;
         if (cameraPosY < 0) cameraPosY = 0;
         if (cameraPosX > cameraMaxX) cameraPosX = cameraMaxX;

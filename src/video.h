@@ -11,10 +11,10 @@
  * @ingroup Video
  */
 typedef struct video_t {
-    SDL_Renderer *renderer;
-    SDL_Window   *window;
-    int32_t      width;
     int32_t      height;
+    SDL_Renderer *renderer;
+    int32_t      width;
+    SDL_Window   *window;
 } Video;
 
 Video *videoInit(const char *title, uint32_t width, uint32_t height, uint32_t flags);

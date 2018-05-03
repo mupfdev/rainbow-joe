@@ -43,8 +43,8 @@ Video *videoInit(const char *title, uint32_t width, uint32_t height, uint32_t fl
         height,
         flags);
 
-    video->width  = width;
     video->height = height;
+    video->width  = width;
 
     if (NULL == video->window)
     {
@@ -59,6 +59,13 @@ Video *videoInit(const char *title, uint32_t width, uint32_t height, uint32_t fl
         SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
 
     if (NULL == video->renderer)
+    {
+        fprintf(stderr, "%s\n", SDL_GetError());
+        free(video);
+        return NULL;
+    }
+
+    if (0 != SDL_RenderSetLogicalSize(video->renderer, width / 2, height / 2))
     {
         fprintf(stderr, "%s\n", SDL_GetError());
         free(video);

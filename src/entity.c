@@ -30,7 +30,7 @@ static int32_t entityThread(void *ent)
         if ((entity->flags >> IN_MID_AIR) & 1)
             entity->velocityFall += entity->gravity;
 
-        if ((entity->flags >> IN_MOTION) & 1)
+        if ((entity->flags >> IN_MOTION)  & 1)
         {
             entity->velocity   += entity->acceleration;
             // Slowing down frame animation.
