@@ -16,13 +16,12 @@ int main()
     Music  *music  = NULL;
     Music  *dead   = NULL;
 
-    video = videoInit("Rainbow Joe", 800, 600, 0, 2);
+    video = videoInit("Rainbow Joe", 800, 600, 0, 1.8);
     if (NULL == video)
     {
         execStatus = EXIT_FAILURE;
         goto quit;
     }
-
     atexit(SDL_Quit);
 
     map = mapInit("res/maps/forest.tmx");
@@ -44,8 +43,6 @@ int main()
         goto quit;
     }
     player->frameYoffset =  32;
-    player->worldPosX    =  16;
-    player->worldPosY    = 160;
 
     /* Note: The error handling isn't missing here.  There is simply no need to
      * quit the program if the music can't be played by some reason. */
@@ -53,13 +50,16 @@ int main()
     music           = musicInit("res/music/creepy.ogg");
     dead            = musicInit("res/sfx/05.ogg");
 
-    if (mixer) musicFadeIn(music, -1, 5000);
-
     uint16_t flags      = 0;
     double   cameraPosX = 0;
     double   cameraPosY = map->map->height * map->map->tile_height - video->height;
     double   timeA      = SDL_GetTicks();
 
+    main:
+    player->flags &= ~(1 << IS_DEAD);
+    if (mixer) musicFadeIn(music, -1, 5000);
+    player->worldPosX    =  16;
+    player->worldPosY    = 160;
     while (1)
     {
         double timeB  = SDL_GetTicks();
@@ -149,10 +149,9 @@ int main()
 
         if ((player->flags >> IS_DEAD) & 1)
         {
-            musicHalt();
             musicPlay(dead, 1);
             SDL_Delay(2000);
-            goto quit;
+            goto main;
         }
 
         // Set camera boundaries to map size.
