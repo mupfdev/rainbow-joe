@@ -57,7 +57,7 @@ LSHIFT: hold to run
 1:      set default zoom level
 2:      zoom out
 3:      zoom in
-F:      toggle free camera mode
+F:      hold to move camera freely
 UP:     move camera up
 DOWN:   move camera down
 LEFT:   move camera left

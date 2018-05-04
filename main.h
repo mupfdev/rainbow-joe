@@ -4,9 +4,6 @@
 #ifndef MAIN_h
 #define MAIN_h
 
-// Flags.
-#define FREE_CAMERA 0
-
 #include "src/aabb.h"
 #include "src/audio.h"
 #include "src/entity.h"

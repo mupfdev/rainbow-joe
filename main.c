@@ -55,7 +55,6 @@ int main()
     dead  = musicInit("res/sfx/05.ogg");
     if (mixer) musicFadeIn(music, -1, 5000);
 
-    uint16_t flags      = 0;
     double   cameraPosX = 0;
     double   cameraPosY = map->map->height * map->map->tile_height - video->height;
     double   timeA      = SDL_GetTicks();
@@ -125,8 +124,7 @@ int main()
         if (keyState[SDL_SCANCODE_3])
             videoSetZoomLevel(video, video->zoomLevel + dTime);
 
-        if (keyState[SDL_SCANCODE_F]) flags ^= 1 << FREE_CAMERA;
-        if (0 != ((flags >> FREE_CAMERA) & 1))
+        if (keyState[SDL_SCANCODE_F])
         {
             if (keyState[SDL_SCANCODE_UP])    cameraPosY -= (250 * dTime);
             if (keyState[SDL_SCANCODE_DOWN])  cameraPosY += (250 * dTime);
