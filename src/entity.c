@@ -27,15 +27,12 @@ static int32_t entityThread(void *ent)
         entity->bb.r = entity->worldPosX + entity->width;
         entity->bb.t = entity->worldPosY;
 
-        if ((entity->flags >> IN_MID_AIR) & 1)
-            entity->velocityFall += entity->gravity;
-
         if ((entity->flags >> IN_MOTION)  & 1)
         {
             entity->velocity   += entity->acceleration;
             // Slowing down frame animation.
             entity->frameDelay += entity->dTime;
-            if (entity->frameDelay > 5000)
+            if (entity->frameDelay > entity->frameDelayMax)
             {
                 entity->frame++;
                 entity->frameDelay = 0;
@@ -56,13 +53,34 @@ static int32_t entityThread(void *ent)
             entity->frame = entity->frameStart;
         }
 
-        if (entity->velocityFall > entity->velocityFallMax)
-            entity->velocityFall = entity->velocityFallMax;
-        if (entity->velocityFall < 0) entity->velocityFall = 0;
-
         // Loop frame animation.
         if (entity->frameEnd <= entity->frame)
             entity->frame = entity->frameStart;
+
+        // Set player position.
+        if (entity->gameLoopCount != entity->gameLoopCountPrev)
+        {
+            if (entity->velocity > 0)
+            {
+                if ((entity->flags >> DIRECTION) & 1)
+                    entity->worldPosX -= (entity->velocity * entity->dTime);
+                else
+                    entity->worldPosX += (entity->velocity * entity->dTime);
+            }
+
+            if ((entity->flags >> IN_MID_AIR) & 1)
+                entity->worldPosY += 0.5 * (entity->worldGravitation * 50000) * entity->dTime * entity->dTime;
+
+            if (entity->worldPosX < 0 - (entity->width / 2))
+                entity->worldPosX = entity->worldWidth - (entity->width / 2);
+
+            if (entity->worldPosX > entity->worldWidth - (entity->width / 2))
+                entity->worldPosX = 0;
+
+            if (entity->worldPosY > entity->worldHeight + entity->height)
+                entity->flags |= 1 << IS_DEAD;
+        }
+        entity->gameLoopCountPrev = entity->gameLoopCount;
     }
 
     return 0;
@@ -97,28 +115,30 @@ Entity *entityInit(const char *name)
     }
 
     // Default values.
-    entity->height          =  32;
-    entity->width           =  32;
-    entity->bb.b            =   0;
-    entity->bb.l            = entity->height;
-    entity->bb.r            = entity->width;
-    entity->bb.t            =   0;
-    entity->acceleration    =   0.2;
-    entity->deceleration    =   0.000004;
-    entity->flags           =   0;
-    entity->fps             =  24;
-    entity->frame           =   0;
-    entity->frameDelay      =   0;
-    entity->frameEnd        = WALK_MAX;
-    entity->frameStart      = WALK;
-    entity->gravity         =   0.6;
-    entity->sprite          = NULL;
-    entity->velocity        =   0.0;
-    entity->velocityMax     = 100.0;
-    entity->velocityFall    =   0.0;
-    entity->velocityFallMax = 320.0;
-    entity->worldPosX       =   0.0;
-    entity->worldPosY       =   0.0;
+    entity->height            =   32;
+    entity->width             =   32;
+    entity->bb.b              =    0;
+    entity->bb.l              = entity->height;
+    entity->bb.r              = entity->width;
+    entity->bb.t              =    0;
+    entity->acceleration      =    0.2;
+    entity->deceleration      =    0.000004;
+    entity->flags             =    0;
+    entity->frame             =    0;
+    entity->frameDelay        =    0;
+    entity->frameDelayMax     = 6000;
+    entity->frameEnd          = WALK_MAX;
+    entity->frameStart        = WALK;
+    entity->gameLoopCount     =    0;
+    entity->gameLoopCountPrev =    0;
+    entity->sprite            = NULL;
+    entity->velocity          =    0.0;
+    entity->velocityMax       =  100.0;
+    entity->worldHeight       =      0;
+    entity->worldGravitation  =    9.81;
+    entity->worldPosX         =    0.0;
+    entity->worldPosY         =    0.0;
+    entity->worldWidth        =      0;
 
     entity->flags |= 1 << THREAD_IS_RUNNING;
     entity->thread = SDL_CreateThread(entityThread, name, entity);
@@ -151,6 +171,7 @@ int8_t entityLoadSprite(Entity *entity, SDL_Renderer *renderer, const char *file
         fprintf(stderr, "%s\n", SDL_GetError());
         return -1;
     }
+
     return 0;
 }
 

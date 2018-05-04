@@ -79,6 +79,28 @@ Video *videoInit(const char *title, uint32_t width, uint32_t height, uint32_t fl
 }
 
 /**
+ * @brief   Set the renderer's zoom level.
+ * @param   video     A Video structure.  See @ref struct Video.
+ * @param   zoomLevel the zoom level
+ * @ingroup Video
+ * @return  0 on success, -1 on failure.
+ */
+int8_t videoSetZoomLevel(Video *video, double zoomLevel)
+{
+    if (zoomLevel < 1) zoomLevel = 1;
+
+    if (0 != SDL_RenderSetLogicalSize(video->renderer, video->width / zoomLevel, video->height / zoomLevel))
+    {
+        fprintf(stderr, "%s\n", SDL_GetError());
+        return -1;
+    }
+
+    video->zoomLevel = zoomLevel;
+
+    return 0;
+}
+
+/**
  * @brief   Terminate SDL's video subsystem.
  * @param   video a Video structure.  See @ref struct Video.
  * @ingroup Video

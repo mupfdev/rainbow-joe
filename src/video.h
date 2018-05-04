@@ -19,6 +19,7 @@ typedef struct video_t {
 } Video;
 
 Video *videoInit(const char *title, uint32_t width, uint32_t height, uint32_t flags, double zoomLevel);
-void  videoTerminate(Video *video);
+int8_t videoSetZoomLevel(Video *video, double zoomLevel);
+void   videoTerminate(Video *video);
 
 #endif

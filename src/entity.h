@@ -28,29 +28,33 @@
  */
 typedef struct entity_t
 {
-    double      acceleration;
+    double   acceleration;
+    double   deceleration;
+    double   dTime;
+    uint16_t flags;
+    uint8_t  frame;
+    double   frameDelay;
+    double   frameDelayMax;
+    uint8_t  frameEnd;
+    uint8_t  frameStart;
+    uint8_t  frameYoffset;
+    uint32_t gameLoopCount;
+    uint8_t  height;
+    double   velocity;
+    double   velocityMax;
+    uint8_t  width;
+    uint32_t worldHeight;
+    double   worldGravitation;
+    double   worldPosX;
+    double   worldPosY;
+    uint32_t worldWidth;
+
+    /* These variables are used internally to store volatile values and usually
+     * do not have to be changed manually. */
     AABB        bb;
-    double      deceleration;
-    double      dTime;
-    uint16_t    flags;
-    uint8_t     fps;
-    uint8_t     frame;
-    double      frameDelay;
-    uint8_t     frameEnd;
-    uint8_t     frameStart;
-    uint8_t     frameYoffset;
-    double      gravity;
-    uint8_t     height;
+    uint32_t    gameLoopCountPrev;
     SDL_Texture *sprite;
-    const char  *spriteImage;
     SDL_Thread  *thread;
-    double      velocity;
-    double      velocityMax;
-    double      velocityFall;
-    double      velocityFallMax;
-    uint8_t     width;
-    double      worldPosX;
-    double      worldPosY;
 } Entity;
 
 void   entityFree(Entity *entity);
