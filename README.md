@@ -54,7 +54,7 @@ doxygen
 A:      move left
 D:      move right
 LSHIFT: hold to run
-1:      default zoom level
+1:      set default zoom level
 2:      zoom out
 3:      zoom in
 F:      toggle free camera mode
