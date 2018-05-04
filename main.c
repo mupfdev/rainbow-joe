@@ -16,7 +16,7 @@ int main()
     Music  *music  = NULL;
     Music  *dead   = NULL;
 
-    video = videoInit("Rainbow Joe", 800, 600, 0);
+    video = videoInit("Rainbow Joe", 800, 600, 0, 2);
     if (NULL == video)
     {
         execStatus = EXIT_FAILURE;
@@ -116,7 +116,7 @@ int main()
         }
         else
         {
-            cameraPosX = player->worldPosX - video->width  / 4 + (player->width  / 2);
+            cameraPosX = player->worldPosX - video->width  / (video->zoomLevel * 2) + (player->width  / 2);
             cameraPosY = player->worldPosY - video->height / 3;
         }
 
@@ -156,8 +156,9 @@ int main()
         }
 
         // Set camera boundaries to map size.
-        int32_t cameraMaxX = (map->map->width  * map->map->tile_width)  - (video->width  / 2);
-        int32_t cameraMaxY = (map->map->height * map->map->tile_height) - (video->height / 2);
+        // These settings are working correctly with zoomlevel <= 2.
+        int32_t cameraMaxX = (map->map->width  * map->map->tile_width)  - (video->width  / video->zoomLevel);
+        int32_t cameraMaxY = (map->map->height * map->map->tile_height) - (video->height / video->zoomLevel);
         if (cameraPosX < 0) cameraPosX = 0;
         if (cameraPosY < 0) cameraPosY = 0;
         if (cameraPosX > cameraMaxX) cameraPosX = cameraMaxX;

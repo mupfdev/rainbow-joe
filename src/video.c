@@ -10,14 +10,15 @@
 
 /**
  * @brief   Initialise SDL's video subsystem.
- * @param   title the title of the window, in UTF-8 encoding.
- * @param   width the width of the window, in screen coordinates.
- * @param   height the height of the window, in screen coordinates.
- * @param   flags 0, or one or more SDL_WindowFlags OR'd together.
+ * @param   title     the title of the window, in UTF-8 encoding.
+ * @param   width     the width of the window, in screen coordinates.
+ * @param   height    the height of the window, in screen coordinates.
+ * @param   flags     0, or one or more SDL_WindowFlags OR'd together.
+ * @param   zoomLevel the zoom level used by the renderer.
  * @return  A Video structure or NULL on failure.  See @ref struct Video.
  * @ingroup Video
  */
-Video *videoInit(const char *title, uint32_t width, uint32_t height, uint32_t flags)
+Video *videoInit(const char *title, uint32_t width, uint32_t height, uint32_t flags, double zoomLevel)
 {
     static Video *video;
     video = malloc(sizeof(struct video_t));
@@ -65,7 +66,9 @@ Video *videoInit(const char *title, uint32_t width, uint32_t height, uint32_t fl
         return NULL;
     }
 
-    if (0 != SDL_RenderSetLogicalSize(video->renderer, width / 2, height / 2))
+    video->zoomLevel = zoomLevel;
+
+    if (0 != SDL_RenderSetLogicalSize(video->renderer, width / zoomLevel, height / zoomLevel))
     {
         fprintf(stderr, "%s\n", SDL_GetError());
         free(video);
