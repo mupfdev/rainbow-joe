@@ -16,9 +16,9 @@ The quite odd game title was generated using
 
 ## Why C?
 
-A lot of people ask me why I wrote this game in C instead of a modern language
-like Rust, Haskell or `[insert your preferred language here]`, because writing
-games in C is neither a easy thing to do nor very common (these days).
+A question I hear alot is why I'm using C for this project instead of a modern
+language like Rust, Haskell or `[insert your preferred language here]`, because
+writing games in C is neither a easy thing to do nor very common (anymore).
 
 The main reason is obvious and I already mentioned it in the introduction: to
 get some exercise in C programming.  And writing a game in C seemed like a fun
