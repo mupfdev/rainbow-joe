@@ -39,12 +39,15 @@ void entityFrame(Entity *entity, double dTime)
     }
 
     // Update frame.
-    entity->frameTime += dTime;
-
-    if (entity->frameTime > 1 / entity->fps)
+    if ((entity->flags >> IN_MOTION)  & 1)
     {
-        entity->frame++;
-        entity->frameTime = 0;
+        entity->frameTime += dTime;
+
+        if (entity->frameTime > 1 / entity->fps)
+        {
+            entity->frame++;
+            entity->frameTime = 0;
+        }
     }
 
     // Loop frame animation.
