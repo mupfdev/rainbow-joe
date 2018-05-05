@@ -6,7 +6,7 @@ all: $(OBJS)
 	gcc $(CFLAGS) $(LIBS) main.c $(OBJS) -o $(PROJECT)
 
 %: %.c
-	gcc -c $(CFLAGS) $(LIBS) -o $@ $<
+	gcc -c $(CFLAGS) $(INC) $(LIBS) -o $@ $<
 
 clean:
 	rm $(PROJECT)

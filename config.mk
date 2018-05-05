@@ -5,12 +5,12 @@ LIBS=\
 	-lSDL2_mixer\
 	`xml2-config --libs`
 CFLAGS=\
-	-g\
+	-Isrc/tmx\
+	-I/usr/include/libxml2\
+	-O2\
 	-pedantic-errors\
 	-std=c99\
 	-DWANT_ZLIB\
-	-Isrc/tmx\
-	-I/usr/include/libxml2\
 	-Wall\
 	-Werror\
 	-Wextra\

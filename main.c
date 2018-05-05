@@ -48,6 +48,7 @@ int main()
     player->worldWidth   = map->map->width  * map->map->tile_width;
     player->worldHeight  = map->map->height * map->map->tile_height;
 
+
     /* Note: The error handling isn't missing here.  There is simply no need to
      * quit the program if the music can't be played by some reason. */
     mixer = mixerInit();
@@ -98,7 +99,9 @@ int main()
         }
         else
         {
-            player->velocityMax  = 100;
+            // Don't allow to slow down in mid-air.
+            if (0 == ((player->flags >> IN_MID_AIR) & 1))
+                player->velocityMax  = 100;
             player->frameStart   = WALK;
             player->frameEnd     = WALK_MAX;
         }
@@ -113,6 +116,13 @@ int main()
             player->flags |= 1   << IN_MOTION;
             player->flags &= ~(1 << DIRECTION);
         }
+
+        if (0 == ((player->flags >> IN_MID_AIR) & 1))
+            if (keyState[SDL_SCANCODE_SPACE])
+            {
+                player->flags        |= 1 << IS_JUMPING;
+                player->velocityJump  = player->velocity;
+            }
 
         if (keyState[SDL_SCANCODE_1])
             videoSetZoomLevel(video, 2);

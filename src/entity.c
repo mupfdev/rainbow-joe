@@ -23,6 +23,7 @@ void entityFrame(Entity *entity, double dTime)
     entity->bb.r = entity->worldPosX + entity->width;
     entity->bb.t = entity->worldPosY;
 
+    // Increase/decrease vertical velocity if player is in motion.
     if ((entity->flags >> IN_MOTION)  & 1)
         entity->velocity += entity->acceleration * dTime;
     else
@@ -54,7 +55,7 @@ void entityFrame(Entity *entity, double dTime)
     if (entity->frameEnd <= entity->frame)
         entity->frame = entity->frameStart;
 
-    // Set player position.
+    // Set vertical player position.
     if (entity->velocity > 0)
     {
         if ((entity->flags >> DIRECTION) & 1)
@@ -63,15 +64,35 @@ void entityFrame(Entity *entity, double dTime)
             entity->worldPosX += (entity->velocity * dTime);
     }
 
+    // Set horizontal player position.
+    if ((entity->flags >> IS_JUMPING) & 1)
+        entity->flags |= 1 << IN_MID_AIR;
+
     if ((entity->flags >> IN_MID_AIR) & 1)
     {
-        entity->distanceFall  = (64 * entity->worldGravitation) * dTime * dTime;
+        double g = (entity->worldMeterInPixel * entity->worldGravitation);
+        if ((entity->flags >> IS_JUMPING) & 1)
+        {
+            if (entity->velocityFall > entity->jump)
+            {
+                g += entity->velocityJump;
+                g = -g * 4;
+            }
+            else
+                entity->flags &= ~(1 << IS_JUMPING);
+        }
+
+        entity->distanceFall  = g * dTime * dTime;
         entity->velocityFall += entity->distanceFall;
         entity->worldPosY    += entity->velocityFall;
     }
     else
+    {
+        entity->flags &= ~(1 << IS_JUMPING);
         entity->velocityFall  = 0;
+    }
 
+    //
     if (entity->worldPosX < 0 - (entity->width / 2))
         entity->worldPosX = entity->worldWidth - (entity->width / 2);
 
@@ -124,12 +145,15 @@ Entity *entityInit()
     entity->frameEnd          = WALK_MAX;
     entity->frameStart        = WALK;
     entity->frameTime         =    0.0;
+    entity->jump              =   -0.25;
     entity->sprite            = NULL;
     entity->velocity          =    0.0;
     entity->velocityFall      =    0.0;
+    entity->velocityJump      =    0.0;
     entity->velocityMax       =  100.0;
     entity->worldHeight       =      0;
     entity->worldGravitation  =    9.81;
+    entity->worldMeterInPixel =     32;
     entity->worldPosX         =    0.0;
     entity->worldPosY         =    0.0;
     entity->worldWidth        =      0;

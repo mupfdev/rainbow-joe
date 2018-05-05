@@ -54,6 +54,7 @@ doxygen
 A:      move left
 D:      move right
 LSHIFT: hold to run
+SPACE:  jump
 1:      set default zoom level
 2:      zoom out
 3:      zoom in

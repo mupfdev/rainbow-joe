@@ -8,10 +8,11 @@
 #include "aabb.h"
 
 // Flags.
-#define DIRECTION          0
-#define IS_DEAD            1
-#define IN_MID_AIR         2
-#define IN_MOTION          3
+#define DIRECTION   0
+#define IS_DEAD     1
+#define IN_MID_AIR  2
+#define IN_MOTION   3
+#define IS_JUMPING  4
 
 // Frames.
 #define WALK      0
@@ -35,10 +36,12 @@ typedef struct entity_t
     uint8_t  frameStart;
     uint8_t  frameYoffset;
     uint8_t  height;
+    double   jump;
     double   velocityMax;
     uint8_t  width;
     uint32_t worldHeight;
     double   worldGravitation;
+    double   worldMeterInPixel;
     double   worldPosX;
     double   worldPosY;
     uint32_t worldWidth;
@@ -49,6 +52,7 @@ typedef struct entity_t
     double      distanceFall;
     uint8_t     frame;
     double      frameTime;
+    double      velocityJump;
     SDL_Texture *sprite;
     double      velocity;
     double      velocityFall;
