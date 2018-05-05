@@ -10,7 +10,8 @@
 /**
  * @ingroup Video
  */
-typedef struct video_t {
+typedef struct video_t
+{
     int32_t      height;
     SDL_Renderer *renderer;
     int32_t      width;

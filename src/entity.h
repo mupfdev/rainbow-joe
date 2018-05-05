@@ -12,7 +12,6 @@
 #define IS_DEAD            1
 #define IN_MID_AIR         2
 #define IN_MOTION          3
-#define THREAD_IS_RUNNING  4
 
 // Frames.
 #define WALK      0
@@ -30,17 +29,12 @@ typedef struct entity_t
 {
     double   acceleration;
     double   deceleration;
-    double   dTime;
     uint16_t flags;
-    uint8_t  frame;
-    double   frameDelay;
-    double   frameDelayMax;
+    double   fps;
     uint8_t  frameEnd;
     uint8_t  frameStart;
     uint8_t  frameYoffset;
-    uint32_t gameLoopCount;
     uint8_t  height;
-    double   velocity;
     double   velocityMax;
     uint8_t  width;
     uint32_t worldHeight;
@@ -52,13 +46,18 @@ typedef struct entity_t
     /* These variables are used internally to store volatile values and usually
      * do not have to be changed manually. */
     AABB        bb;
-    uint32_t    gameLoopCountPrev;
+    double      distanceFall;
+    uint8_t     frame;
+    double      frameTime;
     SDL_Texture *sprite;
-    SDL_Thread  *thread;
+    double      velocity;
+    double      velocityFall;
+
 } Entity;
 
+void   entityFrame(Entity *entity, double dTime);
 void   entityFree(Entity *entity);
-Entity *entityInit(const char *name);
+Entity *entityInit();
 int8_t entityLoadSprite(Entity *entity, SDL_Renderer *renderer, const char *filename);
 int8_t entityRender(SDL_Renderer *renderer, Entity *entity, double posX, double posY);
 

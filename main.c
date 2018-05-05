@@ -64,8 +64,8 @@ int main()
         double timeB  = SDL_GetTicks();
         double dTime  = (timeB - timeA) / 1000;
         timeA         = timeB;
-        player->dTime = dTime;
-        player->gameLoopCount++;
+
+        entityFrame(player, dTime);
 
         if ((player->flags >> IS_DEAD) & 1)
         {
@@ -83,7 +83,6 @@ int main()
         if (SDL_PeepEvents(0, 0, SDL_PEEKEVENT, SDL_QUIT, SDL_QUIT) > 0)
             goto quit;
         keyState = SDL_GetKeyboardState(NULL);
-
         // Reset IN_MOTION flag (in case no key is pressed).
         player->flags &= ~(1 << IN_MOTION);
 
@@ -93,7 +92,6 @@ int main()
             if (0 == ((player->flags >> IN_MID_AIR) & 1))
             {
                 player->velocityMax  = 250;
-                player->deceleration = 0.00001; // x2.5
                 player->frameStart   = RUN;
                 player->frameEnd     = RUN_MAX;
             }
@@ -101,7 +99,6 @@ int main()
         else
         {
             player->velocityMax  = 100;
-            player->deceleration = 0.000004;
             player->frameStart   = WALK;
             player->frameEnd     = WALK_MAX;
         }
