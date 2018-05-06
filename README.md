@@ -18,7 +18,7 @@ The quite odd game title was generated using
 
 A question I hear alot is why I'm using C for this project instead of a modern
 language like Rust, Haskell or `[insert your preferred language here]`, because
-writing games in C is neither a easy thing to do nor very common (anymore).
+writing games in C is neither a easy thing to do nor very common (these days).
 
 The main reason is obvious and I already mentioned it in the introduction: to
 get some exercise in C programming.  And writing a game in C seemed like a fun
@@ -75,7 +75,7 @@ under a BSD 2-Clause "Simplified" Licence.  See the file
 [COPYING](src/tmx/COPYING) for details.
 
 [inih](https://github.com/benhoyt/inih) by Ben Hoyt is licensed the
-[New BSD licence].  See the file [LICENSE.txt](src/inih/LICENSE.txt) for
+New BSD licence.  See the file [LICENSE.txt](src/inih/LICENSE.txt) for
 details.
 
 [Magic Cliffs Environment](http://pixelgameart.org/web/portfolio/magic-cliffs-environment/)
