@@ -11,7 +11,7 @@
    eJzt09lNw0AURuEhkw6AAqABNrcB1MFmgaAHSB1sIxD0ANTB5hdoAEh4gX+EUa6s2ExAlng4n3QUOdE4d5yJcwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/B/eO9dVH5144dyEH743qabUtG/v+1/0va/qTfXVQL13Rs/TVwP/9fk4LWvNilptcR9zuve8WlCLakllv5g188O21Y653lcHqtfiPg517yN1rDbVlsrNDN8z2lmrc1b3fabr8/I+sSt1rW5a3Mea7r2uNtSJOlXBzBDnsq+x6py5//u5qjvfsZT/l/09HtSu2iv3EspnHco5g68vayjlXNWd71jKc7jVZ3fqvlxzoS5VUZaXr5l5b1R5Qynnyp4Le77zxH3Y9XHNk3o29wiV/Yyas2j4nULiHPZc2PMdEp+DXR/XzHSdm+0O71GYOevmbfqdisQ57LmI5/vRrB/3XP00T1OfuRu7IA==
   </data>
  </layer>
- <layer name="Overlay" width="50" height="100">
+ <layer name="Overlay" width="50" height="100" locked="1">
   <data encoding="base64" compression="zlib">
    eJztzzdOQ0EYReGxF0EwoSMYJDKsCTBpCWRYBxk6skSGdZChI0tkKDgbeBKv8TTnk0430tw/BEmSJEmSJEmSJEmSJEmSJEmSJEmSJEmSpGTDNEKjNEbjNEGTNEXT0Zals0O7tEf7dECHdETHdBJtWTqv9Ebv9EGf9EXf9EO/8aal0pQJoZlaqJXaqJ06qJO6MrEX/k83O3uolwrUR/00QIM0FOmOVVqjddqgTdqi7YT3M+ycpTmapwVapCVappVId9zRPT3QIz3RM70kvD9l5xmd0wVd0hVd0w3dRrqjhn9rqY7qKU8N1JiwpyQbQimVUTnlqIIqqYqqs8XdL0mSiusPbCw0/A==
   </data>

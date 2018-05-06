@@ -40,7 +40,8 @@ void entityFrame(Entity *entity, double dTime)
     }
 
     // Update frame.
-    if ((entity->flags >> IN_MOTION)  & 1)
+    if (((entity->flags >> IN_MOTION)  & 1) ||
+        ((entity->flags >> IN_MID_AIR) & 1))
     {
         entity->frameTime += dTime;
 
@@ -71,19 +72,27 @@ void entityFrame(Entity *entity, double dTime)
         entity->flags    |= 1 << IN_MID_AIR;
     }
 
+    // Handle falling, jumping, gravity, etc.
     if ((entity->flags >> IN_MID_AIR) & 1)
     {
         double g = (entity->worldMeterInPixel * entity->worldGravitation);
         if ((entity->flags >> IS_JUMPING) & 1)
         {
+            entity->frameStart = JUMP;
+            entity->frameEnd   = JUMP_MAX;
             g += entity->velocityJump;
-            g = -g * 4;
+            g = -g * entity->jumpGravityFactor;
 
-            if (entity->jumpTime > entity->jumpMax)
+            if (entity->jumpTime > entity->jumpTimeMax)
             {
                 entity->jumpTime = 0;
                 entity->flags &= ~(1 << IS_JUMPING);
             }
+        }
+        else
+        {
+            entity->frameStart = FALL;
+            entity->frameEnd   = FALL_MAX;
         }
 
         entity->distanceFall  = g * dTime * dTime;
@@ -96,14 +105,14 @@ void entityFrame(Entity *entity, double dTime)
         entity->velocityFall  = 0;
     }
 
-    //
+    // Connect left and right border of the map and vice versa.
     if (entity->worldPosX < 0 - (entity->width / 2))
         entity->worldPosX = entity->worldWidth - (entity->width / 2);
 
     if (entity->worldPosX > entity->worldWidth - (entity->width / 2))
         entity->worldPosX = 0 - (entity->width / 2);
 
-
+    // Kill player when he falls out of the map.
     if (entity->worldPosY >= entity->worldHeight + entity->height)
         entity->flags |= 1 << IS_DEAD;
 
@@ -153,8 +162,9 @@ Entity *entityInit()
     entity->frameEnd          = WALK_MAX;
     entity->frameStart        = WALK;
     entity->frameTime         =    0.0;
-    entity->jumpMax           =    0.09;
+    entity->jumpGravityFactor =    4.0;
     entity->jumpTime          =    0.0;
+    entity->jumpTimeMax       =    0.09;
     entity->sprite            = NULL;
     entity->velocity          =    0.0;
     entity->velocityFall      =    0.0;

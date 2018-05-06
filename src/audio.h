@@ -18,6 +18,9 @@ typedef struct mixer_t {
     uint16_t samplingFrequency;
 } Mixer;
 
+/**
+ * @ingroup Audio
+ */
 typedef struct music_t {
     const char *filename;
     Mix_Music  *mus;

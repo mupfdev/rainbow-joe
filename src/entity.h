@@ -9,16 +9,20 @@
 
 // Flags.
 #define DIRECTION   0
-#define IS_DEAD     1
 #define IN_MID_AIR  2
 #define IN_MOTION   3
+#define IS_DEAD     1
 #define IS_JUMPING  4
 
 // Frames.
-#define WALK      0
-#define WALK_MAX  3
+#define FALL      6
+#define FALL_MAX  7
+#define JUMP      4
+#define JUMP_MAX  5
 #define RUN      14
 #define RUN_MAX  17
+#define WALK      0
+#define WALK_MAX  3
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -36,7 +40,8 @@ typedef struct entity_t
     uint8_t  frameStart;
     uint8_t  frameYoffset;
     uint8_t  height;
-    double   jumpMax;
+    double   jumpGravityFactor;
+    double   jumpTimeMax;
     double   velocityMax;
     uint8_t  width;
     uint32_t worldHeight;

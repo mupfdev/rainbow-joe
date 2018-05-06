@@ -5,6 +5,7 @@ LIBS=\
 	-lSDL2_mixer\
 	`xml2-config --libs`
 CFLAGS=\
+	-Isrc/inih\
 	-Isrc/tmx\
 	-I/usr/include/libxml2\
 	-O2\
@@ -16,5 +17,8 @@ CFLAGS=\
 	-Wextra\
 	`sdl2-config --cflags`\
 	`xml2-config --cflags`
-SRCS=$(wildcard src/*.c) $(wildcard src/tmx/*.c)
+SRCS=\
+	$(wildcard src/*.c)\
+	$(wildcard src/tmx/*.c)\
+	$(wildcard src/inih/*.c)
 OBJS=$(patsubst %.c, %.o, $(SRCS))

@@ -67,15 +67,19 @@ Q:      quit
 ```
 
 ## License
-This project is licensed under the "THE BEER-WARE LICENCE".  See the file
+This project is licenced under the "THE BEER-WARE LICENCE".  See the file
 [LICENCE.md](LICENCE.md) for details.
 
-[TMX C Loader](https://github.com/baylej/tmx/) by Bayle Jonathan is licensed
-under a BSD 2-Clause "Simplified" License.  See the file
+[TMX C Loader](https://github.com/baylej/tmx/) by Bayle Jonathan is licenced
+under a BSD 2-Clause "Simplified" Licence.  See the file
 [COPYING](src/tmx/COPYING) for details.
 
+[inih](https://github.com/benhoyt/inih) by Ben Hoyt is licensed the
+[New BSD licence].  See the file [LICENSE.txt](src/inih/LICENSE.txt) for
+details.
+
 [Magic Cliffs Environment](http://pixelgameart.org/web/portfolio/magic-cliffs-environment/)
-by [Luis Zun aka ansimuz](https://www.patreon.com/ansimuz).  Licensed under 
+by [Luis Zun aka ansimuz](https://www.patreon.com/ansimuz).  Licenced under 
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 All other graphic, sound & music resources are dedicated to

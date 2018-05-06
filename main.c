@@ -9,14 +9,21 @@ int main()
 {
     int execStatus  = EXIT_SUCCESS;
 
-    Video    *video  = NULL;
-    Map      *map    = NULL;
-    Entity   *player = NULL;
-    Mixer    *mixer  = NULL;
-    Music    *music  = NULL;
-    Music    *dead   = NULL;
+    Config config  = configInit("default.ini");
+    Video  *video  = NULL;
+    Map    *map    = NULL;
+    Entity *player = NULL;
+    Mixer  *mixer  = NULL;
+    Music  *music  = NULL;
+    Music  *dead   = NULL;
 
-    video = videoInit("Rainbow Joe", 1024, 768, 0, 2);
+    video = videoInit(
+        "Rainbow Joe",
+        config.video.width,
+        config.video.height,
+        config.video.fullscreen,
+        2
+    );
     if (NULL == video)
     {
         execStatus = EXIT_FAILURE;
@@ -53,7 +60,8 @@ int main()
     mixer = mixerInit();
     music = musicInit("res/music/enchanted-tiki-86.ogg");
     dead  = musicInit("res/sfx/05.ogg");
-    if (mixer) musicFadeIn(music, -1, 5000);
+    if (config.audio.enabled)
+        if (mixer) musicFadeIn(music, -1, 5000);
 
     double   cameraPosX = 0;
     double   cameraPosY = map->map->height * map->map->tile_height - video->windowHeight;
@@ -72,9 +80,11 @@ int main()
             player->flags &= ~(1 << IS_DEAD);
             player->worldPosX =   16;
             player->worldPosY = 1408;
-            musicPlay(dead, 1);
+            if (config.audio.enabled)
+                if (mixer) musicPlay(dead, 1);
             SDL_Delay(2000);
-            if (mixer) musicFadeIn(music, -1, 5000);
+            if (config.audio.enabled)
+                if (mixer) musicFadeIn(music, -1, 5000);
         }
 
         // Handle keyboard input.
@@ -100,9 +110,11 @@ int main()
         {
             // Don't allow to slow down in mid-air.
             if (0 == ((player->flags >> IN_MID_AIR) & 1))
+            {
                 player->velocityMax  = 100;
-            player->frameStart   = WALK;
-            player->frameEnd     = WALK_MAX;
+                player->frameStart   = WALK;
+                player->frameEnd     = WALK_MAX;
+            }
         }
         if (keyState[SDL_SCANCODE_Q]) goto quit;
         if (keyState[SDL_SCANCODE_A])
@@ -193,5 +205,6 @@ int main()
     entityFree(player);
     mapFree(map);
     videoTerminate(video);
+    //configFree(config);
     return execStatus;
 }
