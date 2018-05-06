@@ -66,20 +66,24 @@ void entityFrame(Entity *entity, double dTime)
 
     // Set horizontal player position.
     if ((entity->flags >> IS_JUMPING) & 1)
-        entity->flags |= 1 << IN_MID_AIR;
+    {
+        entity->jumpTime += dTime;
+        entity->flags    |= 1 << IN_MID_AIR;
+    }
 
     if ((entity->flags >> IN_MID_AIR) & 1)
     {
         double g = (entity->worldMeterInPixel * entity->worldGravitation);
         if ((entity->flags >> IS_JUMPING) & 1)
         {
-            if (entity->velocityFall > entity->jump)
+            g += entity->velocityJump;
+            g = -g * 4;
+
+            if (entity->jumpTime > entity->jumpMax)
             {
-                g += entity->velocityJump;
-                g = -g * 4;
-            }
-            else
+                entity->jumpTime = 0;
                 entity->flags &= ~(1 << IS_JUMPING);
+            }
         }
 
         entity->distanceFall  = g * dTime * dTime;
@@ -97,10 +101,14 @@ void entityFrame(Entity *entity, double dTime)
         entity->worldPosX = entity->worldWidth - (entity->width / 2);
 
     if (entity->worldPosX > entity->worldWidth - (entity->width / 2))
-        entity->worldPosX = 0;
+        entity->worldPosX = 0 - (entity->width / 2);
+
+
+    if (entity->worldPosY >= entity->worldHeight + entity->height)
+        entity->flags |= 1 << IS_DEAD;
 
     if (entity->worldPosY > entity->worldHeight + entity->height)
-        entity->flags |= 1 << IS_DEAD;
+        entity->worldPosY = entity->worldHeight + entity->height;
 }
 
 /**
@@ -145,7 +153,8 @@ Entity *entityInit()
     entity->frameEnd          = WALK_MAX;
     entity->frameStart        = WALK;
     entity->frameTime         =    0.0;
-    entity->jump              =   -0.25;
+    entity->jumpMax           =    0.09;
+    entity->jumpTime          =    0.0;
     entity->sprite            = NULL;
     entity->velocity          =    0.0;
     entity->velocityFall      =    0.0;

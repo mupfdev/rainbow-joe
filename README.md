@@ -74,6 +74,10 @@ This project is licensed under the "THE BEER-WARE LICENCE".  See the file
 under a BSD 2-Clause "Simplified" License.  See the file
 [COPYING](src/tmx/COPYING) for details.
 
-All graphic, sound & music resources are dedicated to
+[Magic Cliffs Environment](http://pixelgameart.org/web/portfolio/magic-cliffs-environment/)
+by [Luis Zun aka ansimuz](https://www.patreon.com/ansimuz).  Licensed under 
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+All other graphic, sound & music resources are dedicated to
 [public domain](https://creativecommons.org/publicdomain/zero/1.0/) and have
 been found on [OpenGameArt.org](https://opengameart.org/).

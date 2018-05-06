@@ -36,7 +36,7 @@ typedef struct entity_t
     uint8_t  frameStart;
     uint8_t  frameYoffset;
     uint8_t  height;
-    double   jump;
+    double   jumpMax;
     double   velocityMax;
     uint8_t  width;
     uint32_t worldHeight;
@@ -52,6 +52,7 @@ typedef struct entity_t
     double      distanceFall;
     uint8_t     frame;
     double      frameTime;
+    double      jumpTime;
     double      velocityJump;
     SDL_Texture *sprite;
     double      velocity;

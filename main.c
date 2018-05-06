@@ -16,7 +16,7 @@ int main()
     Music    *music  = NULL;
     Music    *dead   = NULL;
 
-    video = videoInit("Rainbow Joe", 800, 600, 0, 2);
+    video = videoInit("Rainbow Joe", 1024, 768, 0, 2);
     if (NULL == video)
     {
         execStatus = EXIT_FAILURE;
@@ -24,7 +24,7 @@ int main()
     }
     atexit(SDL_Quit);
 
-    map = mapInit("res/maps/forest.tmx");
+    map = mapInit("res/maps/01.tmx");
     if (NULL == map)
     {
         execStatus = EXIT_FAILURE;
@@ -42,22 +42,21 @@ int main()
         execStatus = EXIT_FAILURE;
         goto quit;
     }
-    player->frameYoffset =  32;
-    player->worldPosX    =  16;
-    player->worldPosY    = 160;
+    player->frameYoffset =   32;
+    player->worldPosX    =   16;
+    player->worldPosY    = 1408;
     player->worldWidth   = map->map->width  * map->map->tile_width;
     player->worldHeight  = map->map->height * map->map->tile_height;
-
 
     /* Note: The error handling isn't missing here.  There is simply no need to
      * quit the program if the music can't be played by some reason. */
     mixer = mixerInit();
-    music = musicInit("res/music/creepy.ogg");
+    music = musicInit("res/music/enchanted-tiki-86.ogg");
     dead  = musicInit("res/sfx/05.ogg");
     if (mixer) musicFadeIn(music, -1, 5000);
 
     double   cameraPosX = 0;
-    double   cameraPosY = map->map->height * map->map->tile_height - video->height;
+    double   cameraPosY = map->map->height * map->map->tile_height - video->windowHeight;
     double   timeA      = SDL_GetTicks();
 
     while (1)
@@ -70,12 +69,12 @@ int main()
 
         if ((player->flags >> IS_DEAD) & 1)
         {
+            player->flags &= ~(1 << IS_DEAD);
+            player->worldPosX =   16;
+            player->worldPosY = 1408;
             musicPlay(dead, 1);
-            player->worldPosX =  16;
-            player->worldPosY = 160;
             SDL_Delay(2000);
             if (mixer) musicFadeIn(music, -1, 5000);
-            player->flags &= ~(1 << IS_DEAD);
         }
 
         // Handle keyboard input.
@@ -140,8 +139,8 @@ int main()
         }
         else
         {
-            cameraPosX = player->worldPosX - video->width  / (video->zoomLevel * 2) + (player->width  / 2);
-            cameraPosY = player->worldPosY - video->height / (video->zoomLevel * 2) + (player->height / 2);
+            cameraPosX = player->worldPosX - video->windowWidth  / (video->zoomLevel * 2) + (player->width  / 2);
+            cameraPosY = player->worldPosY - video->windowHeight / (video->zoomLevel * 2) + (player->height / 2);
         }
 
         // Set up collision detection.
@@ -151,8 +150,8 @@ int main()
             player->flags |= 1 << IN_MID_AIR;
 
         // Set camera boundaries to map size.
-        int32_t cameraMaxX = (map->map->width  * map->map->tile_width)  - (video->width  / video->zoomLevel);
-        int32_t cameraMaxY = (map->map->height * map->map->tile_height) - (video->height / video->zoomLevel);
+        int32_t cameraMaxX = (map->map->width  * map->map->tile_width)  - (video->windowWidth  / video->zoomLevel);
+        int32_t cameraMaxY = (map->map->height * map->map->tile_height) - (video->windowHeight / video->zoomLevel);
         if (cameraPosX < 0) cameraPosX = 0;
         if (cameraPosY < 0) cameraPosY = 0;
         if (cameraPosX > cameraMaxX) cameraPosX = cameraMaxX;

@@ -18,7 +18,7 @@
  * @return  A Video structure or NULL on failure.  See @ref struct Video.
  * @ingroup Video
  */
-Video *videoInit(const char *title, uint32_t width, uint32_t height, uint32_t flags, double zoomLevel)
+Video *videoInit(const char *title, int32_t width, int32_t height, uint32_t flags, double zoomLevel)
 {
     static Video *video;
     video = malloc(sizeof(struct video_t));
@@ -36,6 +36,10 @@ Video *videoInit(const char *title, uint32_t width, uint32_t height, uint32_t fl
         return NULL;
     }
 
+    video->windowHeight   = height;
+    video->windowWidth    = width;
+    video->zoomLevel      = zoomLevel;
+
     video->window = SDL_CreateWindow(
         title,
         SDL_WINDOWPOS_UNDEFINED,
@@ -43,9 +47,6 @@ Video *videoInit(const char *title, uint32_t width, uint32_t height, uint32_t fl
         width,
         height,
         flags);
-
-    video->height = height;
-    video->width  = width;
 
     if (NULL == video->window)
     {
@@ -66,9 +67,7 @@ Video *videoInit(const char *title, uint32_t width, uint32_t height, uint32_t fl
         return NULL;
     }
 
-    video->zoomLevel = zoomLevel;
-
-    if (0 != SDL_RenderSetLogicalSize(video->renderer, width / zoomLevel, height / zoomLevel))
+    if (0 != SDL_RenderSetLogicalSize(video->renderer, video->windowWidth / zoomLevel, video->windowHeight / zoomLevel))
     {
         fprintf(stderr, "%s\n", SDL_GetError());
         free(video);
@@ -89,7 +88,7 @@ int8_t videoSetZoomLevel(Video *video, double zoomLevel)
 {
     if (zoomLevel < 1) zoomLevel = 1;
 
-    if (0 != SDL_RenderSetLogicalSize(video->renderer, video->width / zoomLevel, video->height / zoomLevel))
+    if (0 != SDL_RenderSetLogicalSize(video->renderer, video->windowWidth / zoomLevel, video->windowHeight / zoomLevel))
     {
         fprintf(stderr, "%s\n", SDL_GetError());
         return -1;

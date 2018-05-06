@@ -135,7 +135,7 @@ int8_t mapRender(
         return -1;
     }
 
-    SDL_Texture *tileset = IMG_LoadTexture(renderer, "res/tilesets/sheet.png");
+    SDL_Texture *tileset = IMG_LoadTexture(renderer, "res/tilesets/tileset.png");
     if (NULL == tileset)
     {
         fprintf(stderr, "%s\n", SDL_GetError());
