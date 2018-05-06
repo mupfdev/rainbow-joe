@@ -124,7 +124,7 @@ int main()
             }
 
         if (keyState[SDL_SCANCODE_1])
-            videoSetZoomLevel(video, 2);
+            videoSetZoomLevel(video, video->zoomLevelInital);
         if (keyState[SDL_SCANCODE_2])
             videoSetZoomLevel(video, video->zoomLevel - dTime);
         if (keyState[SDL_SCANCODE_3])
