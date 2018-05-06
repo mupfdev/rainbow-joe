@@ -8,17 +8,25 @@
  <tile id="122" type="floor"/>
  <tile id="123" type="floor"/>
  <tile id="124" type="floor"/>
- <tile id="141" type="floor"/>
- <tile id="143" type="floor"/>
- <tile id="144" type="floor"/>
- <tile id="145" type="floor"/>
- <tile id="207" type="floor"/>
- <tile id="208" type="floor"/>
- <tile id="209" type="floor"/>
- <tile id="211" type="floor"/>
- <tile id="212" type="floor"/>
- <tile id="213" type="floor"/>
- <tile id="214" type="floor"/>
+ <tile id="194" type="floor"/>
+ <tile id="195" type="floor"/>
+ <tile id="196" type="floor"/>
+ <tile id="197" type="floor"/>
+ <tile id="199" type="floor"/>
+ <tile id="201" type="floor"/>
+ <tile id="202" type="floor"/>
+ <tile id="203" type="floor"/>
+ <tile id="204" type="floor"/>
+ <tile id="265" type="floor"/>
+ <tile id="266" type="floor"/>
+ <tile id="267" type="floor"/>
+ <tile id="269" type="floor"/>
+ <tile id="270" type="floor"/>
+ <tile id="271" type="floor"/>
+ <tile id="272" type="floor"/>
+ <tile id="467" type="floor"/>
+ <tile id="468" type="floor"/>
+ <tile id="469" type="floor"/>
  <tile id="473" type="floor"/>
  <tile id="474" type="floor"/>
  <tile id="675" type="floor"/>
