@@ -164,7 +164,7 @@ Entity *entityInit()
     entity->frameTime         =    0.0;
     entity->jumpGravityFactor =    4.0;
     entity->jumpTime          =    0.0;
-    entity->jumpTimeMax       =    0.09;
+    entity->jumpTimeMax       =    0.12;
     entity->sprite            = NULL;
     entity->velocity          =    0.0;
     entity->velocityFall      =    0.0;

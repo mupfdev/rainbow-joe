@@ -49,9 +49,9 @@ int main()
         execStatus = EXIT_FAILURE;
         goto quit;
     }
-    player->frameYoffset =   32;
-    player->worldPosX    =   16;
-    player->worldPosY    = 1408;
+    player->frameYoffset =  32;
+    player->worldPosX    =  32;
+    player->worldPosY    = 608;
     player->worldWidth   = map->map->width  * map->map->tile_width;
     player->worldHeight  = map->map->height * map->map->tile_height;
 
@@ -78,8 +78,8 @@ int main()
         if ((player->flags >> IS_DEAD) & 1)
         {
             player->flags &= ~(1 << IS_DEAD);
-            player->worldPosX =   16;
-            player->worldPosY = 1408;
+            player->worldPosX =  32;
+            player->worldPosY = 608;
             if (config.audio.enabled)
                 if (mixer) musicPlay(dead, 1);
             SDL_Delay(2000);
@@ -119,11 +119,17 @@ int main()
         if (keyState[SDL_SCANCODE_Q]) goto quit;
         if (keyState[SDL_SCANCODE_A])
         {
+            if (0 == ((player->flags >> DIRECTION) & 1))
+                player->velocity = 0;
+
             player->flags |= 1 << IN_MOTION;
             player->flags |= 1 << DIRECTION;
         }
         if (keyState[SDL_SCANCODE_D])
         {
+            if ((player->flags >> DIRECTION) & 1)
+                player->velocity = 0;
+
             player->flags |= 1   << IN_MOTION;
             player->flags &= ~(1 << DIRECTION);
         }

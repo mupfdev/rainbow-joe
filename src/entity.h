@@ -8,11 +8,11 @@
 #include "aabb.h"
 
 // Flags.
-#define DIRECTION   0
-#define IN_MID_AIR  2
-#define IN_MOTION   3
-#define IS_DEAD     1
-#define IS_JUMPING  4
+#define DIRECTION         0
+#define IN_MID_AIR        1
+#define IN_MOTION         2
+#define IS_DEAD           3
+#define IS_JUMPING        4
 
 // Frames.
 #define FALL      6
