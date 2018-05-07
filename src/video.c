@@ -55,14 +55,22 @@ Video *videoInit(const char *title, int32_t width, int32_t height, uint8_t fulls
         video->windowHeight,
         flags);
 
-    if (fullscreen)
-        SDL_GetWindowSize(video->window, &video->windowWidth, &video->windowHeight);
-
     if (NULL == video->window)
     {
         fprintf(stderr, "%s\n", SDL_GetError());
         free(video);
         return NULL;
+    }
+
+    if (fullscreen)
+    {
+        SDL_GetWindowSize(video->window, &video->windowWidth, &video->windowHeight);
+        if (0 > SDL_ShowCursor(SDL_DISABLE))
+        {
+            fprintf(stderr, "%s\n", SDL_GetError());
+            free(video);
+            return NULL;
+        }
     }
 
     video->renderer = SDL_CreateRenderer(
