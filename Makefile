@@ -3,7 +3,7 @@
 include config.mk
 
 all: $(OBJS)
-	gcc $(CFLAGS) $(LIBS) main.c $(OBJS) -o $(PROJECT)
+	gcc $(CFLAGS) $(LIBS) $(OBJS) -o $(PROJECT)
 
 %: %.c
 	gcc -c $(CFLAGS) $(INC) $(LIBS) -o $@ $<
