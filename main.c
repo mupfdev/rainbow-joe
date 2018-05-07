@@ -1,6 +1,7 @@
 /** @file main.c
  * @author    Michael Fitzmayer
  * @copyright "THE BEER-WARE LICENCE" (Revision 42)
+ * @todo      Add function to display parallax backgrounds.
  */
 
 #include "main.h"
