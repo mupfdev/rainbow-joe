@@ -76,11 +76,11 @@ int main()
         execStatus = EXIT_FAILURE;
         goto quit;
     }
-    npc->frameYoffset =  32;
-    npc->worldPosX    =  96;
-    npc->worldPosY    = 400;
-    npc->worldWidth   = map->map->width  * map->map->tile_width;
-    npc->worldHeight  = map->map->height * map->map->tile_height;
+    npc->frameYoffset  =  32;
+    npc->worldPosX     = 112;
+    npc->worldPosY     = 400;
+    npc->worldWidth    = map->map->width  * map->map->tile_width;
+    npc->worldHeight   = map->map->height * map->map->tile_height;
 
     /* Note: The error handling isn't missing here.  There is simply no need to
      * quit the program if the music can't be played by some reason. */
@@ -113,19 +113,6 @@ int main()
             SDL_Delay(2000);
             if (config.audio.enabled)
                 if (mixer) musicFadeIn(music, -1, 5000);
-        }
-        if ((npc->flags >> IS_DEAD) & 1)
-        {
-            npc->flags     &= ~(1 << IS_DEAD);
-            npc->flags     &= ~(1 << IN_MOTION);
-            npc->flags     ^= 1 << DIRECTION;
-
-            if ((player->flags >> DIRECTION) & 1)
-                npc->worldPosX  = 1920 + (npc->width / 2);
-            else
-                npc->worldPosX  = 1920 - (npc->width / 2);
-
-            npc->worldPosY  =  608;
         }
 
         // Handle keyboard input.
@@ -212,8 +199,27 @@ int main()
         else
             npc->flags |= 1 << IN_MID_AIR;
 
-        if (doIntersect(player->bb, npc->bb))
-            npc->flags |= 1 << IN_MOTION;
+
+        // Set NPC behavior.
+        if ((doIntersect(player->bb, npc->bb)) && 0 == ((npc->flags >> IN_MOTION) & 1))
+        {
+            npc->flags ^= 1 << DIRECTION;
+            npc->flags |= 1 << IN_MOTION;            
+        }
+
+        if ((npc->worldPosX > 1632) &&
+            (npc->worldPosX < 1648) &&
+            ((npc->flags >> DIRECTION) & 1))
+            {
+                npc->flags &= ~(1 << IN_MOTION);
+            }
+
+        if ((npc->worldPosX > 112) &&
+            (npc->worldPosX < 128) &&
+            0 == ((npc->flags >> DIRECTION) & 1))
+            {
+                npc->flags &= ~(1 << IN_MOTION);
+            }
 
         // Set camera boundaries to map size.
         int32_t cameraMaxX = (map->map->width  * map->map->tile_width)  - (video->windowWidth  / video->zoomLevel);
