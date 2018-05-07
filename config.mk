@@ -5,8 +5,6 @@ LIBS=\
 	-lSDL2_mixer\
 	`xml2-config --libs`
 CFLAGS=\
-	-Isrc/inih\
-	-Isrc/tmx\
 	-I/usr/include/libxml2\
 	-O2\
 	-pedantic-errors\

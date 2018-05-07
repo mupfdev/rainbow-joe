@@ -5,8 +5,6 @@
 #ifndef ENTITY_h
 #define ENTITY_h
 
-#include "aabb.h"
-
 // Flags.
 #define DIRECTION         0
 #define IN_MID_AIR        1
@@ -26,6 +24,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include "aabb.h"
 
 /**
  * @ingroup Entity
@@ -38,7 +37,7 @@ typedef struct entity_t
     double   fps;
     uint8_t  frameEnd;
     uint8_t  frameStart;
-    uint8_t  frameYoffset;
+    uint16_t frameYoffset;
     uint8_t  height;
     double   jumpGravityFactor;
     double   jumpTimeMax;

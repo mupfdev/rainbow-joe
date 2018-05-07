@@ -13,6 +13,7 @@ int main()
     Config config  = configInit("default.ini");
     Video  *video  = NULL;
     Map    *map    = NULL;
+    Icon   *fcMode = NULL;
     Entity *player = NULL;
     Entity *npc    = NULL;
     Mixer  *mixer  = NULL;
@@ -35,6 +36,13 @@ int main()
 
     map = mapInit("res/maps/01.tmx");
     if (NULL == map)
+    {
+        execStatus = EXIT_FAILURE;
+        goto quit;
+    }
+
+    fcMode = iconInit(video->renderer, "res/icons/telescope.png");
+    if (NULL == fcMode)
     {
         execStatus = EXIT_FAILURE;
         goto quit;
@@ -246,6 +254,13 @@ int main()
             goto quit;
         }
 
+        if (keyState[SDL_SCANCODE_F])
+            if (-1 == iconRender(video->renderer, fcMode, video->windowWidth / video->zoomLevel - fcMode->width, 0))
+            {
+                execStatus = EXIT_FAILURE;
+                goto quit;
+            }
+
         SDL_RenderPresent(video->renderer);
         SDL_RenderClear(video->renderer);
     }
@@ -256,6 +271,7 @@ int main()
     mixerFree(mixer);
     entityFree(npc);
     entityFree(player);
+    iconFree(fcMode);
     mapFree(map);
     videoTerminate(video);
     return execStatus;
