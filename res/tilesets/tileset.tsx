@@ -29,12 +29,6 @@
  <tile id="469" type="floor"/>
  <tile id="473" type="floor"/>
  <tile id="474" type="floor"/>
- <tile id="675" type="floor"/>
- <tile id="676" type="floor"/>
- <tile id="678" type="floor"/>
- <tile id="679" type="floor"/>
- <tile id="681" type="floor"/>
- <tile id="682" type="floor"/>
  <tile id="698" type="floor"/>
  <tile id="699" type="floor"/>
  <tile id="700" type="floor"/>
@@ -59,6 +53,25 @@
  <tile id="728" type="floor"/>
  <tile id="729" type="floor"/>
  <tile id="730" type="floor"/>
+ <tile id="733" type="floor"/>
+ <tile id="734" type="floor"/>
+ <tile id="736" type="floor"/>
+ <tile id="737" type="floor"/>
+ <tile id="739" type="floor"/>
+ <tile id="740" type="floor"/>
+ <tile id="908" type="floor"/>
+ <tile id="909" type="floor"/>
+ <tile id="911" type="floor"/>
  <tile id="957" type="floor"/>
  <tile id="958" type="floor"/>
+ <tile id="965" type="floor"/>
+ <tile id="966" type="floor"/>
+ <tile id="967" type="floor"/>
+ <tile id="969" type="floor"/>
+ <tile id="970" type="floor"/>
+ <tile id="1022" type="floor"/>
+ <tile id="1023" type="floor"/>
+ <tile id="1024" type="floor"/>
+ <tile id="1028" type="floor"/>
+ <tile id="1029" type="floor"/>
 </tileset>
