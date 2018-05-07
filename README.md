@@ -21,8 +21,8 @@ language like Rust, Haskell or `[insert your preferred language here]`, because
 writing games in C is neither a easy thing to do nor very common (these days).
 
 The main reason is obvious and I already mentioned it in the introduction: to
-get some exercise in C programming.  And writing a game in C seemed like a fun
-way to accomplish this.
+get exercise in C programming.  And writing a game in C seemed like a fun way
+of getting some.
 
 Nevertheless: I hope you find the code of this project useful.  If so, feel free
 to use it in any way you want. Just consider buying me a beer in case we meet
