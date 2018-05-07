@@ -23,8 +23,8 @@ int main()
         config.video.width,
         config.video.height,
         config.video.fullscreen,
-        2
-    );
+        2);
+
     if (NULL == video)
     {
         execStatus = EXIT_FAILURE;

@@ -16,13 +16,11 @@ typedef struct video_t
     SDL_Window   *window;
     int32_t      windowHeight;
     int32_t      windowWidth;
-    int32_t      viewportHeight;
-    int32_t      viewportWidth;
     double       zoomLevel;
     double       zoomLevelInital;
 } Video;
 
-Video *videoInit(const char *title, int32_t width, int32_t height, uint32_t flags, double zoomLevel);
+Video *videoInit(const char *title, int32_t width, int32_t height, uint8_t fullscreen, double zoomLevel);
 int8_t videoSetZoomLevel(Video *video, double zoomLevel);
 void   videoTerminate(Video *video);
 

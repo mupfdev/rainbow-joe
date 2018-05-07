@@ -10,15 +10,15 @@
 
 /**
  * @brief   Initialise SDL's video subsystem.
- * @param   title     the title of the window, in UTF-8 encoding.
- * @param   width     the width of the window, in screen coordinates.
- * @param   height    the height of the window, in screen coordinates.
- * @param   flags     0, or one or more SDL_WindowFlags OR'd together.
- * @param   zoomLevel the zoom level used by the renderer.
+ * @param   title      the title of the window, in UTF-8 encoding.
+ * @param   width      the width of the window, in screen coordinates.
+ * @param   height     the height of the window, in screen coordinates.
+ * @param   fullscreen the window's fullscreen state.
+ * @param   zoomLevel  the zoom level used by the renderer.
  * @return  A Video structure or NULL on failure.  See @ref struct Video.
  * @ingroup Video
  */
-Video *videoInit(const char *title, int32_t width, int32_t height, uint32_t flags, double zoomLevel)
+Video *videoInit(const char *title, int32_t width, int32_t height, uint8_t fullscreen, double zoomLevel)
 {
     static Video *video;
     video = malloc(sizeof(struct video_t));
@@ -36,18 +36,27 @@ Video *videoInit(const char *title, int32_t width, int32_t height, uint32_t flag
         return NULL;
     }
 
-    video->windowHeight    = height;
-    video->windowWidth     = width;
+    video->windowHeight = height;
+    video->windowWidth  = width;
     video->zoomLevel       = zoomLevel;
     video->zoomLevelInital = zoomLevel;
+
+    uint32_t flags;
+    if (fullscreen)
+        flags = SDL_WINDOW_FULLSCREEN_DESKTOP;
+    else
+        flags = 0;
 
     video->window = SDL_CreateWindow(
         title,
         SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED,
-        width,
-        height,
+        video->windowWidth,
+        video->windowHeight,
         flags);
+
+    if (fullscreen)
+        SDL_GetWindowSize(video->window, &video->windowWidth, &video->windowHeight);
 
     if (NULL == video->window)
     {

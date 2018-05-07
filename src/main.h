@@ -8,6 +8,7 @@
 #include "audio.h"
 #include "config.h"
 #include "entity.h"
+#include "hud.h"
 #include "map.h"
 #include "video.h"
 
