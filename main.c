@@ -120,15 +120,14 @@ int main()
         if (keyState[SDL_SCANCODE_A])
         {
             if (0 == ((player->flags >> DIRECTION) & 1))
-                player->velocity = 0;
-
+                player->velocity = -player->velocity;
             player->flags |= 1 << IN_MOTION;
             player->flags |= 1 << DIRECTION;
         }
         if (keyState[SDL_SCANCODE_D])
         {
             if ((player->flags >> DIRECTION) & 1)
-                player->velocity = 0;
+                player->velocity = -player->velocity;
 
             player->flags |= 1   << IN_MOTION;
             player->flags &= ~(1 << DIRECTION);
