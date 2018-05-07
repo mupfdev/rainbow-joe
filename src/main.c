@@ -93,7 +93,7 @@ int main()
     double   cameraPosX = 0;
     double   cameraPosY = map->map->height * map->map->tile_height - video->windowHeight;
     double   timeA      = SDL_GetTicks();
-
+    double   delay      = 0;
     while (1)
     {
         double timeB  = SDL_GetTicks();
@@ -105,14 +105,24 @@ int main()
 
         if ((player->flags >> IS_DEAD) & 1)
         {
-            player->flags     &= ~(1 << IS_DEAD);
-            player->worldPosX  =  32;
-            player->worldPosY  = 608;
-            if (config.audio.enabled)
+            if (config.audio.enabled && (0 == delay))
                 if (mixer) musicPlay(dead, 1);
-            SDL_Delay(2000);
-            if (config.audio.enabled)
-                if (mixer) musicFadeIn(music, -1, 5000);
+            delay += dTime;
+
+            if (delay > 2)
+            {
+                player->flags     &= ~(1 << IS_DEAD);
+                player->worldPosX  =  32;
+                player->worldPosY  = 608;
+                npc->flags        &= ~(1 << DIRECTION);
+                npc->flags        &= ~(1 << IN_MOTION);
+                npc->worldPosX     = 112;
+                npc->worldPosY     = 400;
+
+                delay              =   0;
+                if (config.audio.enabled)
+                    if (mixer) musicFadeIn(music, -1, 5000);
+            }
         }
 
         // Handle keyboard input.
