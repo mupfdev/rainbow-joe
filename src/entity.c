@@ -101,6 +101,8 @@ void entityFrame(Entity *entity, double dTime)
     }
     else
     {
+        entity->frameStart = WALK;
+        entity->frameEnd   = WALK_MAX;
         entity->flags &= ~(1 << IS_JUMPING);
         entity->velocityFall  = 0;
     }
@@ -132,7 +134,6 @@ void entityFree(Entity *entity)
 
 /**
  * @brief
- * @param   name
  * @return
  * @ingroup Entity
  */

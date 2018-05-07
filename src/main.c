@@ -14,6 +14,7 @@ int main()
     Video  *video  = NULL;
     Map    *map    = NULL;
     Entity *player = NULL;
+    Entity *npc    = NULL;
     Mixer  *mixer  = NULL;
     Music  *music  = NULL;
     Music  *dead   = NULL;
@@ -39,7 +40,7 @@ int main()
         goto quit;
     }
 
-    player = entityInit("player");
+    player = entityInit();
     if (NULL == player)
     {
         execStatus = EXIT_FAILURE;
@@ -50,11 +51,28 @@ int main()
         execStatus = EXIT_FAILURE;
         goto quit;
     }
-    player->frameYoffset =  32;
+    player->frameYoffset =  64;
     player->worldPosX    =  32;
     player->worldPosY    = 608;
     player->worldWidth   = map->map->width  * map->map->tile_width;
     player->worldHeight  = map->map->height * map->map->tile_height;
+
+    npc = entityInit();
+    if (NULL == npc)
+    {
+        execStatus = EXIT_FAILURE;
+        goto quit;
+    }
+    if (-1 == entityLoadSprite(npc, video->renderer, "res/sprites/characters.png"))
+    {
+        execStatus = EXIT_FAILURE;
+        goto quit;
+    }
+    npc->frameYoffset =  32;
+    npc->worldPosX    =  96;
+    npc->worldPosY    = 400;
+    npc->worldWidth   = map->map->width  * map->map->tile_width;
+    npc->worldHeight  = map->map->height * map->map->tile_height;
 
     /* Note: The error handling isn't missing here.  There is simply no need to
      * quit the program if the music can't be played by some reason. */
@@ -75,17 +93,31 @@ int main()
         timeA         = timeB;
 
         entityFrame(player, dTime);
+        entityFrame(npc,    dTime);
 
         if ((player->flags >> IS_DEAD) & 1)
         {
-            player->flags &= ~(1 << IS_DEAD);
-            player->worldPosX =  32;
-            player->worldPosY = 608;
+            player->flags     &= ~(1 << IS_DEAD);
+            player->worldPosX  =  32;
+            player->worldPosY  = 608;
             if (config.audio.enabled)
                 if (mixer) musicPlay(dead, 1);
             SDL_Delay(2000);
             if (config.audio.enabled)
                 if (mixer) musicFadeIn(music, -1, 5000);
+        }
+        if ((npc->flags >> IS_DEAD) & 1)
+        {
+            npc->flags     &= ~(1 << IS_DEAD);
+            npc->flags     &= ~(1 << IN_MOTION);
+            npc->flags     ^= 1 << DIRECTION;
+
+            if ((player->flags >> DIRECTION) & 1)
+                npc->worldPosX  = 1920 + (npc->width / 2);
+            else
+                npc->worldPosX  = 1920 - (npc->width / 2);
+
+            npc->worldPosY  =  608;
         }
 
         // Handle keyboard input.
@@ -167,6 +199,14 @@ int main()
         else
             player->flags |= 1 << IN_MID_AIR;
 
+        if (mapCoordIsType(map, "floor", npc->worldPosX, npc->worldPosY + npc->height))
+            npc->flags &= ~(1 << IN_MID_AIR);
+        else
+            npc->flags |= 1 << IN_MID_AIR;
+
+        if (doIntersect(player->bb, npc->bb))
+            npc->flags |= 1 << IN_MOTION;
+
         // Set camera boundaries to map size.
         int32_t cameraMaxX = (map->map->width  * map->map->tile_width)  - (video->windowWidth  / video->zoomLevel);
         int32_t cameraMaxY = (map->map->height * map->map->tile_height) - (video->windowHeight / video->zoomLevel);
@@ -194,6 +234,12 @@ int main()
             goto quit;
         }
 
+        if (-1 == entityRender(video->renderer, npc, npc->worldPosX - cameraPosX, npc->worldPosY - cameraPosY))
+        {
+            execStatus = EXIT_FAILURE;
+            goto quit;
+        }
+
         if (-1 == mapRender(video->renderer, map, "Overlay", 1, 2, map->worldPosX - cameraPosX, map->worldPosY - cameraPosY))
         {
             execStatus = EXIT_FAILURE;
@@ -208,9 +254,9 @@ int main()
     musicFree(dead);
     musicFree(music);
     mixerFree(mixer);
+    entityFree(npc);
     entityFree(player);
     mapFree(map);
     videoTerminate(video);
-    //configFree(config);
     return execStatus;
 }
