@@ -3,11 +3,11 @@
 include config.mk
 
 all: $(OBJS)
-	gcc $(CFLAGS) $(LIBS) $(OBJS) -o $(PROJECT)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(PROJECT)
 
 %: %.c
-	gcc -c $(CFLAGS) $(INC) $(LIBS) -o $@ $<
+	$(CC) -c $(CFLAGS) $(LIBS) -o $@ $<
 
 clean:
-	rm $(PROJECT)
 	rm $(OBJS)
+	rm $(PROJECT)

@@ -1,11 +1,17 @@
+TOOLCHAIN=
+#TOOLCHAIN=i686-w64-mingw32
+CC=$(TOOLCHAIN)-cc
 PROJECT=rainbow-joe
+#PROJECT=rainbow-joe.exe
 LIBS=\
-	`sdl2-config --libs`\
+	-lSDL2 -lpthread\
 	-lSDL2_image\
 	-lSDL2_mixer\
-	`xml2-config --libs`
+	-lxml2 -lz -llzma -licuuc -lm
 CFLAGS=\
-	-I/usr/include/libxml2\
+	-L/usr/$(TOOLCHAIN)/lib\
+	-I/usr/$(TOOLCHAIN)/include\
+	-I/usr/$(TOOLCHAIN)/include/libxml2\
 	-O2\
 	-pedantic-errors\
 	-std=c99\
@@ -13,8 +19,7 @@ CFLAGS=\
 	-Wall\
 	-Werror\
 	-Wextra\
-	`sdl2-config --cflags`\
-	`xml2-config --cflags`
+	-D_REENTRANT
 SRCS=\
 	$(wildcard src/*.c)\
 	$(wildcard src/tmx/*.c)\

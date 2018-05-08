@@ -6,11 +6,15 @@
 
 #include "main.h"
 
-int main()
+int32_t main(int32_t argc, char *argv[])
 {
     int execStatus  = EXIT_SUCCESS;
 
-    Config config  = configInit("default.ini");
+    const char *configFilename;
+    if (argc > 1) configFilename = argv[1];
+    else configFilename = "default.ini";
+
+    Config config  = configInit(configFilename);
     Video  *video  = NULL;
     Map    *map    = NULL;
     Icon   *fcMode = NULL;
