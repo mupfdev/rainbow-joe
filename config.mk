@@ -9,17 +9,18 @@ LIBS=\
 	-lSDL2_mixer\
 	-lxml2 -lz -llzma -licuuc -lm
 CFLAGS=\
+	-D_REENTRANT\
+	-DSDL_MAIN_HANDLED\
+	-DWANT_ZLIB\
 	-L/usr/$(TOOLCHAIN)/lib\
 	-I/usr/$(TOOLCHAIN)/include\
 	-I/usr/$(TOOLCHAIN)/include/libxml2\
-	-O2\
+	-O3\
 	-pedantic-errors\
 	-std=c99\
-	-DWANT_ZLIB\
 	-Wall\
 	-Werror\
-	-Wextra\
-	-D_REENTRANT
+	-Wextra
 SRCS=\
 	$(wildcard src/*.c)\
 	$(wildcard src/tmx/*.c)\

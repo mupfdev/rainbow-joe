@@ -18,6 +18,8 @@ typedef struct map_t
 {
     tmx_map     *map;
     SDL_Texture *texture[MAX_TEXTURES_PER_MAP];
+    uint32_t    height;
+    uint32_t    width;
     double      worldPosX;
     double      worldPosY;
 } Map;

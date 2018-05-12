@@ -76,6 +76,8 @@ Map *mapInit(const char *filename)
         return NULL;
     }
 
+    map->height    = map->map->height * map->map->tile_height;
+    map->width     = map->map->width  * map->map->tile_width;
     map->worldPosX = 0;
     map->worldPosY = 0;
 
@@ -111,6 +113,7 @@ int8_t mapRender(
     double       posX,
     double       posY)
 {
+    // Render texture if already generated.
     if (map->texture[index])
     {
         SDL_Rect dst = { posX, posY, map->map->width * map->map->tile_width, map->map->height * map->map->tile_height };
@@ -122,6 +125,7 @@ int8_t mapRender(
         return 0;
     }
 
+    // Generate texture.
     map->texture[index] = SDL_CreateTexture(
         renderer,
         SDL_PIXELFORMAT_ARGB8888,
