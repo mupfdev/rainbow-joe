@@ -47,14 +47,18 @@ Config configInit(const char *filename)
 {
     static Config config;
 
+    config.video.fps        =  60;
     config.video.fullscreen =   0;
     config.video.height     = 600;
-    config.video.width      = 800;
     config.video.limitFPS   =   1;
-    config.video.fps        =  60;
+    config.video.width      = 800;
 
     if (0 > ini_parse(filename, handler, &config))
         fprintf(stderr, "Couldn't load configuration file: %s\n", filename);
+
+    if (0 > config.video.fps)    config.video.fps    = abs(config.video.fps);
+    if (0 > config.video.height) config.video.height = abs(config.video.height);
+    if (0 > config.video.width)  config.video.width  = abs(config.video.width);
 
     return config;
 }
