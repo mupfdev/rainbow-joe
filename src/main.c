@@ -259,8 +259,8 @@ int32_t main(int32_t argc, char *argv[])
             npc->flags |= 1 << IN_MOTION;            
         }
 
-        if ((npc->worldPosX > 1632) &&
-            (npc->worldPosX < 1648) &&
+        if ((npc->worldPosX > 3552) &&
+            (npc->worldPosX < 3568) &&
             ((npc->flags >> DIRECTION) & 1))
             {
                 npc->flags &= ~(1 << IN_MOTION);
