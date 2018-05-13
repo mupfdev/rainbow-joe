@@ -288,19 +288,19 @@ int32_t main(int32_t argc, char *argv[])
             goto quit;
         }
 
-        if (-1 == backgroundRender(video->renderer, bgClouds, player->worldPosX * 0.075, cameraPosY))
+        if (-1 == backgroundRender(video->renderer, bgClouds, cameraPosX * 0.05, cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
         }
 
-        if (-1 == backgroundRender(video->renderer, bgSea, player->worldPosX * 0.1, cameraPosY))
+        if (-1 == backgroundRender(video->renderer, bgSea, cameraPosX * 0.15, cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
         }
 
-        if (-1 == backgroundRender(video->renderer, bgFarGrounds, player->worldPosX * 0.05, cameraPosY))
+        if (-1 == backgroundRender(video->renderer, bgFarGrounds, cameraPosX * 0.1, cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
