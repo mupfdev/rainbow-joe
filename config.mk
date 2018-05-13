@@ -13,7 +13,6 @@ CFLAGS=\
 	-DSDL_MAIN_HANDLED\
 	-DWANT_ZLIB\
 	-L/usr/$(TOOLCHAIN)/lib\
-	-I/usr/$(TOOLCHAIN)/include\
 	-I/usr/$(TOOLCHAIN)/include/libxml2\
 	-O2\
 	-pedantic-errors\

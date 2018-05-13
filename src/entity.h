@@ -5,12 +5,15 @@
 #ifndef ENTITY_h
 #define ENTITY_h
 
+#define PLAYER_ENTITY  0
+#define NUM_ENTITIES   5
+
 // Flags.
-#define DIRECTION         0
-#define IN_MID_AIR        1
-#define IN_MOTION         2
-#define IS_DEAD           3
-#define IS_JUMPING        4
+#define DIRECTION   0
+#define IN_MID_AIR  1
+#define IN_MOTION   2
+#define IS_DEAD     3
+#define IS_JUMPING  4
 
 // Frames.
 #define FALL      6
@@ -41,6 +44,8 @@ typedef struct entity_t
     uint8_t  height;
     double   jumpGravityFactor;
     double   jumpTimeMax;
+    double   respawnPosX;
+    double   respawnPosY;
     double   velocityMax;
     uint8_t  width;
     uint32_t worldHeight;
@@ -69,5 +74,6 @@ void   entityFree(Entity *entity);
 Entity *entityInit();
 int8_t entityLoadSprite(Entity *entity, SDL_Renderer *renderer, const char *filename);
 int8_t entityRender(SDL_Renderer *renderer, Entity *entity, double cameraPosX, double cameraPosY);
+void   entityRespawn(Entity *entity);
 
 #endif

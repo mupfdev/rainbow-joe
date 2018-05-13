@@ -5,6 +5,8 @@
 #ifndef BACKGROUND_h
 #define BACKGROUND_h
 
+#define NUM_BACKGROUNDS 4
+
 #include <stdint.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>

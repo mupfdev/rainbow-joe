@@ -163,9 +163,12 @@ Entity *entityInit()
     entity->frameEnd          = WALK_MAX;
     entity->frameStart        = WALK;
     entity->frameTime         =    0.0;
+    entity->frameYoffset      =   32;
     entity->jumpGravityFactor =    4.0;
     entity->jumpTime          =    0.0;
     entity->jumpTimeMax       =    0.12;
+    entity->respawnPosX       =    0.0;
+    entity->respawnPosY       =    0.0;
     entity->sprite            = NULL;
     entity->velocity          =    0.0;
     entity->velocityFall      =    0.0;
@@ -241,4 +244,12 @@ int8_t entityRender(SDL_Renderer *renderer, Entity *entity, double cameraPosX, d
     }
 
     return 0;
+}
+
+void entityRespawn(Entity *entity)
+{
+    entity->flags     &= ~(1 << IS_DEAD);
+    entity->flags     &= ~(1 << IN_MOTION);
+    entity->worldPosX  = entity->respawnPosX;
+    entity->worldPosY  = entity->respawnPosY;
 }

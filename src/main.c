@@ -13,19 +13,23 @@ int32_t main(int32_t argc, char *argv[])
     if (argc > 1) configFilename = argv[1];
     else configFilename = "default.ini";
 
-    Config     config        = configInit(configFilename);
-    Video      *video        = NULL;
-    Map        *map          = NULL;
-    Background *bgSky        = NULL;
-    Background *bgClouds     = NULL;
-    Background *bgSea        = NULL;
-    Background *bgFarGrounds = NULL;
-    Icon       *fcMode       = NULL;
-    Entity     *player       = NULL;
-    Entity     *npc          = NULL;
-    Mixer      *mixer        = NULL;
-    Music      *music        = NULL;
-    Music      *dead         = NULL;
+    Config     config = configInit(configFilename);
+    Video      *video = NULL;
+    Map        *map   = NULL;
+
+    Background *bg[NUM_BACKGROUNDS];
+    for (uint32_t i = 0; i < NUM_BACKGROUNDS; i++)
+        bg[i] = NULL;
+
+    Icon       *fcMode = NULL;
+
+    Entity *entity[NUM_ENTITIES];
+    for (uint32_t i = 0; i < NUM_ENTITIES; i++)
+        entity[i] = NULL;
+
+    Mixer      *mixer    = NULL;
+    Music      *music    = NULL;
+    Music      *sfxDead  = NULL;
 
     video = videoInit(
         "Rainbow Joe",
@@ -48,37 +52,37 @@ int32_t main(int32_t argc, char *argv[])
         goto quit;
     }
 
-    bgSky = backgroundInit(video->renderer, "res/backgrounds/sky.png", map->width);
-    if (NULL == bgSky)
+    bg[0] = backgroundInit(video->renderer, "res/backgrounds/sky.png", map->width);
+    if (NULL == bg[0])
     {
         execStatus = EXIT_FAILURE;
         goto quit;
     }
-    bgSky->worldPosY = map->height - bgSky->height;
+    bg[0]->worldPosY = map->height - bg[0]->height;
 
-    bgClouds = backgroundInit(video->renderer, "res/backgrounds/clouds.png", map->width);
-    if (NULL == bgClouds)
+    bg[1] = backgroundInit(video->renderer, "res/backgrounds/clouds.png", map->width);
+    if (NULL == bg[1])
     {
         execStatus = EXIT_FAILURE;
         goto quit;
     }
-    bgClouds->worldPosY = map->height - bgClouds->height;
+    bg[1]->worldPosY = map->height - bg[1]->height;
 
-    bgSea = backgroundInit(video->renderer, "res/backgrounds/sea.png", map->width);
-    if (NULL == bgSea)
+    bg[2] = backgroundInit(video->renderer, "res/backgrounds/sea.png", map->width);
+    if (NULL == bg[2])
     {
         execStatus = EXIT_FAILURE;
         goto quit;
     }
-    bgSea->worldPosY = map->height - bgSea->height;
+    bg[2]->worldPosY = map->height - bg[2]->height;
 
-    bgFarGrounds = backgroundInit(video->renderer, "res/backgrounds/far-grounds.png", map->width);
-    if (NULL == bgFarGrounds)
+    bg[3] = backgroundInit(video->renderer, "res/backgrounds/far-grounds.png", map->width);
+    if (NULL == bg[3])
     {
         execStatus = EXIT_FAILURE;
         goto quit;
     }
-    bgFarGrounds->worldPosY = map->height - bgFarGrounds->height;
+    bg[3]->worldPosY = map->height - bg[3]->height;
 
     fcMode = iconInit(video->renderer, "res/icons/telescope.png");
     if (NULL == fcMode)
@@ -87,45 +91,55 @@ int32_t main(int32_t argc, char *argv[])
         goto quit;
     }
 
-    player = entityInit();
-    if (NULL == player)
+    for (uint32_t i = 0; i < NUM_ENTITIES; i++)
     {
-        execStatus = EXIT_FAILURE;
-        goto quit;
+        entity[i] = entityInit();
+        if (NULL == entity[i])
+        {
+            execStatus = EXIT_FAILURE;
+            goto quit;
+        }
+        if (-1 == entityLoadSprite(entity[i], video->renderer, "res/sprites/characters.png"))
+        {
+            execStatus = EXIT_FAILURE;
+            goto quit;
+        }
+        entity[i]->worldWidth  = map->width;
+        entity[i]->worldHeight = map->height;
     }
-    if (-1 == entityLoadSprite(player, video->renderer, "res/sprites/characters.png"))
-    {
-        execStatus = EXIT_FAILURE;
-        goto quit;
-    }
-    player->frameYoffset =  64;
-    player->worldPosX    =  32;
-    player->worldPosY    = 608;
-    player->worldWidth   = map->width;
-    player->worldHeight  = map->height;
 
-    npc = entityInit();
-    if (NULL == npc)
-    {
-        execStatus = EXIT_FAILURE;
-        goto quit;
-    }
-    if (-1 == entityLoadSprite(npc, video->renderer, "res/sprites/characters.png"))
-    {
-        execStatus = EXIT_FAILURE;
-        goto quit;
-    }
-    npc->frameYoffset  =  32;
-    npc->worldPosX     = 112;
-    npc->worldPosY     = 400;
-    npc->worldWidth    = map->width;
-    npc->worldHeight   = map->height;
+    // Set up individual entities.
+    // Player.
+    entity[PLAYER_ENTITY]->frameYoffset =  64;
+    entity[PLAYER_ENTITY]->respawnPosX  =  32;
+    entity[PLAYER_ENTITY]->respawnPosY  = 608;
+    entity[PLAYER_ENTITY]->worldPosX    =  32;
+    entity[PLAYER_ENTITY]->worldPosY    = 608;
+    // NPCs.
+    entity[1]->respawnPosX  =  112;
+    entity[1]->respawnPosY  =  400;
+    entity[1]->worldPosX    =  112;
+    entity[1]->worldPosY    =  400;
+    entity[2]->respawnPosX  =  256;
+    entity[2]->respawnPosY  =   80;
+    entity[2]->worldPosX    =  256;
+    entity[2]->worldPosY    =   80;
+    entity[3]->frameYoffset =   64;
+    entity[3]->respawnPosX  =  496;
+    entity[3]->respawnPosY  =  160;
+    entity[3]->worldPosX    =  496;
+    entity[3]->worldPosY    =  160;
+    entity[4]->frameYoffset =    0;
+    entity[4]->respawnPosX  = 3696;
+    entity[4]->respawnPosY  =   80;
+    entity[4]->worldPosX    = 3696;
+    entity[4]->worldPosY    =   80;
 
     /* Note: The error handling isn't missing here.  There is simply no need to
      * quit the program if the music can't be played by some reason. */
-    mixer = mixerInit();
-    music = musicInit("res/music/enchanted-tiki-86.ogg");
-    dead  = musicInit("res/sfx/05.ogg");
+    mixer   = mixerInit();
+    music   = musicInit("res/music/enchanted-tiki-86.ogg");
+    sfxDead = musicInit("res/sfx/05.ogg");
     if (config.audio.enabled)
         if (mixer) musicFadeIn(music, -1, 5000);
 
@@ -143,26 +157,26 @@ int32_t main(int32_t argc, char *argv[])
         if (config.video.limitFPS)
             SDL_Delay(1000 / config.video.fps - dTime);
 
-        entityFrame(player, dTime);
-        entityFrame(npc,    dTime);
+        for (uint32_t i = 0; i < NUM_ENTITIES; i++)
+        {
+            entityFrame(entity[i], dTime);
+            if ((entity[i]->flags >> IS_DEAD) & 1)
+                if (PLAYER_ENTITY != i)
+                    entityRespawn(entity[i]);
+        }
 
-        if ((player->flags >> IS_DEAD) & 1)
+        if ((entity[PLAYER_ENTITY]->flags >> IS_DEAD) & 1)
         {
             if (config.audio.enabled && (0 == delay))
-                if (mixer) musicPlay(dead, 1);
-            delay += dTime;
+            if (mixer) musicPlay(sfxDead, 1);
+                delay += dTime;
 
             if (delay > 2)
             {
-                player->flags     &= ~(1 << IS_DEAD);
-                player->worldPosX  =  32;
-                player->worldPosY  = 608;
-                npc->flags        &= ~(1 << DIRECTION);
-                npc->flags        &= ~(1 << IN_MOTION);
-                npc->worldPosX     = 112;
-                npc->worldPosY     = 400;
-
-                delay              =   0;
+                entity[PLAYER_ENTITY]->flags &= ~(1 << IS_DEAD);
+                for (uint32_t i = 0; i < NUM_ENTITIES; i++)
+                    entityRespawn(entity[i]);
+                delay =  0;
                 if (config.audio.enabled)
                     if (mixer) musicFadeIn(music, -1, 5000);
             }
@@ -175,50 +189,50 @@ int32_t main(int32_t argc, char *argv[])
             goto quit;
         keyState = SDL_GetKeyboardState(NULL);
         // Reset IN_MOTION flag (in case no key is pressed).
-        player->flags &= ~(1 << IN_MOTION);
+        entity[PLAYER_ENTITY]->flags &= ~(1 << IN_MOTION);
 
         if (keyState[SDL_SCANCODE_LSHIFT])
         {
             // Allow running only when not in mid-air.
-            if (0 == ((player->flags >> IN_MID_AIR) & 1))
+            if (0 == ((entity[PLAYER_ENTITY]->flags >> IN_MID_AIR) & 1))
             {
-                player->velocityMax  = 250;
-                player->frameStart   = RUN;
-                player->frameEnd     = RUN_MAX;
+                entity[PLAYER_ENTITY]->velocityMax  = 250;
+                entity[PLAYER_ENTITY]->frameStart   = RUN;
+                entity[PLAYER_ENTITY]->frameEnd     = RUN_MAX;
             }
         }
         else
         {
             // Don't allow to slow down in mid-air.
-            if (0 == ((player->flags >> IN_MID_AIR) & 1))
+            if (0 == ((entity[PLAYER_ENTITY]->flags >> IN_MID_AIR) & 1))
             {
-                player->velocityMax  = 100;
-                player->frameStart   = WALK;
-                player->frameEnd     = WALK_MAX;
+                entity[PLAYER_ENTITY]->velocityMax  = 100;
+                entity[PLAYER_ENTITY]->frameStart   = WALK;
+                entity[PLAYER_ENTITY]->frameEnd     = WALK_MAX;
             }
         }
         if (keyState[SDL_SCANCODE_Q]) goto quit;
         if (keyState[SDL_SCANCODE_A])
         {
-            if (0 == ((player->flags >> DIRECTION) & 1))
-                player->velocity = -player->velocity;
-            player->flags |= 1 << IN_MOTION;
-            player->flags |= 1 << DIRECTION;
+            if (0 == ((entity[PLAYER_ENTITY]->flags >> DIRECTION) & 1))
+                entity[PLAYER_ENTITY]->velocity = -entity[PLAYER_ENTITY]->velocity;
+            entity[PLAYER_ENTITY]->flags |= 1 << IN_MOTION;
+            entity[PLAYER_ENTITY]->flags |= 1 << DIRECTION;
         }
         if (keyState[SDL_SCANCODE_D])
         {
-            if ((player->flags >> DIRECTION) & 1)
-                player->velocity = -player->velocity;
+            if ((entity[PLAYER_ENTITY]->flags >> DIRECTION) & 1)
+                entity[PLAYER_ENTITY]->velocity = -entity[PLAYER_ENTITY]->velocity;
 
-            player->flags |= 1   << IN_MOTION;
-            player->flags &= ~(1 << DIRECTION);
+            entity[PLAYER_ENTITY]->flags |= 1   << IN_MOTION;
+            entity[PLAYER_ENTITY]->flags &= ~(1 << DIRECTION);
         }
 
-        if (0 == ((player->flags >> IN_MID_AIR) & 1))
+        if (0 == ((entity[PLAYER_ENTITY]->flags >> IN_MID_AIR) & 1))
             if (keyState[SDL_SCANCODE_SPACE])
             {
-                player->flags        |= 1 << IS_JUMPING;
-                player->velocityJump  = player->velocity;
+                entity[PLAYER_ENTITY]->flags        |= 1 << IS_JUMPING;
+                entity[PLAYER_ENTITY]->velocityJump  = entity[PLAYER_ENTITY]->velocity;
             }
 
         if (keyState[SDL_SCANCODE_1])
@@ -237,41 +251,32 @@ int32_t main(int32_t argc, char *argv[])
         }
         else
         {
-            cameraPosX = player->worldPosX - video->windowWidth  / (video->zoomLevel * 2) + (player->width  / 2);
-            cameraPosY = player->worldPosY - video->windowHeight / (video->zoomLevel * 2) + (player->height / 2);
+            cameraPosX = entity[PLAYER_ENTITY]->worldPosX - video->windowWidth  / (video->zoomLevel * 2) + (entity[PLAYER_ENTITY]->width  / 2);
+            cameraPosY = entity[PLAYER_ENTITY]->worldPosY - video->windowHeight / (video->zoomLevel * 2) + (entity[PLAYER_ENTITY]->height / 2);
         }
 
         // Set up collision detection.
-        if (mapCoordIsType(map, "floor", player->worldPosX, player->worldPosY + player->height))
-            player->flags &= ~(1 << IN_MID_AIR);
-        else
-            player->flags |= 1 << IN_MID_AIR;
-
-        if (mapCoordIsType(map, "floor", npc->worldPosX, npc->worldPosY + npc->height))
-            npc->flags &= ~(1 << IN_MID_AIR);
-        else
-            npc->flags |= 1 << IN_MID_AIR;
-
-        // Set NPC behavior.
-        if ((doIntersect(player->bb, npc->bb)) && 0 == ((npc->flags >> IN_MOTION) & 1))
+        for (uint32_t i = 0; i < NUM_ENTITIES; i++)
         {
-            npc->flags ^= 1 << DIRECTION;
-            npc->flags |= 1 << IN_MOTION;            
+            if (mapCoordIsType(map, "floor", entity[i]->worldPosX, entity[i]->worldPosY + entity[i]->height))
+                entity[i]->flags &= ~(1 << IN_MID_AIR);
+            else
+                entity[i]->flags |= 1 << IN_MID_AIR;
         }
 
-        if ((npc->worldPosX > 3552) &&
-            (npc->worldPosX < 3568) &&
-            ((npc->flags >> DIRECTION) & 1))
+        // Set NPC behavior.
+        for (uint32_t i = 1; i < NUM_ENTITIES; i++)
+        {
+            if ((doIntersect(entity[PLAYER_ENTITY]->bb, entity[i]->bb)))
             {
-                npc->flags &= ~(1 << IN_MOTION);
-            }
+                if (entity[PLAYER_ENTITY]->worldPosX > entity[i]->worldPosX)
+                    entity[i]->flags |= 1 << DIRECTION;            
+                else
+                    entity[i]->flags &= ~(1 << DIRECTION);
 
-        if ((npc->worldPosX > 112) &&
-            (npc->worldPosX < 128) &&
-            0 == ((npc->flags >> DIRECTION) & 1))
-            {
-                npc->flags &= ~(1 << IN_MOTION);
+                entity[i]->flags |= 1 << IN_MOTION;            
             }
+        }
 
         // Set camera boundaries to map size.
         int32_t cameraMaxX = (map->width)  - (video->windowWidth  / video->zoomLevel);
@@ -282,25 +287,25 @@ int32_t main(int32_t argc, char *argv[])
         if (cameraPosY > cameraMaxY) cameraPosY = cameraMaxY;
 
         // Render scene.
-        if (-1 == backgroundRender(video->renderer, bgSky, cameraPosX, cameraPosY))
+        if (-1 == backgroundRender(video->renderer, bg[0], cameraPosX, cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
         }
 
-        if (-1 == backgroundRender(video->renderer, bgClouds, cameraPosX * 0.05, cameraPosY))
+        if (-1 == backgroundRender(video->renderer, bg[1], cameraPosX * 0.05, cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
         }
 
-        if (-1 == backgroundRender(video->renderer, bgSea, cameraPosX * 0.15, cameraPosY))
+        if (-1 == backgroundRender(video->renderer, bg[2], cameraPosX * 0.15, cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
         }
 
-        if (-1 == backgroundRender(video->renderer, bgFarGrounds, cameraPosX * 0.1, cameraPosY))
+        if (-1 == backgroundRender(video->renderer, bg[3], cameraPosX * 0.1, cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
@@ -318,17 +323,12 @@ int32_t main(int32_t argc, char *argv[])
             goto quit;
         }
 
-        if (-1 == entityRender(video->renderer, player, cameraPosX, cameraPosY))
-        {
-            execStatus = EXIT_FAILURE;
-            goto quit;
-        }
-
-        if (-1 == entityRender(video->renderer, npc, cameraPosX, cameraPosY))
-        {
-            execStatus = EXIT_FAILURE;
-            goto quit;
-        }
+        for (uint32_t i = 0; i < NUM_ENTITIES; i++)
+            if (-1 == entityRender(video->renderer, entity[i], cameraPosX, cameraPosY))
+            {
+                execStatus = EXIT_FAILURE;
+                goto quit;
+            }
 
         if (-1 == mapRender(video->renderer, map, "Overlay", 1, 2, cameraPosX, cameraPosY))
         {
@@ -348,16 +348,18 @@ int32_t main(int32_t argc, char *argv[])
     }
 
     quit:
-    musicFree(dead);
+    musicFree(sfxDead);
     musicFree(music);
     mixerFree(mixer);
-    entityFree(npc);
-    entityFree(player);
+
+    for (uint32_t i = 0; i < NUM_ENTITIES; i++)
+        entityFree(entity[i]);
+
     iconFree(fcMode);
-    backgroundFree(bgFarGrounds);
-    backgroundFree(bgSea);
-    backgroundFree(bgClouds);
-    backgroundFree(bgSky);
+
+    for (uint32_t i = 0; i < NUM_BACKGROUNDS; i++)
+        backgroundFree(bg[i]);
+
     mapFree(map);
     videoTerminate(video);
     return execStatus;
