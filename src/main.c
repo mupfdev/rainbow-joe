@@ -14,19 +14,19 @@ int32_t main(int32_t argc, char *argv[])
     if (argc > 1) configFilename = argv[1];
     else configFilename = "default.ini";
 
-    Config     config      = configInit(configFilename);
-    Video      *video      = NULL;
-    Background *sky        = NULL;
-    Background *clouds     = NULL;
-    Background *sea        = NULL;
-    Background *farGrounds = NULL;
-    Map        *map        = NULL;
-    Icon       *fcMode     = NULL;
-    Entity     *player     = NULL;
-    Entity     *npc        = NULL;
-    Mixer      *mixer      = NULL;
-    Music      *music      = NULL;
-    Music      *dead       = NULL;
+    Config     config        = configInit(configFilename);
+    Video      *video        = NULL;
+    Map        *map          = NULL;
+    Background *bgSky        = NULL;
+    Background *bgClouds     = NULL;
+    Background *bgSea        = NULL;
+    Background *bgFarGrounds = NULL;
+    Icon       *fcMode       = NULL;
+    Entity     *player       = NULL;
+    Entity     *npc          = NULL;
+    Mixer      *mixer        = NULL;
+    Music      *music        = NULL;
+    Music      *dead         = NULL;
 
     video = videoInit(
         "Rainbow Joe",
@@ -42,40 +42,44 @@ int32_t main(int32_t argc, char *argv[])
     }
     atexit(SDL_Quit);
 
-    sky = backgroundInit("res/backgrounds/sky.png");
-    if (NULL == sky)
-    {
-        execStatus = EXIT_FAILURE;
-        goto quit;
-    }
-
-    clouds = backgroundInit("res/backgrounds/clouds.png");
-    if (NULL == clouds)
-    {
-        execStatus = EXIT_FAILURE;
-        goto quit;
-    }
-
-    sea = backgroundInit("res/backgrounds/sea.png");
-    if (NULL == sea)
-    {
-        execStatus = EXIT_FAILURE;
-        goto quit;
-    }
-
-    farGrounds = backgroundInit("res/backgrounds/far-grounds.png");
-    if (NULL == farGrounds)
-    {
-        execStatus = EXIT_FAILURE;
-        goto quit;
-    }
-
     map = mapInit("res/maps/01.tmx");
     if (NULL == map)
     {
         execStatus = EXIT_FAILURE;
         goto quit;
     }
+
+    bgSky = backgroundInit(video->renderer, "res/backgrounds/sky.png", map->width);
+    if (NULL == bgSky)
+    {
+        execStatus = EXIT_FAILURE;
+        goto quit;
+    }
+    bgSky->worldPosY = map->height - bgSky->height;
+
+    bgClouds = backgroundInit(video->renderer, "res/backgrounds/clouds.png", map->width);
+    if (NULL == bgClouds)
+    {
+        execStatus = EXIT_FAILURE;
+        goto quit;
+    }
+    bgClouds->worldPosY = map->height - bgClouds->height;
+
+    bgSea = backgroundInit(video->renderer, "res/backgrounds/sea.png", map->width);
+    if (NULL == bgSea)
+    {
+        execStatus = EXIT_FAILURE;
+        goto quit;
+    }
+    bgSea->worldPosY = map->height - bgSea->height;
+
+    bgFarGrounds = backgroundInit(video->renderer, "res/backgrounds/far-grounds.png", map->width);
+    if (NULL == bgFarGrounds)
+    {
+        execStatus = EXIT_FAILURE;
+        goto quit;
+    }
+    bgFarGrounds->worldPosY = map->height - bgFarGrounds->height;
 
     fcMode = iconInit(video->renderer, "res/icons/telescope.png");
     if (NULL == fcMode)
@@ -135,6 +139,10 @@ int32_t main(int32_t argc, char *argv[])
         double timeB  = SDL_GetTicks();
         double dTime  = (timeB - timeA) / 1000;
         timeA         = timeB;
+
+        // Limit FPS.
+        if (config.video.limitFPS)
+            SDL_Delay(1000 / config.video.fps - dTime);
 
         entityFrame(player, dTime);
         entityFrame(npc,    dTime);
@@ -267,6 +275,7 @@ int32_t main(int32_t argc, char *argv[])
                 npc->flags &= ~(1 << IN_MOTION);
             }
 
+
         // Set camera boundaries to map size.
         int32_t cameraMaxX = (map->width)  - (video->windowWidth  / video->zoomLevel);
         int32_t cameraMaxY = (map->height) - (video->windowHeight / video->zoomLevel);
@@ -276,63 +285,55 @@ int32_t main(int32_t argc, char *argv[])
         if (cameraPosY > cameraMaxY) cameraPosY = cameraMaxY;
 
         // Render scene.
-        sky->worldPosX = 0;
-        sky->worldPosY = map->height - sky->height;
-        if (-1 == backgroundRender(video->renderer, sky, map->width, sky->worldPosX - cameraPosX, sky->worldPosY - cameraPosY))
+        if (-1 == backgroundRender(video->renderer, bgSky, cameraPosX, cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
         }
 
-        clouds->worldPosX = -player->worldPosX * 0.075;
-        clouds->worldPosY = map->height - clouds->height;
-        if (-1 == backgroundRender(video->renderer, clouds, map->width, clouds->worldPosX - cameraPosX, clouds->worldPosY - cameraPosY))
+        if (-1 == backgroundRender(video->renderer, bgClouds, player->worldPosX * 0.075, cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
         }
 
-        sea->worldPosX = -player->worldPosX * 0.1;
-        sea->worldPosY = map->height - sea->height;
-        if (-1 == backgroundRender(video->renderer, sea, map->width, sea->worldPosX - cameraPosX, sea->worldPosY - cameraPosY))
+        if (-1 == backgroundRender(video->renderer, bgSea, player->worldPosX * 0.1, cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
         }
 
-        farGrounds->worldPosX = -player->worldPosX * 0.05;
-        farGrounds->worldPosY = map->height - farGrounds->height;
-        if (-1 == backgroundRender(video->renderer, farGrounds, map->width, farGrounds->worldPosX - cameraPosX, farGrounds->worldPosY - cameraPosY))
+        if (-1 == backgroundRender(video->renderer, bgFarGrounds, player->worldPosX * 0.05, cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
         }
 
-        if (-1 == mapRender(video->renderer, map, "Background", 1, 0, map->worldPosX - cameraPosX, map->worldPosY - cameraPosY))
+        if (-1 == mapRender(video->renderer, map, "Background", 1, 0, cameraPosX, cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
         }
 
-        if (-1 == mapRender(video->renderer, map, "World", 1, 1, map->worldPosX - cameraPosX, map->worldPosY - cameraPosY))
+        if (-1 == mapRender(video->renderer, map, "World", 1, 1, cameraPosX, cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
         }
 
-        if (-1 == entityRender(video->renderer, player, player->worldPosX - cameraPosX, player->worldPosY - cameraPosY))
+        if (-1 == entityRender(video->renderer, player, cameraPosX, cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
         }
 
-        if (-1 == entityRender(video->renderer, npc, npc->worldPosX - cameraPosX, npc->worldPosY - cameraPosY))
+        if (-1 == entityRender(video->renderer, npc, cameraPosX, cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
         }
 
-        if (-1 == mapRender(video->renderer, map, "Overlay", 1, 2, map->worldPosX - cameraPosX, map->worldPosY - cameraPosY))
+        if (-1 == mapRender(video->renderer, map, "Overlay", 1, 2, cameraPosX, cameraPosY))
         {
             execStatus = EXIT_FAILURE;
             goto quit;
@@ -356,11 +357,11 @@ int32_t main(int32_t argc, char *argv[])
     entityFree(npc);
     entityFree(player);
     iconFree(fcMode);
+    backgroundFree(bgFarGrounds);
+    backgroundFree(bgSea);
+    backgroundFree(bgClouds);
+    backgroundFree(bgSky);
     mapFree(map);
-    backgroundFree(farGrounds);
-    backgroundFree(sea);
-    backgroundFree(clouds);
-    backgroundFree(sky);
     videoTerminate(video);
     return execStatus;
 }

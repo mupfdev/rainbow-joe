@@ -29,6 +29,8 @@ static int32_t handler(void* cfg, const char *section, const char *name, const c
     else if (MATCH("Video", "fullscreen")) config->video.fullscreen = val;
     else if (MATCH("Video", "height"))     config->video.height     = val;
     else if (MATCH("Video", "width"))      config->video.width      = val;
+    else if (MATCH("Video", "limitFPS"))   config->video.limitFPS   = val;
+    else if (MATCH("Video", "fps"))        config->video.fps        = val;
     else
         return 0;
 
@@ -48,6 +50,8 @@ Config configInit(const char *filename)
     config.video.fullscreen =   0;
     config.video.height     = 600;
     config.video.width      = 800;
+    config.video.limitFPS   =   1;
+    config.video.fps        =  60;
 
     if (0 > ini_parse(filename, handler, &config))
         fprintf(stderr, "Couldn't load configuration file: %s\n", filename);

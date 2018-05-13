@@ -18,7 +18,14 @@ void backgroundFree(Background *background)
     free(background);
 }
 
-Background *backgroundInit(const char *filename)
+/**
+ * @brief   
+ * @param   filename
+ * @param   mapWidth
+ * @return  
+ * @ingroup Background
+ */
+Background *backgroundInit(SDL_Renderer *renderer, const char *filename, int32_t mapWidth)
 {
     static Background *background;
     background = malloc(sizeof(struct background_t));
@@ -35,6 +42,30 @@ Background *backgroundInit(const char *filename)
     background->worldPosX  = 0;
     background->worldPosY  = 0;
 
+    background->image = IMG_LoadTexture(renderer, background->filename);
+    if (NULL == background->image)
+    {
+        fprintf(stderr, "%s\n", SDL_GetError());
+        free(background);
+        return NULL;
+    }
+
+    if (0 != SDL_QueryTexture(background->image, NULL, NULL, &background->imageWidth, &background->imageHeight))
+    {
+        fprintf(stderr, "%s\n", SDL_GetError());
+        free(background);
+        return NULL;
+    }
+
+    background->wFactor = 0;
+    if (background->wFactor > mapWidth)
+        background->wFactor = 1;
+    else
+        background->wFactor = ceil((double)mapWidth / (double)background->imageWidth);
+
+    background->height = background->imageHeight;
+    background->width  = background->imageWidth * background->wFactor;
+
     return background;
 }
 
@@ -42,37 +73,38 @@ Background *backgroundInit(const char *filename)
  * @brief 
  * @param   renderer
  * @param   background
- * @param   mapWidth
- * @param   posX
- * @param   posY
+ * @param   cameraPosX camera position along the x-axis.
+ * @param   cameraPosY camera position along the y-axis.
  * @return  
  * @ingroup Background
  */
 int8_t backgroundRender(
     SDL_Renderer *renderer,
     Background   *background,
-    int32_t      mapWidth,
-    double       posX,
-    double       posY)
+    double       cameraPosX,
+    double       cameraPosY)
 {
     // Render background if already generated.
     if (background->background)
     {
-        SDL_Rect dst = { posX, posY, background->width, background->height };
+        double renderPosX = background->worldPosX - cameraPosX;
+        double renderPosY = background->worldPosY - cameraPosY;
+
+        SDL_Rect dst = { renderPosX, renderPosY, background->width, background->height };
         if (-1 == SDL_RenderCopyEx(renderer, background->background, NULL, &dst, 0, NULL, SDL_FLIP_NONE))
         {
             fprintf(stderr, "%s\n", SDL_GetError());
             return -1;
         }
 
-        dst.x = posX + background->width;
+        dst.x = renderPosX + background->width;
         if (-1 == SDL_RenderCopyEx(renderer, background->background, NULL, &dst, 0, NULL, SDL_FLIP_NONE))
         {
             fprintf(stderr, "%s\n", SDL_GetError());
             return -1;
         }
 
-        dst.x = posX - background->width;
+        dst.x = renderPosX - background->width;
         if (-1 == SDL_RenderCopyEx(renderer, background->background, NULL, &dst, 0, NULL, SDL_FLIP_NONE))
         {
             fprintf(stderr, "%s\n", SDL_GetError());
@@ -83,30 +115,6 @@ int8_t backgroundRender(
     }
 
     // Generate background.
-    SDL_Texture *image = IMG_LoadTexture(renderer, background->filename);
-    if (NULL == image)
-    {
-        fprintf(stderr, "%s\n", SDL_GetError());
-        return -1;
-    }
-
-    int32_t imageHeight;
-    int32_t imageWidth;
-    if (0 != SDL_QueryTexture(image, NULL, NULL, &imageWidth, &imageHeight))
-    {
-        fprintf(stderr, "%s\n", SDL_GetError());
-        return -1;
-    }
-
-    uint8_t wFactor = 0;
-    if (wFactor > mapWidth)
-        wFactor = 1;
-    else
-        wFactor = ceil((double)mapWidth / (double)imageWidth);
-
-    background->height = imageHeight;
-    background->width  = imageWidth * wFactor;
-
     background->background = SDL_CreateTexture(
         renderer,
         SDL_PIXELFORMAT_ARGB8888,
@@ -128,13 +136,13 @@ int8_t backgroundRender(
 
     SDL_Rect dst;
     dst.x = 0;
-    for (uint8_t i = 0; i < wFactor; i++)
+    for (uint8_t i = 0; i < background->wFactor; i++)
     {
         dst.y  = 0;
-        dst.w  = imageWidth;
-        dst.h  = imageHeight;
-        SDL_RenderCopy(renderer, image, NULL, &dst);
-        dst.x += imageWidth;
+        dst.w  = background->imageWidth;
+        dst.h  = background->imageHeight;
+        SDL_RenderCopy(renderer, background->image, NULL, &dst);
+        dst.x += background->imageWidth;
     }
 
     // Switch back to default render target.

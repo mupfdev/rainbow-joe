@@ -15,7 +15,7 @@ CFLAGS=\
 	-L/usr/$(TOOLCHAIN)/lib\
 	-I/usr/$(TOOLCHAIN)/include\
 	-I/usr/$(TOOLCHAIN)/include/libxml2\
-	-O3\
+	-O2\
 	-pedantic-errors\
 	-std=c99\
 	-Wall\

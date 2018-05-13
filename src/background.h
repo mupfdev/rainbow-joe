@@ -16,14 +16,18 @@ typedef struct background_t
 {
     SDL_Texture *background;
     const char  *filename;
+    SDL_Texture *image;
+    int32_t     imageWidth;
+    int32_t     imageHeight;
     uint32_t    height;
     uint32_t    width;
+    uint8_t     wFactor;
     double      worldPosX;
     double      worldPosY;
 } Background;
 
 void       backgroundFree(Background *background);
-Background *backgroundInit(const char *filename);
-int8_t     backgroundRender(SDL_Renderer *renderer, Background *background, int32_t windowWidth, double posX, double posY);
+Background *backgroundInit(SDL_Renderer *renderer, const char *filename, int32_t mapWidth);
+int8_t     backgroundRender(SDL_Renderer *renderer, Background *background, double cameraPosX, double cameraPosY);
 
 #endif

@@ -208,12 +208,12 @@ int8_t entityLoadSprite(Entity *entity, SDL_Renderer *renderer, const char *file
  * @brief
  * @param   renderer
  * @param   entity
- * @param   posX
- * @param   posY
+ * @param   cameraPosX camera position along the x-axis.
+ * @param   cameraPosY camera position along the y-axis.
  * @return
  * @ingroup Entity
  */
-int8_t entityRender(SDL_Renderer *renderer, Entity *entity, double posX, double posY)
+int8_t entityRender(SDL_Renderer *renderer, Entity *entity, double cameraPosX, double cameraPosY)
 {
     if (NULL == entity->sprite)
     {
@@ -221,7 +221,10 @@ int8_t entityRender(SDL_Renderer *renderer, Entity *entity, double posX, double 
         return -1;
     }
 
-    SDL_Rect dst = { posX, posY, entity->width, entity->height };
+    double renderPosX = entity->worldPosX - cameraPosX;
+    double renderPosY = entity->worldPosY - cameraPosY;
+
+    SDL_Rect dst = { renderPosX, renderPosY, entity->width, entity->height };
     SDL_Rect src = { entity->frame * entity->width, entity->frameYoffset, entity->width, entity->height };
 
     SDL_RendererFlip flip;

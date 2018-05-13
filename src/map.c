@@ -89,18 +89,16 @@ Map *mapInit(const char *filename)
 
 /**
  * @brief   Render Map on screen.
- * @param   renderer SDL's rendering context.  See @ref struct Video.
- * @param   map      the map that should be rendered.
- * @param   name     substring of the layer name(s) that should be rendered.
- * @param   bg       boolean value to determine if the map's background colour
- *                   should be rendered or not.  If set to 0, the background
- *                   stays transparent.
- * @param   index    determine the texture index.  The total amount of textures
- *                   per map is defined by MAP_TEXTURES_PER_MAP.
- * @param   posX     coordinate, where the map should be rendered along the
- *                   x-axis of the set rendering context.
- * @param   posY     coordinate, where the map should be rendered along the
- *                   y-axis of the set rendering context.
+ * @param   renderer   SDL's rendering context.  See @ref struct Video.
+ * @param   map        the map that should be rendered.
+ * @param   name       substring of the layer name(s) that should be rendered.
+ * @param   bg         boolean value to determine if the map's background colour
+ *                     should be rendered or not.  If set to 0, the background
+ *                     stays transparent.
+ * @param   index      determine the texture index.  The total amount of textures
+ *                     per map is defined by MAP_TEXTURES_PER_MAP.
+ * @param   cameraPosX camera position along the x-axis.
+ * @param   cameraPosY camera position along the y-axis.
  * @return  0 on success, -1 on error.
  * @ingroup Map
  */
@@ -110,13 +108,16 @@ int8_t mapRender(
     const char   *name,
     uint8_t      bg,
     uint8_t      index,
-    double       posX,
-    double       posY)
+    double       cameraPosX,
+    double       cameraPosY)
 {
     // Render texture if already generated.
     if (map->texture[index])
     {
-        SDL_Rect dst = { posX, posY, map->map->width * map->map->tile_width, map->map->height * map->map->tile_height };
+        double renderPosX = map->worldPosX - cameraPosX;
+        double renderPosY = map->worldPosY - cameraPosY;
+
+        SDL_Rect dst = { renderPosX, renderPosY, map->map->width * map->map->tile_width, map->map->height * map->map->tile_height };
         if (-1 == SDL_RenderCopyEx(renderer, map->texture[index], NULL, &dst, 0, NULL, SDL_FLIP_NONE))
         {
             fprintf(stderr, "%s\n", SDL_GetError());

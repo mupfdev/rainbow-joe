@@ -24,6 +24,8 @@ typedef struct videoConfig_t {
     int32_t height;
     int32_t width;
     int8_t  fullscreen;
+    int8_t  limitFPS;
+    int8_t  fps;
 } VideoConfig;
 
 /**

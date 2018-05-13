@@ -27,6 +27,6 @@ typedef struct map_t
 uint8_t mapCoordIsType(Map *map, const char *type, double xPos, double yPos);
 void    mapFree(Map *map);
 Map     *mapInit(const char *filename);
-int8_t  mapRender(SDL_Renderer *renderer, Map *map, const char *name, uint8_t bg, uint8_t index, double posX, double posY);
+int8_t  mapRender(SDL_Renderer *renderer, Map *map, const char *name, uint8_t bg, uint8_t index, double cameraPosX, double cameraPosY);
 
 #endif

@@ -68,6 +68,6 @@ void   entityFrame(Entity *entity, double dTime);
 void   entityFree(Entity *entity);
 Entity *entityInit();
 int8_t entityLoadSprite(Entity *entity, SDL_Renderer *renderer, const char *filename);
-int8_t entityRender(SDL_Renderer *renderer, Entity *entity, double posX, double posY);
+int8_t entityRender(SDL_Renderer *renderer, Entity *entity, double cameraPosX, double cameraPosY);
 
 #endif

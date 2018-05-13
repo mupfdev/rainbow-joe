@@ -76,8 +76,8 @@ Video *videoInit(const char *title, int32_t width, int32_t height, uint8_t fulls
     video->renderer = SDL_CreateRenderer(
         video->window,
         -1,
-        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
-
+        SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+ 
     if (NULL == video->renderer)
     {
         fprintf(stderr, "%s\n", SDL_GetError());
