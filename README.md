@@ -38,7 +38,7 @@ sdl2_mixer 2.0.2
 zlib       1.2.11
 ```
 
-To compile _Rainbow Joe_ simply enter:
+To compile _Rainbow Joe_ under Linux simply enter:
 ```
 make
 ```
@@ -47,6 +47,10 @@ To generate the documentation using doxygen enter:
 ```
 doxygen
 ```
+
+## Releases
+There are also **Windows** builds that can be found here:
+[Releases](https://github.com/mupfelofen-de/rainbow-joe/releases).
 
 ## Controls
 
