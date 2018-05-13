@@ -1,7 +1,7 @@
 /** @file main.c
  * @author    Michael Fitzmayer
  * @copyright "THE BEER-WARE LICENCE" (Revision 42)
- * @todo      Add function to display parallax backgrounds.
+ * @todo      Update FPS limiter in order that he doesn't delay the main loop.
  */
 
 #include "main.h"
@@ -253,7 +253,6 @@ int32_t main(int32_t argc, char *argv[])
         else
             npc->flags |= 1 << IN_MID_AIR;
 
-
         // Set NPC behavior.
         if ((doIntersect(player->bb, npc->bb)) && 0 == ((npc->flags >> IN_MOTION) & 1))
         {
@@ -275,7 +274,6 @@ int32_t main(int32_t argc, char *argv[])
                 npc->flags &= ~(1 << IN_MOTION);
             }
 
-
         // Set camera boundaries to map size.
         int32_t cameraMaxX = (map->width)  - (video->windowWidth  / video->zoomLevel);
         int32_t cameraMaxY = (map->height) - (video->windowHeight / video->zoomLevel);
@@ -285,6 +283,7 @@ int32_t main(int32_t argc, char *argv[])
         if (cameraPosY > cameraMaxY) cameraPosY = cameraMaxY;
 
         // Render scene.
+
         if (-1 == backgroundRender(video->renderer, bgSky, cameraPosX, cameraPosY))
         {
             execStatus = EXIT_FAILURE;
