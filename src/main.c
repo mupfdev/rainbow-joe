@@ -123,10 +123,11 @@ int32_t main(int32_t argc, char *argv[])
     entity[PLAYER_ENTITY]->worldPosX    =  32;
     entity[PLAYER_ENTITY]->worldPosY    = 608;
     // NPCs.
-    entity[1]->respawnPosX  =  112;
-    entity[1]->respawnPosY  =  400;
-    entity[1]->worldPosX    =  112;
-    entity[1]->worldPosY    =  400;
+    entity[1]->frameYoffset =   64;
+    entity[1]->respawnPosX  =  144;
+    entity[1]->respawnPosY  =  432;
+    entity[1]->worldPosX    =  144;
+    entity[1]->worldPosY    =  432;
     entity[2]->respawnPosX  =  256;
     entity[2]->respawnPosY  =   80;
     entity[2]->worldPosX    =  256;
@@ -136,14 +137,15 @@ int32_t main(int32_t argc, char *argv[])
     entity[3]->respawnPosY  =  160;
     entity[3]->worldPosX    =  496;
     entity[3]->worldPosY    =  160;
-    entity[4]->frameYoffset =    0;
-    entity[4]->respawnPosX  = 3696;
+    entity[4]->respawnPosX  = 1776;
     entity[4]->respawnPosY  =   80;
-    entity[4]->worldPosX    = 3696;
+    entity[4]->worldPosX    = 1776;
     entity[4]->worldPosY    =   80;
 
-    sfx[SFX_DEAD] = sfxInit("res/sfx/dead.wav");
-    sfx[SFX_JUMP] = sfxInit("res/sfx/jump.wav");
+    sfx[SFX_DEAD]    = sfxInit("res/sfx/dead.wav");
+    sfx[SFX_JUMP]    = sfxInit("res/sfx/jump.wav");
+    sfx[SFX_PAUSE]   = sfxInit("res/sfx/pause.wav");
+    sfx[SFX_UNPAUSE] = sfxInit("res/sfx/unpause.wav");
 
     uint8_t pause      = 0;
     double  cameraPosX = 0;
@@ -164,9 +166,19 @@ int32_t main(int32_t argc, char *argv[])
         keyState = SDL_GetKeyboardState(NULL);
 
         if (keyState[SDL_SCANCODE_Q]) goto quit;
-        if (keyState[SDL_SCANCODE_ESCAPE]) pause = 1;
+        if (keyState[SDL_SCANCODE_ESCAPE]) {
+            if (0 == pause)
+                if (mixer && config.audio.enabled) sfxPlay(sfx[SFX_PAUSE], CH_PAUSE, 0);
+            pause = 1;
+            musicPause();
+        }
         if (keyState[SDL_SCANCODE_SPACE])
-            if (pause) pause = 0;
+            if (pause)
+            {
+                if (mixer && config.audio.enabled) sfxPlay(sfx[SFX_UNPAUSE], CH_UNPAUSE, 0);
+                pause = 0;
+                musicResume();
+            }
         if (pause) continue;
 
         // Limit FPS.
@@ -276,7 +288,7 @@ int32_t main(int32_t argc, char *argv[])
         // Set NPC behavior.
         for (uint32_t i = 1; i < NUM_ENTITIES; i++)
         {
-            if ((doIntersect(entity[PLAYER_ENTITY]->bb, entity[i]->bb)))
+            if (doIntersect(entity[PLAYER_ENTITY]->bb, entity[i]->bb))
             {
                 if (entity[PLAYER_ENTITY]->worldPosX > entity[i]->worldPosX)
                     entity[i]->flags |= 1 << DIRECTION;            

@@ -94,6 +94,15 @@ void musicFree(Music *music)
 }
 
 /**
+ * @brief Halt music.
+ * @ingroup Audio
+ */
+void musicHalt()
+{
+    Mix_HaltMusic();
+}
+
+/**
  * @brief   Initialise Music.
  * @return  Music on success, NULL on error.
  * @ingroup Audio
@@ -140,12 +149,15 @@ int8_t musicPlay(Music *music, int8_t loops)
 }
 
 /**
- * @brief Halt music.
+ * @brief   Toggle music playback.
  * @ingroup Audio
  */
-void musicHalt()
+void musicToggle()
 {
-    Mix_HaltMusic();
+    if (Mix_PausedMusic())
+        Mix_ResumeMusic();
+    else
+        Mix_PauseMusic();
 }
 
 /**
