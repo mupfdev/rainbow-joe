@@ -57,8 +57,9 @@ There are also **Windows** builds that can be found here:
 ```
 A:      move left
 D:      move right
+ESCAPE: pause
 LSHIFT: hold to run
-SPACE:  jump
+SPACE:  jump / unpause
 1:      set default zoom level
 2:      zoom out
 3:      zoom in

@@ -145,15 +145,29 @@ int32_t main(int32_t argc, char *argv[])
     sfx[SFX_DEAD] = sfxInit("res/sfx/dead.wav");
     sfx[SFX_JUMP] = sfxInit("res/sfx/jump.wav");
 
-    double cameraPosX = 0;
-    double cameraPosY = map->height - video->windowHeight;
-    double timeA      = SDL_GetTicks();
-    double delay      = 0;
+    uint8_t pause      = 0;
+    double  cameraPosX = 0;
+    double  cameraPosY = map->height - video->windowHeight;
+    double  timeA      = SDL_GetTicks();
+    double  delay      = 0;
     while (1)
     {
-        double timeB  = SDL_GetTicks();
-        double dTime  = (timeB - timeA) / 1000;
-        timeA         = timeB;
+        double timeB = SDL_GetTicks();
+        double dTime = (timeB - timeA) / 1000;
+        timeA        = timeB;
+
+        // Handle keyboard input.
+        const uint8_t *keyState;
+        SDL_PumpEvents();
+        if (SDL_PeepEvents(0, 0, SDL_PEEKEVENT, SDL_QUIT, SDL_QUIT) > 0)
+            goto quit;
+        keyState = SDL_GetKeyboardState(NULL);
+
+        if (keyState[SDL_SCANCODE_Q]) goto quit;
+        if (keyState[SDL_SCANCODE_ESCAPE]) pause = 1;
+        if (keyState[SDL_SCANCODE_SPACE])
+            if (pause) pause = 0;
+        if (pause) continue;
 
         // Limit FPS.
         if (config.video.limitFPS)
@@ -182,12 +196,7 @@ int32_t main(int32_t argc, char *argv[])
             }
         }
 
-        // Handle keyboard input.
-        const uint8_t *keyState;
-        SDL_PumpEvents();
-        if (SDL_PeepEvents(0, 0, SDL_PEEKEVENT, SDL_QUIT, SDL_QUIT) > 0)
-            goto quit;
-        keyState = SDL_GetKeyboardState(NULL);
+        // Keyboard input.
         // Reset IN_MOTION flag (in case no key is pressed).
         entity[PLAYER_ENTITY]->flags &= ~(1 << IN_MOTION);
 
@@ -211,7 +220,6 @@ int32_t main(int32_t argc, char *argv[])
                 entity[PLAYER_ENTITY]->frameEnd     = WALK_MAX;
             }
         }
-        if (keyState[SDL_SCANCODE_Q]) goto quit;
         if (keyState[SDL_SCANCODE_A])
         {
             if (0 == ((entity[PLAYER_ENTITY]->flags >> DIRECTION) & 1))
