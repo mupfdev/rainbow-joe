@@ -30,6 +30,7 @@ someday.
 
 ## Screenshot
 Click to open in full-resolution.
+
 [![Screenshot](media/screenshot-preview.png)](media/screenshot.png?raw=true "Screenshot")
 
 ## Dependencies and how to compile
