@@ -57,7 +57,7 @@ int32_t main(int32_t argc, char *argv[])
      * quit the program if the music can't be played by some reason. */
     mixer = mixerInit();
     music = musicInit("res/music/enchanted-tiki-86.ogg");
-    musicFadeIn(music, -1, 8000);
+    if (mixer && config.audio.enabled) musicFadeIn(music, -1, 8000);
 
     fcMode = iconInit(video->renderer, "res/icons/telescope.png");
     if (NULL == fcMode)
@@ -170,7 +170,7 @@ int32_t main(int32_t argc, char *argv[])
         if ((entity[PLAYER_ENTITY]->flags >> IS_DEAD) & 1)
         {
             if (0 == delay)
-                if (mixer) sfxPlay(sfx[SFX_DEAD], CH_DEAD, 0);
+                if (mixer && config.audio.enabled) sfxPlay(sfx[SFX_DEAD], CH_DEAD, 0);
             delay += dTime;
 
             if (delay > 2)
@@ -231,7 +231,7 @@ int32_t main(int32_t argc, char *argv[])
         if (0 == ((entity[PLAYER_ENTITY]->flags >> IN_MID_AIR) & 1))
             if (keyState[SDL_SCANCODE_SPACE])
             {
-                if (mixer) sfxPlay(sfx[SFX_JUMP], CH_JUMP, 0);
+                if (mixer && config.audio.enabled) sfxPlay(sfx[SFX_JUMP], CH_JUMP, 0);
                 entity[PLAYER_ENTITY]->flags        |= 1 << IS_JUMPING;
                 entity[PLAYER_ENTITY]->velocityJump  = entity[PLAYER_ENTITY]->velocity;
             }
