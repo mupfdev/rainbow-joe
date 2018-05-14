@@ -13,23 +13,24 @@ int32_t main(int32_t argc, char *argv[])
     if (argc > 1) configFilename = argv[1];
     else configFilename = "default.ini";
 
-    Config     config = configInit(configFilename);
-    Video      *video = NULL;
-    Map        *map   = NULL;
+    Config config  = configInit(configFilename);
+    Video  *video  = NULL;
+    Map    *map    = NULL;
+    Mixer  *mixer  = NULL;
+    Music  *music  = NULL;
+    Icon   *fcMode = NULL;
 
     Background *bg[NUM_BACKGROUNDS];
     for (uint32_t i = 0; i < NUM_BACKGROUNDS; i++)
         bg[i] = NULL;
 
-    Icon       *fcMode = NULL;
-
     Entity *entity[NUM_ENTITIES];
     for (uint32_t i = 0; i < NUM_ENTITIES; i++)
         entity[i] = NULL;
 
-    Mixer      *mixer    = NULL;
-    Music      *music    = NULL;
-    Music      *sfxDead  = NULL;
+    SFX *sfx[NUM_SFX];
+    for (uint32_t i = 0; i < NUM_SFX; i++)
+        sfx[i] = NULL;
 
     video = videoInit(
         "Rainbow Joe",
@@ -47,6 +48,19 @@ int32_t main(int32_t argc, char *argv[])
 
     map = mapInit("res/maps/01.tmx");
     if (NULL == map)
+    {
+        execStatus = EXIT_FAILURE;
+        goto quit;
+    }
+
+    /* Note: The error handling isn't missing here.  There is simply no need to
+     * quit the program if the music can't be played by some reason. */
+    mixer = mixerInit();
+    music = musicInit("res/music/enchanted-tiki-86.ogg");
+    musicFadeIn(music, -1, 8000);
+
+    fcMode = iconInit(video->renderer, "res/icons/telescope.png");
+    if (NULL == fcMode)
     {
         execStatus = EXIT_FAILURE;
         goto quit;
@@ -83,13 +97,6 @@ int32_t main(int32_t argc, char *argv[])
         goto quit;
     }
     bg[3]->worldPosY = map->height - bg[3]->height;
-
-    fcMode = iconInit(video->renderer, "res/icons/telescope.png");
-    if (NULL == fcMode)
-    {
-        execStatus = EXIT_FAILURE;
-        goto quit;
-    }
 
     for (uint32_t i = 0; i < NUM_ENTITIES; i++)
     {
@@ -135,18 +142,13 @@ int32_t main(int32_t argc, char *argv[])
     entity[4]->worldPosX    = 3696;
     entity[4]->worldPosY    =   80;
 
-    /* Note: The error handling isn't missing here.  There is simply no need to
-     * quit the program if the music can't be played by some reason. */
-    mixer   = mixerInit();
-    music   = musicInit("res/music/enchanted-tiki-86.ogg");
-    sfxDead = musicInit("res/sfx/05.ogg");
-    if (config.audio.enabled)
-        if (mixer) musicFadeIn(music, -1, 5000);
+    sfx[SFX_DEAD] = sfxInit("res/sfx/dead.wav");
+    sfx[SFX_JUMP] = sfxInit("res/sfx/jump.wav");
 
-    double   cameraPosX = 0;
-    double   cameraPosY = map->height - video->windowHeight;
-    double   timeA      = SDL_GetTicks();
-    double   delay      = 0;
+    double cameraPosX = 0;
+    double cameraPosY = map->height - video->windowHeight;
+    double timeA      = SDL_GetTicks();
+    double delay      = 0;
     while (1)
     {
         double timeB  = SDL_GetTicks();
@@ -167,9 +169,9 @@ int32_t main(int32_t argc, char *argv[])
 
         if ((entity[PLAYER_ENTITY]->flags >> IS_DEAD) & 1)
         {
-            if (config.audio.enabled && (0 == delay))
-            if (mixer) musicPlay(sfxDead, 1);
-                delay += dTime;
+            if (0 == delay)
+                if (mixer) sfxPlay(sfx[SFX_DEAD], CH_DEAD, 0);
+            delay += dTime;
 
             if (delay > 2)
             {
@@ -177,8 +179,6 @@ int32_t main(int32_t argc, char *argv[])
                 for (uint32_t i = 0; i < NUM_ENTITIES; i++)
                     entityRespawn(entity[i]);
                 delay =  0;
-                if (config.audio.enabled)
-                    if (mixer) musicFadeIn(music, -1, 5000);
             }
         }
 
@@ -231,6 +231,7 @@ int32_t main(int32_t argc, char *argv[])
         if (0 == ((entity[PLAYER_ENTITY]->flags >> IN_MID_AIR) & 1))
             if (keyState[SDL_SCANCODE_SPACE])
             {
+                if (mixer) sfxPlay(sfx[SFX_JUMP], CH_JUMP, 0);
                 entity[PLAYER_ENTITY]->flags        |= 1 << IS_JUMPING;
                 entity[PLAYER_ENTITY]->velocityJump  = entity[PLAYER_ENTITY]->velocity;
             }
@@ -348,19 +349,20 @@ int32_t main(int32_t argc, char *argv[])
     }
 
     quit:
-    musicFree(sfxDead);
-    musicFree(music);
-    mixerFree(mixer);
+    for (uint32_t i = 0; i < NUM_SFX; i++)
+        sfxFree(sfx[i]);
 
     for (uint32_t i = 0; i < NUM_ENTITIES; i++)
         entityFree(entity[i]);
 
-    iconFree(fcMode);
-
     for (uint32_t i = 0; i < NUM_BACKGROUNDS; i++)
         backgroundFree(bg[i]);
 
+    iconFree(fcMode);
+    musicFree(music);
+    mixerFree(mixer);
     mapFree(map);
     videoTerminate(video);
+
     return execStatus;
 }

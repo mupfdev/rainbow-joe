@@ -37,7 +37,6 @@ typedef struct cfg_t
     VideoConfig video;
 } Config;
 
-void   configFree(Config *config);
 Config configInit(const char *filename);
 
 #endif

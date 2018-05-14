@@ -58,6 +58,7 @@ Mixer *mixerInit()
         free(mixer);
         return NULL;
     }
+    Mix_AllocateChannels(16);
 
     return mixer;
 }
@@ -73,14 +74,7 @@ Mixer *mixerInit()
  */
 int8_t musicFadeIn(Music *music, int8_t loops, uint16_t ms)
 {
-    music->mus = Mix_LoadMUS(music->filename);
-
-    if (NULL == music->mus) {
-        fprintf(stderr, "%s\n", Mix_GetError());
-        return -1;
-    }
-
-    if (-1 == Mix_FadeInMusic(music->mus, loops, ms))
+    if (-1 == Mix_FadeInMusic(music->music, loops, ms))
     {
         fprintf(stderr, "%s\n", Mix_GetError());
         return -1;
@@ -114,29 +108,30 @@ Music *musicInit(const char *filename)
         return NULL;
     }
 
-    music->filename = filename;
+    music->music = Mix_LoadMUS(filename);
+
+    if (NULL == music->music)
+    {
+        fprintf(stderr, "%s\n", Mix_GetError());
+        free(music);
+        return NULL;
+    }
 
     return music;
 }
 
 /**
  * @brief   Play music.
- * @param   music the music structure that should be played.
- * @param   loops number of times to play through the music, -1 plays the music
- *                forever.
+ * @param   music   the music structure that should be played.
+ * @param   loops   number of times to play through the music, -1 plays the music
+ *                  forever.
  * @return  0 on success, -1 on error.
  * @ingroup Audio
  */
 int8_t musicPlay(Music *music, int8_t loops)
 {
-    music->mus = Mix_LoadMUS(music->filename);
-
-    if (NULL == music->mus) {
-        fprintf(stderr, "%s\n", Mix_GetError());
-        return -1;
-    }
-
-    if (-1 == Mix_PlayMusic(music->mus, loops)) {
+    if (-1 == Mix_PlayMusic(music->music, loops))
+    {
         fprintf(stderr, "%s\n", Mix_GetError());
         return -1;
     }
@@ -146,8 +141,67 @@ int8_t musicPlay(Music *music, int8_t loops)
 
 /**
  * @brief Halt music.
+ * @ingroup Audio
  */
 void musicHalt()
 {
     Mix_HaltMusic();
+}
+
+/**
+ * @brief   
+ * @param   sfx
+ * @ingroup Audio
+ */
+void sfxFree(SFX *sfx)
+{
+    free(sfx);
+}
+
+/**
+ * @brief   
+ * @param   sfx
+ * @return  
+ * @ingroup Audio
+ */
+SFX *sfxInit(const char *filename)
+{
+    static SFX *sfx;
+    sfx = malloc(sizeof(struct sfx_t));
+    if (NULL == sfx)
+    {
+        fprintf(stderr, "sfxInit(): error allocating memory.\n");
+        return NULL;
+    }
+
+    sfx->sfx = Mix_LoadWAV(filename);
+
+    if (NULL == sfx->sfx)
+    {
+        fprintf(stderr, "%s\n", Mix_GetError());
+        free(sfx);
+        return NULL;
+    }
+
+    return sfx;
+}
+
+/**
+ * @brief   
+ * @param   sfx
+ * @param   channel
+ * @param   loops
+ * @return  
+ * @ingroup Audio
+ */
+int8_t sfxPlay(SFX *sfx, int8_t channel, int8_t loops)
+{
+    if (0 == Mix_Playing(channel))
+        if (-1 == Mix_PlayChannel(channel, sfx->sfx, loops))
+        {
+            fprintf(stderr, "%s\n", Mix_GetError());
+            return -1;
+        }
+
+    return 0;
 }
