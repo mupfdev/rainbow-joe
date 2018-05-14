@@ -20,7 +20,8 @@ CFLAGS=\
 	-std=c99\
 	-Wall\
 	-Werror\
-	-Wextra
+	-Wextra\
+	-Wno-stringop-truncation
 SRCS=\
 	$(wildcard src/*.c)\
 	$(wildcard src/tmx/*.c)\
