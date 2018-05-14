@@ -56,8 +56,8 @@ int32_t main(int32_t argc, char *argv[])
     /* Note: The error handling isn't missing here.  There is simply no need to
      * quit the program if the music can't be played by some reason. */
     mixer = mixerInit();
-    music = musicInit("res/music/enchanted-tiki-86.ogg");
-    if (mixer && config.audio.enabled) musicFadeIn(music, -1, 8000);
+    music = musicInit("res/music/01.ogg");
+    if (mixer && config.audio.enabled) musicFadeIn(music, -1, 2000);
 
     fcMode = iconInit(video->renderer, "res/icons/telescope.png");
     if (NULL == fcMode)
@@ -143,6 +143,7 @@ int32_t main(int32_t argc, char *argv[])
     entity[4]->worldPosY    =   80;
 
     sfx[SFX_DEAD]    = sfxInit("res/sfx/dead.wav");
+    sfx[SFX_IMPACT]  = sfxInit("res/sfx/impact.wav");
     sfx[SFX_JUMP]    = sfxInit("res/sfx/jump.wav");
     sfx[SFX_PAUSE]   = sfxInit("res/sfx/pause.wav");
     sfx[SFX_UNPAUSE] = sfxInit("res/sfx/unpause.wav");
@@ -190,7 +191,10 @@ int32_t main(int32_t argc, char *argv[])
             entityFrame(entity[i], dTime);
             if ((entity[i]->flags >> IS_DEAD) & 1)
                 if (PLAYER_ENTITY != i)
+                {
+                    if (mixer && config.audio.enabled) sfxPlay(sfx[SFX_IMPACT], CH_IMPACT, 0);
                     entityRespawn(entity[i]);
+                }
         }
 
         if ((entity[PLAYER_ENTITY]->flags >> IS_DEAD) & 1)

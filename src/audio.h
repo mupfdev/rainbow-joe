@@ -10,13 +10,15 @@
 
 #define NUM_SFX      5
 #define SFX_DEAD     0
-#define SFX_JUMP     1
-#define SFX_PAUSE    2
-#define SFX_UNPAUSE  3
+#define SFX_IMPACT   1
+#define SFX_JUMP     2
+#define SFX_PAUSE    3
+#define SFX_UNPAUSE  4
 #define CH_DEAD      1
-#define CH_JUMP      2
-#define CH_PAUSE     3
-#define CH_UNPAUSE   4
+#define CH_IMPACT    2
+#define CH_JUMP      3
+#define CH_PAUSE     4
+#define CH_UNPAUSE   5
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
