@@ -174,7 +174,7 @@ void sfxFree(SFX *sfx)
  * @brief   Initialise sound effect.
  * @param   sfx the sound sfx structure.  See @ref struct SFX.
  * @return  SFX on success, NULL on error.
- * @ingroup Audio 
+ * @ingroup Audio
  */
 SFX *sfxInit(const char *filename)
 {
@@ -204,7 +204,7 @@ SFX *sfxInit(const char *filename)
  * @param   channel the mixer channel to use.
  * @param   loops   number of times to play the sound effect, -1 plays the
  *                  effect forever.
- * @return  
+ * @return
  * @ingroup Audio
  */
 int8_t sfxPlay(SFX *sfx, int8_t channel, int8_t loops)

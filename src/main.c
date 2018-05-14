@@ -53,6 +53,7 @@ int32_t main(int32_t argc, char *argv[])
         goto quit;
     }
 
+    // Audio mixer and music.
     /* Note: The error handling isn't missing here.  There is simply no need to
      * quit the program if the music can't be played by some reason. */
     mixer = mixerInit();
@@ -124,23 +125,33 @@ int32_t main(int32_t argc, char *argv[])
     entity[PLAYER_ENTITY]->worldPosY    = 608;
     // NPCs.
     entity[1]->frameYoffset =   64;
+    entity[3]->frameYoffset =   64;
+    entity[5]->frameYoffset =    0;
+    entity[6]->frameYoffset =    0;
     entity[1]->respawnPosX  =  144;
     entity[1]->respawnPosY  =  432;
-    entity[1]->worldPosX    =  144;
-    entity[1]->worldPosY    =  432;
     entity[2]->respawnPosX  =  256;
     entity[2]->respawnPosY  =   80;
-    entity[2]->worldPosX    =  256;
-    entity[2]->worldPosY    =   80;
-    entity[3]->frameYoffset =   64;
     entity[3]->respawnPosX  =  496;
     entity[3]->respawnPosY  =  160;
-    entity[3]->worldPosX    =  496;
-    entity[3]->worldPosY    =  160;
     entity[4]->respawnPosX  = 1776;
     entity[4]->respawnPosY  =   80;
-    entity[4]->worldPosX    = 1776;
-    entity[4]->worldPosY    =   80;
+    entity[5]->respawnPosX  = 1200;
+    entity[5]->respawnPosY  =   32;
+    entity[6]->respawnPosX  =  672;
+    entity[6]->respawnPosY  =  656;
+    entity[1]->worldPosX    = entity[1]->respawnPosX;
+    entity[1]->worldPosY    = entity[1]->respawnPosY;
+    entity[2]->worldPosX    = entity[2]->respawnPosX;
+    entity[2]->worldPosY    = entity[2]->respawnPosY;
+    entity[3]->worldPosX    = entity[3]->respawnPosX;
+    entity[3]->worldPosY    = entity[3]->respawnPosY;
+    entity[4]->worldPosX    = entity[4]->respawnPosX;
+    entity[4]->worldPosY    = entity[4]->respawnPosY;
+    entity[5]->worldPosX    = entity[5]->respawnPosX;
+    entity[5]->worldPosY    = entity[5]->respawnPosY;
+    entity[6]->worldPosX    = entity[6]->respawnPosX;
+    entity[6]->worldPosY    = entity[6]->respawnPosY;
 
     sfx[SFX_DEAD]    = sfxInit("res/sfx/dead.wav");
     sfx[SFX_IMPACT]  = sfxInit("res/sfx/impact.wav");
@@ -372,6 +383,7 @@ int32_t main(int32_t argc, char *argv[])
         SDL_RenderClear(video->renderer);
     }
 
+    // Free allocated memory and exit.
     quit:
     for (uint32_t i = 0; i < NUM_SFX; i++)
         sfxFree(sfx[i]);

@@ -28,6 +28,10 @@ Nevertheless: I hope you find the code of this project useful.  If so, feel free
 to use it in any way you want. Just consider buying me a beer in case we meet
 someday.
 
+## Screenshot
+Click to open in full-resolution.
+[![Screenshot](media/screenshot-preview.png)](media/screenshot.png?raw=true "Screenshot")
+
 ## Dependencies and how to compile
 The program has been successfully compiled with the following libraries:
 ```

@@ -29,6 +29,10 @@
  <tile id="469" type="floor"/>
  <tile id="473" type="floor"/>
  <tile id="474" type="floor"/>
+ <tile id="498" type="floor"/>
+ <tile id="499" type="floor"/>
+ <tile id="500" type="floor"/>
+ <tile id="501" type="floor"/>
  <tile id="698" type="floor"/>
  <tile id="699" type="floor"/>
  <tile id="700" type="floor"/>

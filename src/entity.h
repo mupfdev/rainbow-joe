@@ -11,7 +11,7 @@
  *          The number of entities used in the main program.
  * @ingroup Entity
  */
-#define NUM_ENTITIES   5
+#define NUM_ENTITIES   7
 
 // Flags.
 #define DIRECTION   0
