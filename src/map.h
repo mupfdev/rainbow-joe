@@ -5,6 +5,11 @@
 #ifndef MAP_h
 #define MAP_h
 
+/**
+ * @def     MAX_TEXTURES_PER_MAP
+ *          The maximum number of textures (layers) per map.
+ * @ingroup Map
+ */
 #define MAX_TEXTURES_PER_MAP 5
 
 #include <SDL2/SDL.h>

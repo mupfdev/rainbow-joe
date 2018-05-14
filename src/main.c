@@ -212,7 +212,7 @@ int32_t main(int32_t argc, char *argv[])
             }
         }
 
-        // Keyboard input.
+        // Process keyboard input.
         // Reset IN_MOTION flag (in case no key is pressed).
         entity[PLAYER_ENTITY]->flags &= ~(1 << IN_MOTION);
 
@@ -295,11 +295,11 @@ int32_t main(int32_t argc, char *argv[])
             if (doIntersect(entity[PLAYER_ENTITY]->bb, entity[i]->bb))
             {
                 if (entity[PLAYER_ENTITY]->worldPosX > entity[i]->worldPosX)
-                    entity[i]->flags |= 1 << DIRECTION;            
+                    entity[i]->flags |= 1 << DIRECTION;
                 else
                     entity[i]->flags &= ~(1 << DIRECTION);
 
-                entity[i]->flags |= 1 << IN_MOTION;            
+                entity[i]->flags |= 1 << IN_MOTION;
             }
         }
 

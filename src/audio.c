@@ -1,7 +1,7 @@
 /** @file audio.c
  * @ingroup   Audio
  * @defgroup  Audio
- * @brief     Handler for the playback of music, sound effects, etc.t
+ * @brief     Handler for the playback of music, sound effects, etc..
  * @author    Michael Fitzmayer
  * @copyright "THE BEER-WARE LICENCE" (Revision 42)
  */
@@ -10,7 +10,7 @@
 
 /**
  * @brief   Free audio mixer.
- * @param   mixer
+ * @param   mixer the mixer structure.  See @ref struct Mixer.
  * @ingroup Audio
  */
 void mixerFree(Mixer *mixer)
@@ -22,7 +22,7 @@ void mixerFree(Mixer *mixer)
 
 /**
  * @brief   Initialise audio mixer.
- * @return  Mixer on success, NULL on error.
+ * @return  Mixer on success, NULL on error.  See @ref struct Mixer.
  * @ingroup Audio
  */
 Mixer *mixerInit()
@@ -85,7 +85,7 @@ int8_t musicFadeIn(Music *music, int8_t loops, uint16_t ms)
 
 /**
  * @brief   Free music.
- * @param   music
+ * @param   music the music structure.  See @ref struct Music.
  * @ingroup Audio
  */
 void musicFree(Music *music)
@@ -104,7 +104,7 @@ void musicHalt()
 
 /**
  * @brief   Initialise Music.
- * @return  Music on success, NULL on error.
+ * @return  Music on success, NULL on error.  See @ref struct Music.
  * @ingroup Audio
  */
 Music *musicInit(const char *filename)
@@ -131,9 +131,9 @@ Music *musicInit(const char *filename)
 
 /**
  * @brief   Play music.
- * @param   music   the music structure that should be played.
- * @param   loops   number of times to play through the music, -1 plays the music
- *                  forever.
+ * @param   music the music structure that should be played.
+ * @param   loops number of times to play through the music, -1 plays the
+ *                music forever.
  * @return  0 on success, -1 on error.
  * @ingroup Audio
  */
@@ -161,8 +161,8 @@ void musicToggle()
 }
 
 /**
- * @brief   
- * @param   sfx
+ * @brief   Free sound effect.
+ * @param   sfx the sfx structure.  See @ref struct SFX.
  * @ingroup Audio
  */
 void sfxFree(SFX *sfx)
@@ -171,10 +171,10 @@ void sfxFree(SFX *sfx)
 }
 
 /**
- * @brief   
- * @param   sfx
- * @return  
- * @ingroup Audio
+ * @brief   Initialise sound effect.
+ * @param   sfx the sound sfx structure.  See @ref struct SFX.
+ * @return  SFX on success, NULL on error.
+ * @ingroup Audio 
  */
 SFX *sfxInit(const char *filename)
 {
@@ -199,10 +199,11 @@ SFX *sfxInit(const char *filename)
 }
 
 /**
- * @brief   
- * @param   sfx
- * @param   channel
- * @param   loops
+ * @brief   Play sound effect.
+ * @param   sfx     the sfx structure.
+ * @param   channel the mixer channel to use.
+ * @param   loops   number of times to play the sound effect, -1 plays the
+ *                  effect forever.
  * @return  
  * @ingroup Audio
  */

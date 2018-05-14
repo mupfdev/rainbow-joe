@@ -5,6 +5,11 @@
 #ifndef BACKGROUND_h
 #define BACKGROUND_h
 
+/**
+ * @def     NUM_BACKGROUNDS
+ *          The overall number of backgrounds used in the main program.
+ * @ingroup Background
+ */
 #define NUM_BACKGROUNDS 4
 
 #include <stdint.h>

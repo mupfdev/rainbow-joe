@@ -8,15 +8,6 @@
 
 #include "config.h"
 
-/**
- * @brief   
- * @param   cfg
- * @param   section
- * @param   name
- * @param   value
- * @return  
- * @ingroup Config
- */
 static int32_t handler(void* cfg, const char *section, const char *name, const char *value)
 {
     Config *config = (Config*)cfg;
@@ -38,9 +29,10 @@ static int32_t handler(void* cfg, const char *section, const char *name, const c
 }
 
 /**
- * @brief   
- * @param   filename
- * @return  
+ * @brief   Initialise configuration file.
+ * @param   filename the configuration file to load.
+ * @return  Always Config, error message on failure.  It is important to define
+ *          a fallback in the main program.  See @ref struct Config.
  * @ingroup Config
  */
 Config configInit(const char *filename)

@@ -8,6 +8,13 @@
 
 #include "aabb.h"
 
+/**
+ * @brief   Check if two bounding boxes intersect.
+ * @param   boxA bounding box A.
+ * @param   boxB bounding box B.
+ * @return  1 if boxes intersect, 0 if not.
+ * @ingroup AABB
+ */
 uint8_t doIntersect(AABB boxA, AABB boxB)
 {
     double dAx = boxB.l - boxA.r;

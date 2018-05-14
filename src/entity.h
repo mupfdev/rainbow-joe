@@ -6,6 +6,11 @@
 #define ENTITY_h
 
 #define PLAYER_ENTITY  0
+/**
+ * @def     NUM_ENTITIES
+ *          The number of entities used in the main program.
+ * @ingroup Entity
+ */
 #define NUM_ENTITIES   5
 
 // Flags.

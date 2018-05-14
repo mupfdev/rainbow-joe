@@ -5,7 +5,17 @@
 #ifndef AUDIO_h
 #define AUDIO_h
 
+/**
+ * @def     musicPause()
+ *          Pause music playback.
+ * @ingroup Audio
+ */
 #define musicPause()  Mix_PauseMusic()
+/**
+ * @def     musicResume()
+ *          Resume music playback.
+ * @ingroup Audio
+ */
 #define musicResume() Mix_ResumeMusic()
 
 #define NUM_SFX      5

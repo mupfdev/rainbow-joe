@@ -45,7 +45,7 @@ uint8_t mapCoordIsType(Map *map, const char *type, double xPos, double yPos)
 }
 
 /**
- * @brief   Free map.
+ * @brief   Free map.  See @ref struct Map.
  * @param   map the map that should be freed.
  * @ingroup Map
  */
@@ -55,9 +55,9 @@ void mapFree(Map *map)
 }
 
 /**
- * @brief   Initialise map.
+ * @brief   Initialise map.  See @ref struct Map.
  * @param   filename the TMX map file to load.
- * @return  The initialised map on success, NULL on error.
+ * @return  Map on success, NULL on error.
  * @ingroup Map
  */
 Map *mapInit(const char *filename)
@@ -88,7 +88,7 @@ Map *mapInit(const char *filename)
 }
 
 /**
- * @brief   Render Map on screen.
+ * @brief   Render map on screen.
  * @param   renderer   SDL's rendering context.  See @ref struct Video.
  * @param   map        the map that should be rendered.
  * @param   name       substring of the layer name(s) that should be rendered.

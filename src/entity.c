@@ -2,7 +2,7 @@
  * @ingroup   Entity
  * @defgroup  Entity
  * @brief     Handler to take care of game entities such as the player, enemies,
- *            etc.
+ *            etc..
  * @author    Michael Fitzmayer
  * @copyright "THE BEER-WARE LICENCE" (Revision 42)
  */
@@ -11,8 +11,8 @@
 
 /**
  * @brief   Update entity.  Thie function has to be called every frame.
- * @param   entity
- * @param   dTime
+ * @param   entity the entity to update.  See @ref struct Entity.
+ * @param   dTime  delta time; time passed since last frame in seconds.
  * @ingroup Entity
  */
 void entityFrame(Entity *entity, double dTime)
@@ -123,8 +123,8 @@ void entityFrame(Entity *entity, double dTime)
 }
 
 /**
- * @brief
- * @param entity
+ * @brief   Free entity.
+ * @param   entity the entity structure.  See @ref struct Entity.
  * @ingroup Entity
  */
 void entityFree(Entity *entity)
@@ -133,8 +133,8 @@ void entityFree(Entity *entity)
 }
 
 /**
- * @brief
- * @return
+ * @brief   Initialise entity.
+ * @return  Entity on success, NULL on error.  See @ref struct Entity.
  * @ingroup Entity
  */
 Entity *entityInit()
@@ -208,12 +208,12 @@ int8_t entityLoadSprite(Entity *entity, SDL_Renderer *renderer, const char *file
 }
 
 /**
- * @brief
- * @param   renderer
- * @param   entity
+ * @brief   Render entity on screen.
+ * @param   renderer   SDL's rendering context.  See @ref struct Video.
+ * @param   entity     the entity to render.  See @ref struct Entity.
  * @param   cameraPosX camera position along the x-axis.
  * @param   cameraPosY camera position along the y-axis.
- * @return
+ * @return  0 on success, -1 on error.
  * @ingroup Entity
  */
 int8_t entityRender(SDL_Renderer *renderer, Entity *entity, double cameraPosX, double cameraPosY)
@@ -246,6 +246,11 @@ int8_t entityRender(SDL_Renderer *renderer, Entity *entity, double cameraPosX, d
     return 0;
 }
 
+/**
+ * @brief   Respawn entity.
+ * @param   entity the entity to respawn.  See @ref struct Entity.
+ * @ingroup Entity
+ */
 void entityRespawn(Entity *entity)
 {
     entity->flags     &= ~(1 << IS_DEAD);

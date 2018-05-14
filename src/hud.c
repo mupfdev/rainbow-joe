@@ -9,8 +9,8 @@
 #include "hud.h"
 
 /**
- * @brief   
- * @param   icon
+ * @brief   Free icon structure.
+ * @param   icon the icon structure.  See @ref struct Icon.
  * @ingroup HUD
  */
 void iconFree(Icon *icon)
@@ -19,9 +19,9 @@ void iconFree(Icon *icon)
 }
 
 /**
- * @brief   
- * @param   filename
- * @return  
+ * @brief   Initialise icon.  See @ref struct Icon.
+ * @param   filename the image file to load.
+ * @return  Icon on success, NULL on error.
  * @ingroup HUD
  */
 Icon *iconInit(SDL_Renderer *renderer, const char *filename)
@@ -50,12 +50,12 @@ Icon *iconInit(SDL_Renderer *renderer, const char *filename)
 }
 
 /**
- * @brief   
- * @param   renderer
- * @param   icon
- * @param   posX
- * @param   posY
- * @return  
+ * @brief   Render icon on screen.
+ * @param   renderer SDL's rendering context.  See @ref struct Video.
+ * @param   icon     the icon structure to render.  See @ref struct Icon.
+ * @param   posX     render position along the x-axis.
+ * @param   posY     render position along the y-axis.
+ * @return  0 on success, -1 on error.
  * @ingroup HUD
  */
 int8_t iconRender(SDL_Renderer *renderer, Icon *icon, double posX, double posY)

@@ -9,8 +9,8 @@
 #include "background.h"
 
 /**
- * @brief   
- * @param   background
+ * @brief   Free background structure.
+ * @param   background the background structure.  See @ref struct Background.
  * @ingroup Background
  */
 void backgroundFree(Background *background)
@@ -19,10 +19,10 @@ void backgroundFree(Background *background)
 }
 
 /**
- * @brief   
- * @param   filename
- * @param   mapWidth
- * @return  
+ * @brief   Initialise background structure.  See @ref struct Background.
+ * @param   filename   the image file to load.
+ * @param   mapWidth   the width of the map.  See @ref struct Map.
+ * @return  Background on success, NULL on error.
  * @ingroup Background
  */
 Background *backgroundInit(SDL_Renderer *renderer, const char *filename, int32_t mapWidth)
@@ -70,12 +70,12 @@ Background *backgroundInit(SDL_Renderer *renderer, const char *filename, int32_t
 }
 
 /**
- * @brief 
- * @param   renderer
- * @param   background
+ * @brief   Render background.
+ * @param   renderer   SDL's rendering context.  See @ref struct Video.
+ * @param   background the background structure.  See @ref struct Background.
  * @param   cameraPosX camera position along the x-axis.
  * @param   cameraPosY camera position along the y-axis.
- * @return  
+ * @return  0 on success, -1 on error.
  * @ingroup Background
  */
 int8_t backgroundRender(
