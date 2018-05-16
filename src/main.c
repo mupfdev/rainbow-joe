@@ -17,7 +17,7 @@
 
 int32_t main(int32_t argc, char *argv[])
 {
-    int execStatus  = EXIT_SUCCESS;
+    int32_t execStatus  = EXIT_SUCCESS;
 
     const char *configFilename;
     if (argc > 1)
