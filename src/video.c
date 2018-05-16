@@ -6,6 +6,7 @@
  * @copyright "THE BEER-WARE LICENCE" (Revision 42)
  */
 
+#include <stdio.h>
 #include "video.h"
 
 /**

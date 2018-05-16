@@ -8,6 +8,7 @@
  */
 
 #include <SDL2/SDL_image.h>
+#include <stdio.h>
 #include "entity.h"
 
 /**
