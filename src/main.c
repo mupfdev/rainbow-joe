@@ -3,34 +3,54 @@
  * @copyright "THE BEER-WARE LICENCE" (Revision 42)
  */
 
-#include "main.h"
+#include <SDL2/SDL.h>
+#include "aabb.h"
+#include "audio.h"
+#include "background.h"
+#include "config.h"
+#include "entity.h"
+#include "hud.h"
+#include "map.h"
+#include "video.h"
 
 int32_t main(int32_t argc, char *argv[])
 {
     int execStatus  = EXIT_SUCCESS;
 
     const char *configFilename;
-    if (argc > 1) configFilename = argv[1];
-    else configFilename = "default.ini";
+    if (argc > 1)
+    {
+        configFilename = argv[1];
+    }
+    else
+    {
+        configFilename = "default.ini";
+    }
 
     Config config  = configInit(configFilename);
     Video  *video  = NULL;
     Map    *map    = NULL;
     Mixer  *mixer  = NULL;
     Music  *music  = NULL;
-    Icon   *fcMode = NULL;
+    Icon   *iconFC = NULL;
 
     Background *bg[NUM_BACKGROUNDS];
     for (uint32_t i = 0; i < NUM_BACKGROUNDS; i++)
+    {
         bg[i] = NULL;
+    }
 
     Entity *entity[NUM_ENTITIES];
     for (uint32_t i = 0; i < NUM_ENTITIES; i++)
+    {
         entity[i] = NULL;
+    }
 
     SFX *sfx[NUM_SFX];
     for (uint32_t i = 0; i < NUM_SFX; i++)
+    {
         sfx[i] = NULL;
+    }
 
     video = videoInit(
         "Rainbow Joe",
@@ -58,10 +78,13 @@ int32_t main(int32_t argc, char *argv[])
      * quit the program if the music can't be played by some reason. */
     mixer = mixerInit();
     music = musicInit("res/music/01.ogg");
-    if (mixer && config.audio.enabled) musicFadeIn(music, -1, 2000);
+    if (mixer && config.audio.enabled)
+    {
+        musicFadeIn(music, -1, 2000);
+    }
 
-    fcMode = iconInit(video->renderer, "res/icons/telescope.png");
-    if (NULL == fcMode)
+    iconFC = iconInit(video->renderer, "res/icons/telescope.png");
+    if (NULL == iconFC)
     {
         execStatus = EXIT_FAILURE;
         goto quit;
@@ -153,17 +176,17 @@ int32_t main(int32_t argc, char *argv[])
     entity[6]->worldPosX    = entity[6]->respawnPosX;
     entity[6]->worldPosY    = entity[6]->respawnPosY;
 
-    sfx[SFX_DEAD]    = sfxInit("res/sfx/dead.wav");
-    sfx[SFX_IMPACT]  = sfxInit("res/sfx/impact.wav");
-    sfx[SFX_JUMP]    = sfxInit("res/sfx/jump.wav");
-    sfx[SFX_PAUSE]   = sfxInit("res/sfx/pause.wav");
-    sfx[SFX_UNPAUSE] = sfxInit("res/sfx/unpause.wav");
+    sfx[SFX_DEAD]           = sfxInit("res/sfx/dead.wav");
+    sfx[SFX_IMPACT]         = sfxInit("res/sfx/impact.wav");
+    sfx[SFX_JUMP]           = sfxInit("res/sfx/jump.wav");
+    sfx[SFX_PAUSE]          = sfxInit("res/sfx/pause.wav");
+    sfx[SFX_UNPAUSE]        = sfxInit("res/sfx/unpause.wav");
 
-    uint8_t pause      = 0;
-    double  cameraPosX = 0;
-    double  cameraPosY = map->height - video->windowHeight;
-    double  timeA      = SDL_GetTicks();
-    double  delay      = 0;
+    uint8_t pause           = 0;
+    double  cameraPosX      = 0;
+    double  cameraPosY      = map->height - video->windowHeight;
+    double  timeA           = SDL_GetTicks();
+    double  delay           = 0;
     while (1)
     {
         double timeB = SDL_GetTicks();
@@ -174,44 +197,65 @@ int32_t main(int32_t argc, char *argv[])
         const uint8_t *keyState;
         SDL_PumpEvents();
         if (SDL_PeepEvents(0, 0, SDL_PEEKEVENT, SDL_QUIT, SDL_QUIT) > 0)
+        {
             goto quit;
+        }
         keyState = SDL_GetKeyboardState(NULL);
 
         if (keyState[SDL_SCANCODE_Q]) goto quit;
+
         if (keyState[SDL_SCANCODE_ESCAPE]) {
             if (0 == pause)
+            {
                 if (mixer && config.audio.enabled) sfxPlay(sfx[SFX_PAUSE], CH_PAUSE, 0);
+            }
             pause = 1;
             musicPause();
         }
+
         if (keyState[SDL_SCANCODE_SPACE])
+        {
             if (pause)
             {
-                if (mixer && config.audio.enabled) sfxPlay(sfx[SFX_UNPAUSE], CH_UNPAUSE, 0);
+                if (mixer && config.audio.enabled)
+                {
+                    sfxPlay(sfx[SFX_UNPAUSE], CH_UNPAUSE, 0);
+                }
                 pause = 0;
                 musicResume();
             }
+        }
+
         if (pause) continue;
 
         // Limit FPS.
         if (config.video.limitFPS)
+        {
             SDL_Delay(1000 / config.video.fps - dTime);
+        }
 
         for (uint32_t i = 0; i < NUM_ENTITIES; i++)
         {
             entityFrame(entity[i], dTime);
             if ((entity[i]->flags >> IS_DEAD) & 1)
+            {
                 if (PLAYER_ENTITY != i)
                 {
                     if (mixer && config.audio.enabled) sfxPlay(sfx[SFX_IMPACT], CH_IMPACT, 0);
                     entityRespawn(entity[i]);
                 }
+            }
         }
 
         if ((entity[PLAYER_ENTITY]->flags >> IS_DEAD) & 1)
         {
             if (0 == delay)
-                if (mixer && config.audio.enabled) sfxPlay(sfx[SFX_DEAD], CH_DEAD, 0);
+            {
+                if (mixer && config.audio.enabled)
+                {
+                    sfxPlay(sfx[SFX_DEAD], CH_DEAD, 0);
+                }
+            }
             delay += dTime;
 
             if (delay > 2)
@@ -247,36 +291,55 @@ int32_t main(int32_t argc, char *argv[])
                 entity[PLAYER_ENTITY]->frameEnd     = WALK_MAX;
             }
         }
+
         if (keyState[SDL_SCANCODE_A])
         {
             if (0 == ((entity[PLAYER_ENTITY]->flags >> DIRECTION) & 1))
+            {
                 entity[PLAYER_ENTITY]->velocity = -entity[PLAYER_ENTITY]->velocity;
+            }
             entity[PLAYER_ENTITY]->flags |= 1 << IN_MOTION;
             entity[PLAYER_ENTITY]->flags |= 1 << DIRECTION;
         }
+
         if (keyState[SDL_SCANCODE_D])
         {
             if ((entity[PLAYER_ENTITY]->flags >> DIRECTION) & 1)
+            {
                 entity[PLAYER_ENTITY]->velocity = -entity[PLAYER_ENTITY]->velocity;
+            }
 
             entity[PLAYER_ENTITY]->flags |= 1   << IN_MOTION;
             entity[PLAYER_ENTITY]->flags &= ~(1 << DIRECTION);
         }
 
         if (0 == ((entity[PLAYER_ENTITY]->flags >> IN_MID_AIR) & 1))
+        {
             if (keyState[SDL_SCANCODE_SPACE])
             {
-                if (mixer && config.audio.enabled) sfxPlay(sfx[SFX_JUMP], CH_JUMP, 0);
+                if (mixer && config.audio.enabled)
+                {
+                    sfxPlay(sfx[SFX_JUMP], CH_JUMP, 0);
+                }
                 entity[PLAYER_ENTITY]->flags        |= 1 << IS_JUMPING;
                 entity[PLAYER_ENTITY]->velocityJump  = entity[PLAYER_ENTITY]->velocity;
             }
+        }
 
         if (keyState[SDL_SCANCODE_1])
+        {
             videoSetZoomLevel(video, video->zoomLevelInital);
+        }
+
         if (keyState[SDL_SCANCODE_2])
+        {
             videoSetZoomLevel(video, video->zoomLevel - dTime);
+        }
+
         if (keyState[SDL_SCANCODE_3])
+        {
             videoSetZoomLevel(video, video->zoomLevel + dTime);
+        }
 
         if (keyState[SDL_SCANCODE_F])
         {
@@ -295,9 +358,13 @@ int32_t main(int32_t argc, char *argv[])
         for (uint32_t i = 0; i < NUM_ENTITIES; i++)
         {
             if (mapCoordIsType(map, "floor", entity[i]->worldPosX, entity[i]->worldPosY + entity[i]->height))
+            {
                 entity[i]->flags &= ~(1 << IN_MID_AIR);
+            }
             else
+            {
                 entity[i]->flags |= 1 << IN_MID_AIR;
+            }
         }
 
         // Set NPC behavior.
@@ -306,9 +373,13 @@ int32_t main(int32_t argc, char *argv[])
             if (doIntersect(entity[PLAYER_ENTITY]->bb, entity[i]->bb))
             {
                 if (entity[PLAYER_ENTITY]->worldPosX > entity[i]->worldPosX)
+                {
                     entity[i]->flags |= 1 << DIRECTION;
+                }
                 else
+                {
                     entity[i]->flags &= ~(1 << DIRECTION);
+                }
 
                 entity[i]->flags |= 1 << IN_MOTION;
             }
@@ -317,8 +388,8 @@ int32_t main(int32_t argc, char *argv[])
         // Set camera boundaries to map size.
         int32_t cameraMaxX = (map->width)  - (video->windowWidth  / video->zoomLevel);
         int32_t cameraMaxY = (map->height) - (video->windowHeight / video->zoomLevel);
-        if (cameraPosX < 0) cameraPosX = 0;
-        if (cameraPosY < 0) cameraPosY = 0;
+        if (cameraPosX < 0)          cameraPosX = 0;
+        if (cameraPosY < 0)          cameraPosY = 0;
         if (cameraPosX > cameraMaxX) cameraPosX = cameraMaxX;
         if (cameraPosY > cameraMaxY) cameraPosY = cameraMaxY;
 
@@ -373,7 +444,7 @@ int32_t main(int32_t argc, char *argv[])
         }
 
         if (keyState[SDL_SCANCODE_F])
-            if (-1 == iconRender(video->renderer, fcMode, video->windowWidth / video->zoomLevel - fcMode->width, 0))
+            if (-1 == iconRender(video->renderer, iconFC, video->windowWidth / video->zoomLevel - iconFC->width, 0))
             {
                 execStatus = EXIT_FAILURE;
                 goto quit;
@@ -386,15 +457,21 @@ int32_t main(int32_t argc, char *argv[])
     // Free allocated memory and exit.
     quit:
     for (uint32_t i = 0; i < NUM_SFX; i++)
+    {
         sfxFree(sfx[i]);
+    }
 
     for (uint32_t i = 0; i < NUM_ENTITIES; i++)
+    {
         entityFree(entity[i]);
+    }
 
     for (uint32_t i = 0; i < NUM_BACKGROUNDS; i++)
+    {
         backgroundFree(bg[i]);
+    }
 
-    iconFree(fcMode);
+    iconFree(iconFC);
     musicFree(music);
     mixerFree(mixer);
     mapFree(map);

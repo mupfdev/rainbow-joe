@@ -6,7 +6,14 @@
 #define HUD_h
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include <stdint.h>
+
+/**
+ * @def     iconFree()
+ *          Free icon structure.
+ * @ingroup HUD
+ */
+#define iconFree(icon) free(icon)
 
 /**
  * @ingroup HUD
@@ -19,7 +26,6 @@ typedef struct icon_t {
     uint8_t     width;
 } Icon;
 
-void   iconFree(Icon *icon);
 Icon   *iconInit(SDL_Renderer *renderer, const char *filename);
 int8_t iconRender(SDL_Renderer *renderer, Icon *icon, double cameraPosX, double cameraPosY);
 

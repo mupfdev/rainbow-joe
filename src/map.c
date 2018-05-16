@@ -7,6 +7,7 @@
  * @copyright "THE BEER-WARE LICENCE" (Revision 42)
  */
 
+#include <SDL2/SDL_image.h>
 #include "map.h"
 
 /**
@@ -28,16 +29,24 @@ uint8_t mapCoordIsType(Map *map, const char *type, double xPos, double yPos)
         (yPos < 0) ||
         (xPos > map->map->width) ||
         (yPos > map->map->height))
+    {
             return 0;
+    }
 
     tmx_layer *layers = map->map->ly_head;
     while(layers)
     {
         uint16_t gid = layers->content.gids[((int32_t)yPos * map->map->width) + (int32_t)xPos] & TMX_FLIP_BITS_REMOVAL;
         if (NULL != map->map->tiles[gid])
+        {
             if (NULL != map->map->tiles[gid]->type)
+            {
                 if (0 == strcmp(type, map->map->tiles[gid]->type))
+                {
                     return 1;
+                }
+            }
+        }
         layers = layers->next;
     }
 
@@ -71,7 +80,8 @@ Map *mapInit(const char *filename)
     }
 
     map->map = tmx_load(filename);
-    if (NULL == map->map) {
+    if (NULL == map->map)
+    {
         fprintf(stderr, "%s\n", tmx_strerr());
         return NULL;
     }
@@ -82,7 +92,9 @@ Map *mapInit(const char *filename)
     map->worldPosY = 0;
 
     for (uint8_t i = 0; i < MAX_TEXTURES_PER_MAP; i++)
+    {
         map->texture[i] = NULL;
+    }
 
     return map;
 }
@@ -117,7 +129,13 @@ int8_t mapRender(
         double renderPosX = map->worldPosX - cameraPosX;
         double renderPosY = map->worldPosY - cameraPosY;
 
-        SDL_Rect dst = { renderPosX, renderPosY, map->map->width * map->map->tile_width, map->map->height * map->map->tile_height };
+        SDL_Rect dst =
+        {
+            renderPosX,
+            renderPosY,
+            map->map->width * map->map->tile_width,
+            map->map->height * map->map->tile_height
+        };
         if (-1 == SDL_RenderCopyEx(renderer, map->texture[index], NULL, &dst, 0, NULL, SDL_FLIP_NONE))
         {
             fprintf(stderr, "%s\n", SDL_GetError());
@@ -154,12 +172,14 @@ int8_t mapRender(
     }
 
     if (bg)
+    {
         SDL_SetRenderDrawColor(
             renderer,
             (map->map->backgroundcolor >> 16) & 0xFF,
             (map->map->backgroundcolor >>  8) & 0xFF,
             (map->map->backgroundcolor)       & 0xFF,
             255);
+    }
 
     tmx_layer *layers = map->map->ly_head;
     while(layers)
@@ -169,9 +189,10 @@ int8_t mapRender(
         SDL_Rect    src;
         tmx_tileset *ts;
 
-        if ( (layers->visible) && (NULL != strstr(layers->name, name)) )
+        if ((layers->visible) && (NULL != strstr(layers->name, name)))
         {
             for (uint32_t ih = 0; ih < map->map->height; ih++)
+            {
                 for (uint32_t iw = 0; iw < map->map->width; iw++)
                 {
                     gid = layers->content.gids[(ih * map->map->width) + iw] & TMX_FLIP_BITS_REMOVAL;
@@ -187,6 +208,7 @@ int8_t mapRender(
                         SDL_RenderCopy(renderer, tileset, &src, &dst);
                     }
                 }
+            }
         }
         layers = layers->next;
     }

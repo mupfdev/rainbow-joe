@@ -5,18 +5,43 @@
 #ifndef AUDIO_h
 #define AUDIO_h
 
+#include <SDL2/SDL_mixer.h>
+#include <stdint.h>
+
+/**
+ * @def     musicFree()
+ *          Free music structure.
+ * @ingroup Audio
+ */
+#define musicFree(music) free(music)
+
+/**
+ * @def     musicHalt()
+ *          Halt music playback.
+ * @ingroup Audio
+ */
+#define musicHalt() Mix_HaltMusic()
+
 /**
  * @def     musicPause()
  *          Pause music playback.
  * @ingroup Audio
  */
-#define musicPause()  Mix_PauseMusic()
+#define musicPause() Mix_PauseMusic()
+
 /**
  * @def     musicResume()
  *          Resume music playback.
  * @ingroup Audio
  */
 #define musicResume() Mix_ResumeMusic()
+
+/**
+ * @def     sfxFree()
+ *          Free sfx structure.
+ * @ingroup Audio
+ */
+#define sfxFree(sfx) free(sfx)
 
 #define NUM_SFX      5
 #define SFX_DEAD     0
@@ -29,9 +54,6 @@
 #define CH_JUMP      3
 #define CH_PAUSE     4
 #define CH_UNPAUSE   5
-
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
 
 /**
  * @ingroup Audio
@@ -60,12 +82,9 @@ typedef struct sfx_t {
 void   mixerFree(Mixer *mixer);
 Mixer  *mixerInit();
 int8_t musicFadeIn(Music *music, int8_t loops, uint16_t ms);
-void   musicFree(Music *music);
-void   musicHalt();
 Music *musicInit(const char *filename);
 int8_t musicPlay(Music *music, int8_t loops);
 void   musicToggle();
-void   sfxFree(SFX *sfx);
 SFX   *sfxInit(const char *filename);
 int8_t sfxPlay(SFX *sfx, int8_t channel, int8_t loops);
 

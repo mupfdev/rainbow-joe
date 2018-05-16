@@ -6,6 +6,7 @@
 #define VIDEO_h
 
 #include <SDL2/SDL.h>
+#include <stdint.h>
 
 /**
  * @ingroup Video

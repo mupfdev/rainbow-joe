@@ -6,17 +6,8 @@
  * @copyright "THE BEER-WARE LICENCE" (Revision 42)
  */
 
+#include <SDL2/SDL_image.h>
 #include "background.h"
-
-/**
- * @brief   Free background structure.
- * @param   background the background structure.  See @ref struct Background.
- * @ingroup Background
- */
-void backgroundFree(Background *background)
-{
-    free(background);
-}
 
 /**
  * @brief   Initialise background structure.  See @ref struct Background.
@@ -59,9 +50,13 @@ Background *backgroundInit(SDL_Renderer *renderer, const char *filename, int32_t
 
     background->wFactor = 0;
     if (background->wFactor > mapWidth)
+    {
         background->wFactor = 1;
+    }
     else
+    {
         background->wFactor = ceil((double)mapWidth / (double)background->imageWidth);
+    }
 
     background->height = background->imageHeight;
     background->width  = background->imageWidth * background->wFactor;
@@ -90,7 +85,13 @@ int8_t backgroundRender(
         double renderPosX = background->worldPosX - cameraPosX;
         double renderPosY = background->worldPosY - cameraPosY;
 
-        SDL_Rect dst = { renderPosX, renderPosY, background->width, background->height };
+        SDL_Rect dst =
+        {
+            renderPosX,
+            renderPosY,
+            background->width,
+            background->height
+        };
         if (-1 == SDL_RenderCopyEx(renderer, background->background, NULL, &dst, 0, NULL, SDL_FLIP_NONE))
         {
             fprintf(stderr, "%s\n", SDL_GetError());

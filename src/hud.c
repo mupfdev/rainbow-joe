@@ -6,17 +6,8 @@
  * @copyright "THE BEER-WARE LICENCE" (Revision 42)
  */
 
+#include <SDL2/SDL_image.h>
 #include "hud.h"
-
-/**
- * @brief   Free icon structure.
- * @param   icon the icon structure.  See @ref struct Icon.
- * @ingroup HUD
- */
-void iconFree(Icon *icon)
-{
-    free(icon);
-}
 
 /**
  * @brief   Initialise icon.  See @ref struct Icon.
@@ -66,8 +57,20 @@ int8_t iconRender(SDL_Renderer *renderer, Icon *icon, double posX, double posY)
         return -1;
     }
 
-    SDL_Rect dst = { posX, posY, icon->width, icon->height };
-    SDL_Rect src = { 0,    0,    icon->width, icon->height };
+    SDL_Rect dst =
+    {
+        posX,
+        posY,
+        icon->width,
+        icon->height
+    };
+    SDL_Rect src =
+    {
+        0,
+        0,
+        icon->width,
+        icon->height
+    };
 
     if (-1 == SDL_RenderCopy(renderer, icon->icon, &src, &dst))
     {

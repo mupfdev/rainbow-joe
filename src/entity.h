@@ -5,13 +5,24 @@
 #ifndef ENTITY_h
 #define ENTITY_h
 
-#define PLAYER_ENTITY  0
+#include <SDL2/SDL.h>
+#include <stdint.h>
+#include "aabb.h"
+
+/**
+ * @def     entityFree()
+ *          Free entity structure.
+ * @ingroup Entity
+ */
+#define entityFree(entity) free(entity)
+
 /**
  * @def     NUM_ENTITIES
  *          The number of entities used in the main program.
  * @ingroup Entity
  */
 #define NUM_ENTITIES   7
+#define PLAYER_ENTITY  0
 
 // Flags.
 #define DIRECTION   0
@@ -30,36 +41,31 @@
 #define WALK      0
 #define WALK_MAX  3
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include "aabb.h"
-
 /**
  * @ingroup Entity
  */
 typedef struct entity_t
 {
-    double   acceleration;
-    double   deceleration;
-    uint16_t flags;
-    double   fps;
-    uint8_t  frameEnd;
-    uint8_t  frameStart;
-    uint16_t frameYoffset;
-    uint8_t  height;
-    double   jumpGravityFactor;
-    double   jumpTimeMax;
-    double   respawnPosX;
-    double   respawnPosY;
-    double   velocityMax;
-    uint8_t  width;
-    uint32_t worldHeight;
-    double   worldGravitation;
-    double   worldMeterInPixel;
-    double   worldPosX;
-    double   worldPosY;
-    uint32_t worldWidth;
-
+    double      acceleration;
+    double      deceleration;
+    uint16_t    flags;
+    double      fps;
+    uint8_t     frameEnd;
+    uint8_t     frameStart;
+    uint16_t    frameYoffset;
+    uint8_t     height;
+    double      jumpGravityFactor;
+    double      jumpTimeMax;
+    double      respawnPosX;
+    double      respawnPosY;
+    double      velocityMax;
+    uint8_t     width;
+    uint32_t    worldHeight;
+    double      worldGravitation;
+    double      worldMeterInPixel;
+    double      worldPosX;
+    double      worldPosY;
+    uint32_t    worldWidth;
     /* These variables are used internally to store volatile values and usually
      * do not have to be changed manually. */
     AABB        bb;
@@ -75,7 +81,6 @@ typedef struct entity_t
 } Entity;
 
 void   entityFrame(Entity *entity, double dTime);
-void   entityFree(Entity *entity);
 Entity *entityInit();
 int8_t entityLoadSprite(Entity *entity, SDL_Renderer *renderer, const char *filename);
 int8_t entityRender(SDL_Renderer *renderer, Entity *entity, double cameraPosX, double cameraPosY);

@@ -7,6 +7,7 @@
  * @copyright "THE BEER-WARE LICENCE" (Revision 42)
  */
 
+#include <SDL2/SDL_image.h>
 #include "entity.h"
 
 /**
@@ -25,13 +26,19 @@ void entityFrame(Entity *entity, double dTime)
 
     // Increase/decrease vertical velocity if player is in motion.
     if ((entity->flags >> IN_MOTION)  & 1)
+    {
         entity->velocity += entity->acceleration * dTime;
+    }
     else
+    {
         entity->velocity -= entity->deceleration * dTime;
+    }
 
     // Set vertical velocity limits.
     if (entity->velocity > entity->velocityMax)
+    {
         entity->velocity = entity->velocityMax;
+    }
     if (entity->velocity < 0)
     {
         entity->velocity = 0;
@@ -54,15 +61,21 @@ void entityFrame(Entity *entity, double dTime)
 
     // Loop frame animation.
     if (entity->frameEnd <= entity->frame)
+    {
         entity->frame = entity->frameStart;
+    }
 
     // Set vertical player position.
     if (entity->velocity > 0)
     {
         if ((entity->flags >> DIRECTION) & 1)
+        {
             entity->worldPosX -= (entity->velocity * dTime);
+        }
         else
+        {
             entity->worldPosX += (entity->velocity * dTime);
+        }
     }
 
     // Set horizontal player position.
@@ -101,35 +114,33 @@ void entityFrame(Entity *entity, double dTime)
     }
     else
     {
-        entity->frameStart = WALK;
-        entity->frameEnd   = WALK_MAX;
-        entity->flags &= ~(1 << IS_JUMPING);
+        entity->frameStart    = WALK;
+        entity->frameEnd      = WALK_MAX;
+        entity->flags        &= ~(1 << IS_JUMPING);
         entity->velocityFall  = 0;
     }
 
     // Connect left and right border of the map and vice versa.
     if (entity->worldPosX < 0 - (entity->width / 2))
+    {
         entity->worldPosX = entity->worldWidth - (entity->width / 2);
+    }
 
     if (entity->worldPosX > entity->worldWidth - (entity->width / 2))
+    {
         entity->worldPosX = 0 - (entity->width / 2);
+    }
 
     // Kill player when he falls out of the map.
     if (entity->worldPosY >= entity->worldHeight + entity->height)
+    {
         entity->flags |= 1 << IS_DEAD;
+    }
 
     if (entity->worldPosY > entity->worldHeight + entity->height)
+    {
         entity->worldPosY = entity->worldHeight + entity->height;
-}
-
-/**
- * @brief   Free entity.
- * @param   entity the entity structure.  See @ref struct Entity.
- * @ingroup Entity
- */
-void entityFree(Entity *entity)
-{
-    free(entity);
+    }
 }
 
 /**
@@ -148,38 +159,38 @@ Entity *entityInit()
     }
 
     // Default values.
-    entity->height            =   32;
-    entity->width             =   32;
-    entity->bb.b              =    0;
-    entity->bb.l              = entity->height;
-    entity->bb.r              = entity->width;
-    entity->bb.t              =    0;
-    entity->acceleration      =  400;
-    entity->deceleration      =  200;
-    entity->distanceFall      =    0;
-    entity->flags             =    0;
-    entity->fps               =   12;
-    entity->frame             =    0;
-    entity->frameEnd          = WALK_MAX;
-    entity->frameStart        = WALK;
-    entity->frameTime         =    0.0;
-    entity->frameYoffset      =   32;
-    entity->jumpGravityFactor =    4.0;
-    entity->jumpTime          =    0.0;
-    entity->jumpTimeMax       =    0.12;
-    entity->respawnPosX       =    0.0;
-    entity->respawnPosY       =    0.0;
-    entity->sprite            = NULL;
-    entity->velocity          =    0.0;
-    entity->velocityFall      =    0.0;
-    entity->velocityJump      =    0.0;
-    entity->velocityMax       =  100.0;
-    entity->worldHeight       =      0;
-    entity->worldGravitation  =    9.81;
-    entity->worldMeterInPixel =     32;
-    entity->worldPosX         =    0.0;
-    entity->worldPosY         =    0.0;
-    entity->worldWidth        =      0;
+    entity->height            =  32;
+    entity->width             =  32;
+    entity->bb.b              =   0;
+    entity->bb.l              =   entity->height;
+    entity->bb.r              =   entity->width;
+    entity->bb.t              =   0;
+    entity->acceleration      = 400;
+    entity->deceleration      = 200;
+    entity->distanceFall      =   0;
+    entity->flags             =   0;
+    entity->fps               =  12;
+    entity->frame             =   0;
+    entity->frameEnd          =   WALK_MAX;
+    entity->frameStart        =   WALK;
+    entity->frameTime         =   0.0;
+    entity->frameYoffset      =  32;
+    entity->jumpGravityFactor =   4.0;
+    entity->jumpTime          =   0.0;
+    entity->jumpTimeMax       =   0.12;
+    entity->respawnPosX       =   0.0;
+    entity->respawnPosY       =   0.0;
+    entity->sprite            =   NULL;
+    entity->velocity          =   0.0;
+    entity->velocityFall      =   0.0;
+    entity->velocityJump      =   0.0;
+    entity->velocityMax       = 100.0;
+    entity->worldHeight       =   0;
+    entity->worldGravitation  =   9.81;
+    entity->worldMeterInPixel =  32;
+    entity->worldPosX         =   0.0;
+    entity->worldPosY         =   0.0;
+    entity->worldWidth        =   0;
 
     return entity;
 }
@@ -195,7 +206,9 @@ Entity *entityInit()
 int8_t entityLoadSprite(Entity *entity, SDL_Renderer *renderer, const char *filename)
 {
     if (NULL != entity->sprite)
+    {
         SDL_DestroyTexture(entity->sprite);
+    }
 
     entity->sprite = IMG_LoadTexture(renderer, filename);
     if (NULL == entity->sprite)
@@ -227,15 +240,31 @@ int8_t entityRender(SDL_Renderer *renderer, Entity *entity, double cameraPosX, d
     double renderPosX = entity->worldPosX - cameraPosX;
     double renderPosY = entity->worldPosY - cameraPosY;
 
-    SDL_Rect dst = { renderPosX, renderPosY, entity->width, entity->height };
-    SDL_Rect src = { entity->frame * entity->width, entity->frameYoffset, entity->width, entity->height };
+    SDL_Rect dst =
+    {
+        renderPosX,
+        renderPosY,
+        entity->width,
+        entity->height
+    };
+    SDL_Rect src =
+    {
+        entity->frame * entity->width,
+        entity->frameYoffset,
+        entity->width,
+        entity->height
+    };
 
     SDL_RendererFlip flip;
 
     if ((entity->flags >> DIRECTION) & 1)
+    {
         flip = SDL_FLIP_HORIZONTAL;
+    }
     else
+    {
         flip = SDL_FLIP_NONE;
+    }
 
     if (-1 == SDL_RenderCopyEx(renderer, entity->sprite, &src, &dst, 0, NULL, flip))
     {

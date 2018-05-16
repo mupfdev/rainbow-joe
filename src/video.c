@@ -43,9 +43,13 @@ Video *videoInit(const char *title, int32_t width, int32_t height, uint8_t fulls
 
     uint32_t flags;
     if (fullscreen)
+    {
         flags = SDL_WINDOW_FULLSCREEN_DESKTOP;
+    }
     else
+    {
         flags = 0;
+    }
 
     video->window = SDL_CreateWindow(
         title,
@@ -125,7 +129,9 @@ int8_t videoSetZoomLevel(Video *video, double zoomLevel)
 void videoTerminate(Video *video)
 {
     if ((NULL == video->window))
+    {
         fprintf(stderr, "%s\n", SDL_GetError());
+    }
 
     SDL_DestroyRenderer(video->renderer);
     SDL_DestroyWindow(video->window);

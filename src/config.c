@@ -6,7 +6,10 @@
  * @copyright "THE BEER-WARE LICENCE" (Revision 42)
  */
 
+#include <stdlib.h>
+#include <string.h>
 #include "config.h"
+#include "inih/ini.h"
 
 static int32_t handler(void* cfg, const char *section, const char *name, const char *value)
 {
@@ -23,7 +26,9 @@ static int32_t handler(void* cfg, const char *section, const char *name, const c
     else if (MATCH("Video", "limitFPS"))   config->video.limitFPS   = val;
     else if (MATCH("Video", "fps"))        config->video.fps        = val;
     else
+    {
         return 0;
+    }
 
     return 1;
 }
@@ -46,7 +51,9 @@ Config configInit(const char *filename)
     config.video.width      = 800;
 
     if (0 > ini_parse(filename, handler, &config))
+    {
         fprintf(stderr, "Couldn't load configuration file: %s\n", filename);
+    }
 
     if (0 > config.video.fps)    config.video.fps    = abs(config.video.fps);
     if (0 > config.video.height) config.video.height = abs(config.video.height);

@@ -6,7 +6,8 @@
  * @copyright "THE BEER-WARE LICENCE" (Revision 42)
  */
 
- #include "audio.h"
+#include <SDL2/SDL.h>
+#include "audio.h"
 
 /**
  * @brief   Free audio mixer.
@@ -47,12 +48,11 @@ Mixer *mixerInit()
     mixer->numChannels       = 2;
     mixer->samplingFrequency = 44100;
 
-    if (-1 ==
-        Mix_OpenAudio(
-            mixer->samplingFrequency,
-            mixer->audioFormat,
-            mixer->numChannels,
-            mixer->chunkSize))
+    if (-1 == Mix_OpenAudio(
+        mixer->samplingFrequency,
+        mixer->audioFormat,
+        mixer->numChannels,
+        mixer->chunkSize))
     {
         fprintf(stderr, "%s\n", Mix_GetError());
         free(mixer);
@@ -81,25 +81,6 @@ int8_t musicFadeIn(Music *music, int8_t loops, uint16_t ms)
     }
 
     return 0;
-}
-
-/**
- * @brief   Free music.
- * @param   music the music structure.  See @ref struct Music.
- * @ingroup Audio
- */
-void musicFree(Music *music)
-{
-    free(music);
-}
-
-/**
- * @brief Halt music.
- * @ingroup Audio
- */
-void musicHalt()
-{
-    Mix_HaltMusic();
 }
 
 /**
@@ -155,19 +136,13 @@ int8_t musicPlay(Music *music, int8_t loops)
 void musicToggle()
 {
     if (Mix_PausedMusic())
+    {
         Mix_ResumeMusic();
+    }
     else
+    {
         Mix_PauseMusic();
-}
-
-/**
- * @brief   Free sound effect.
- * @param   sfx the sfx structure.  See @ref struct SFX.
- * @ingroup Audio
- */
-void sfxFree(SFX *sfx)
-{
-    free(sfx);
+    }
 }
 
 /**
@@ -210,11 +185,13 @@ SFX *sfxInit(const char *filename)
 int8_t sfxPlay(SFX *sfx, int8_t channel, int8_t loops)
 {
     if (0 == Mix_Playing(channel))
+    {
         if (-1 == Mix_PlayChannel(channel, sfx->sfx, loops))
         {
             fprintf(stderr, "%s\n", Mix_GetError());
             return -1;
         }
+    }
 
     return 0;
 }
