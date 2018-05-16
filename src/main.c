@@ -4,6 +4,8 @@
  */
 
 #include <SDL2/SDL.h>
+#include <stdint.h>
+#include <stdlib.h>
 #include "aabb.h"
 #include "audio.h"
 #include "background.h"
