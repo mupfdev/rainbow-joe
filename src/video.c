@@ -37,8 +37,8 @@ Video *videoInit(const char *title, int32_t width, int32_t height, uint8_t fulls
         return NULL;
     }
 
-    video->windowHeight = height;
-    video->windowWidth  = width;
+    video->windowHeight    = height;
+    video->windowWidth     = width;
     video->zoomLevel       = zoomLevel;
     video->zoomLevelInital = zoomLevel;
 
