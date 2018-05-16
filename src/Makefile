@@ -6,4 +6,4 @@ all:
 	make -C ../
 
 clean:
-	rm *.o tmx/*.o ../$(PROJECT)
+	make -C ../ clean
