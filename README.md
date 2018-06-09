@@ -48,6 +48,12 @@ To compile _Rainbow Joe_ under Linux simply enter:
 make
 ```
 
+If you're on NixOS enter:
+```
+nix-shell
+make
+```
+
 To generate the documentation using doxygen enter:
 ```
 doxygen
