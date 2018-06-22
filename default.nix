@@ -9,7 +9,7 @@ let
     SDLlibs = [ SDL2 SDL2_image SDL2_mixer ];
 
 in pkgs.stdenv.mkDerivation {
-    name = "rainbow-joe-git";
+    name = "rainbow-joe";
     src = ./.;
 
     NIX_CFLAGS_COMPILE = (makeSDLCFlags SDLlibs) ++ [ "-I${getDev zlib}/include" "-I${getDev libxml2}/include/libxml2" ];
